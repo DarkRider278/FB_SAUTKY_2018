@@ -1,0 +1,19 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub Layout_Click (Sender)
+
+
+   ' pgMain.pn_DSS.Visible              = (tw_Layout.layout.ItemIndex <> 2)
+    
+
+    
+
+
+    'AllTV.TV_InitConnections()
+end sub
+
+</script_body>
+</script>

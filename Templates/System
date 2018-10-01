@@ -1,0 +1,80 @@
+object System: TccContainer
+  Caption = 'System'
+  TabVisible = False
+  object AppEvents: TptApplicationEvents
+    Left = 54
+    Top = 13
+    EventDataNames = 
+      'OnRunMode=OnRunMode,OnTVConnectionChange=System_AppEventsTVConne' +
+      'ctionChange,OnOpenProject=System_AppEventsOpenProject,OnTVDialog' +
+      'Close=System_AppEventsTVConnectionChange,OnDesignMode=System_App' +
+      'EventsDesignMode,OnCloseProject=System_AppEventsCloseProject'
+  end
+  object BDE_DS_Language: TptBdeDataSource
+    Active = True
+    DatabasePath = 'D:\dr_projekte\cc\FB_SKY_AUSTRIA_2018_08_20\Data\Database\'
+    SQL = 'SELECT ITEM, GER, ENG FROM LANGUAGE.DBF'#13#10
+    Filtered = False
+    RequestLive = True
+    Left = 11
+    Top = 12
+  end
+  object ScriptHotkey1: TptScriptHotkey
+    Hotkey.LongKeyData = '99'
+    Hotkey.Shift = [ssCtrl]
+    Hotkey.IsLong = True
+    Hotkey.Enabled = True
+    Left = 55
+    Top = 55
+    EventDataNames = 'OnExecute=System_ScriptHotkey1Execute'
+  end
+  object ScriptHotkey2: TptScriptHotkey
+    Hotkey.LongKeyData = '88'
+    Hotkey.Shift = [ssCtrl]
+    Hotkey.IsLong = True
+    Hotkey.Enabled = True
+    Left = 55
+    Top = 95
+    EventDataNames = 'OnExecute=System_ScriptHotkey2Execute'
+  end
+  object BdeDataSource1: TptBdeDataSource
+    Active = False
+    DatabasePath = 'D:\TSP_Bundesliga_2018_07_26'
+    SQL = 'SELECT * FROM TEAMS.DBF WHERE tv_name_3='#39't2081'#39#13#10
+    Filtered = False
+    RequestLive = False
+    Left = 160
+    Top = 20
+  end
+  object debugTimer: TptBackgroundTimer
+    Enabled = True
+    Interval = 5000
+    Left = 425
+    Top = 125
+    EventDataNames = 'OnTimer=System_debugTimerTimer'
+  end
+  object ScriptHotkey3: TptScriptHotkey
+    Hotkey.LongKeyData = '11'
+    Hotkey.Shift = [ssCtrl]
+    Hotkey.IsLong = True
+    Hotkey.Description = 'DSS'
+    Hotkey.Enabled = True
+    Left = 55
+    Top = 135
+    EventDataNames = 'OnExecute=System_ScriptHotkey3Execute'
+  end
+  object bt_karusell: TptTimer
+    Enabled = False
+    Interval = 7000
+    Left = 415
+    Top = 20
+    EventDataNames = 'OnTimer=System_bt_karusellTimer'
+  end
+  object BackgroundTimer1: TptBackgroundTimer
+    Enabled = True
+    Interval = 10000
+    Left = 540
+    Top = 30
+    EventDataNames = 'OnTimer=System_BackgroundTimer1Timer'
+  end
+end

@@ -1,0 +1,141 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+dim ka_score
+dim ka_side
+
+
+Sub OnRunMode (Sender)
+'    cc.SF.ShowSplashForm "PLEASE WAIT WHILE INITIALIZING GUI..."
+    KEINE_TRENNER_FRAGE = True  ' Nur beim ersten Wechsel in den Run Modus ist das True
+   ' pgMain.Panel4.Visible = True
+   ' pgMain.TrackBar1.Position = 2500
+    if cc.SF.ActivePage is pgMain then restore_gui_settings
+    Set AllTV = New cls_Grafikaufrufe
+    set oXML = CreateObject("Microsoft.XMLDOM")
+    OpenLanguageDatabase
+    SET objTeamStat = CreateObject("Scripting.Dictionary")
+    LoadNameTranslations
+    ToolWindow1.Visible = true
+    tw_konferenz.Visible = true
+ '   cc.SF.HideSplashForm
+
+    'System.FileDog.Active = false
+    System.debugTimer.Interval = 5000
+
+    ' Schauen wir mal was wir schon fuer XML Files hier finden
+    if cc.Files.DirectoryExists(pgData.ed_XML_Path.Text) then traverse_XML_directory(pgData.ed_XML_Path.Text)
+    TSP_MATCH_CHANGE ' das aktuelle Spiel im TSP nochmal triggern
+    
+end sub
+
+sub System_ScriptHotkey1Execute (Sender)
+
+    AllTV.TV__ClearAll
+end sub
+
+sub System_ScriptHotkey2Execute (Sender)
+    pgMain_Btn_Hide_DSS_ZusatzClick (Sender)
+end sub
+
+sub System_AppEventsTVConnectionChange (Sender, ConnID)
+    cc.SF.DebugText "TV CONNECTIONS CHANGED!! ", clRed
+    ReadTVConnections
+end sub
+
+sub System_AppEventsOpenProject (Sender)
+    cc.sf.ClearDebugWindow
+    LAST_TABSHEET = pgMain.Name
+    ReadTVConnections
+end sub
+
+sub System_AppEventsDesignMode (Sender)
+    save_gui_settings
+end sub
+
+sub System_AppEventsCloseProject (Sender)
+    save_gui_settings
+    System.BdeDataSource1.Active = False   ' Datenbank aus
+end sub
+
+' Hier
+'sub System_DirSeekerDirectoryChanged (Sender, FileName)
+'        '   FileDog_ChangeLog_Changed Sender, pgData.ed_XML_Path.Text & "\CHANGELOG.txt", 1
+'
+'
+'
+'
+'    exit sub
+'    if right(FileName, 4) <> ".xml" then exit sub '  Ich ignoriere mal alles nicht XML artige
+'   ' cc.sf.debugtext "[DirSeeker] File Changed: " & FileName, vbMagenta
+'    FileName = Sender.DirPath & "\" & FileName
+'
+'    if cc.Files.FileExists(fileName) then
+'        if System.FileDog.files.IndexOf(FileName) = -1 then
+'            System.FileDog.files.Add FileName
+'        end if
+'        call OPTA_FILE_CHANGED(Sender, FileName, -1)     ' Eigentlich würde nur der Directory Watcher ausreichen denk ich
+'        cc.sf.wait 250
+'    else
+'        if System.FileDog.files.IndexOf(FileName) <> -1 then System.FileDog.files.Delete System.FileDog.files.IndexOf(FileName)
+'    end if
+'   ' system.FileDog.Active = true
+'end sub
+
+
+' Zu Testzwecken, simuliert aller "paar Sekunden" das DatenUpdate einer zufälligen Opta Datei
+sub System_debugTimerTimer (Sender)
+'    FILE_COUNT = FILE_COUNT + 1
+    'FILE_COUNT = FILE_COUNT mod System.FileDog.files.Count
+'    dim random : random = cint((100 * rnd()) mod System.FileDog.files.Count)
+
+ '   call OPTA_FILE_CHANGED(Sender, System.FileDog.files.Strings(FILE_COUNT), FILE_COUNT)
+    'call FileDog_ChangeLog_Changed (Sender, pgData.ed_XML_Path.Text & "\CHANGELOG.txt", 0)
+end sub
+
+sub System_ScriptHotkey3Execute (Sender)
+    pgMain.Btn_ShowDSS.Down = not pgMain.Btn_ShowDSS.Down ' Maus Klick simulieren
+    pgMain_Btn_ShowDSSClick pgMain.Btn_ShowDSS
+end sub
+
+'sub FileDog_ChangeLog_Changed (Sender, FileName, FileIndex)
+'    dim changed_files, file
+'    'cc.sf.debugtext "[FileWatcher alive] " & split(now())(1)
+'    if not cc.Files.FileExists(FileName) then exit sub
+'    changed_files = cc.Strings.LoadFromFile(FileName, false)
+'    cc.Files.DeleteFile(FileName)
+'    changed_files = mid(changed_files,4)    ' Da sind irgendwelche Steuerzeichen am Anfang
+'    'cc.sf.debugtext """" & changed_files & """"  & len(changed_files)
+'    if len(changed_files) < 4 then exit sub
+'    for each file in split(changed_files, vbNewLine)
+'        if not right(file, 12) = "-results.xml" then OPTA_FILE_CHANGED Sender, file, 0             ' Die -results möchte ich lieber nicht in Echtzeit aktualisieren
+'    next
+'end sub
+
+sub System_bt_karusellTimer (Sender)
+     if tw_konferenz.cb_manual_karusell.Checked=false then
+         tw_konferenz_bt_nextkarusellClick tw_konferenz.bt_nextkarusell
+    end if
+end sub
+dim lastcom
+lastcom=time()
+dim comcount
+comcount=0
+dim comcountdss
+comcountdss=0
+sub System_BackgroundTimer1Timer (Sender)
+    dim c
+    dim c2
+    c2=time()
+    c= ((minute(c2))*60+second(c2))-((minute(lastcom))*60+second(lastcom))
+
+    tw_commercial.lbl_comout.Caption="Last " &Cint(c/60)&" min"
+     tw_commercial.lbl_comshow.Caption=comcount
+     if comcount >= 3 then  tw_commercial.lbl_comshow.Font.Color=clYellow
+     tw_commercial.lbl_comshowdss.Caption=comcountdss
+     if comcountdss >= 3 then  tw_commercial.lbl_comshowdss.Font.Color=clYellow
+end sub
+
+</script_body>
+</script>

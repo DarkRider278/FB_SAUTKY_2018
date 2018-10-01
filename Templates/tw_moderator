@@ -1,0 +1,249 @@
+object tw_moderator: TccToolWindow
+  Tag = 5
+  FloatingBorderStyle = bsNone
+  Caption = 'Moderator'
+  Color = 3289650
+  ClientAreaHeight = 102
+  ClientAreaWidth = 285
+  DockableTo = []
+  LastDock = frmMain.dckLeft
+  Resizable = False
+  TabOrder = 0
+  Visible = False
+  Floating = True
+  ParentColor = False
+  Float = True
+  SavedAtRunTime = True
+  object cb_Moderator: TptComboBox
+    Left = 10
+    Top = 20
+    Width = 271
+    Height = 21
+    TabOrder = 0
+    Text = 'Elisabeth Gamauf'
+    Items.WideStrings = (
+      'Thomas Trukesitz'
+      'Martin Konrad'
+      'Jörg Künne'
+      'Gerfried Pröll'
+      'Johannes Brandl'
+      'Elisabeth Gamauf'
+      'Roland Streinz'
+      'Constanze Weiss'
+      'Gerhard Krabath'
+      'Johannes Hofer'
+      'Lisa Insam'
+      'Michael Ganhör')
+    Items.WideStrings_UTF7 = (
+      'Thomas Trukesitz'
+      'Martin Konrad'
+      'J+APY-rg K+APw-nne'
+      'Gerfried Pr+APY-ll'
+      'Johannes Brandl'
+      'Elisabeth Gamauf'
+      'Roland Streinz'
+      'Constanze Weiss'
+      'Gerhard Krabath'
+      'Johannes Hofer'
+      'Lisa Insam'
+      'Michael Ganh+APY-r')
+    ItemIndex = 5
+    DroppedWidth = 271
+    DropDownAutoSize = False
+    FixedStyle = False
+    SaveStyle = cbssStandard
+    Locked = False
+    EventDataNames = 'OnChange=tw_moderator_cb_ModeratorChange'
+  end
+  object cb_Moderator1: TptComboBox
+    Left = 9
+    Top = 55
+    Width = 271
+    Height = 21
+    TabOrder = 1
+    Text = 'Walter Kogler#Sky Experte;'
+    Items.WideStrings = (
+      'Anton Pfeffer#Sky Experte;'
+      'Hans Krankl#Sky Experte;'
+      'Andreas Herzog#Sky Experte;'
+      'Walter Kogler#Sky Experte;'
+      'Michael Konsel#Sky Experte; '
+      'Alfred Tatar#Sky Experte;'
+      'Manuel Ortlechner#Sky Experte;'
+      'Heribert Weber#Sky Experte;'
+      ''
+      '----------RBS---------------------------'
+      'Christoph Freund#Sportdirektor;salzburg'#9#9#9
+      'Stephan Reiter#Geschäftsführer;salzburg'#9#9#9
+      '----------SCR---------------------------'#9#9#9#9#9#9
+      'Michael Krammer#Präsident;rapid_wien'#9#9#9
+      'Christoph Peschek#Geschäftsführer Wirtschaft;rapid_wien'#9#9#9
+      'Fredy Bickel#Geschäftsführer Sport;rapid_wien'#9#9#9
+      '----------FAK---------------------------'#9#9#9#9#9#9
+      'Wolfgang Katzian#Präsident;austria_wien'#9#9
+      'Markus Kraetschmer#Vorstand;austria_wien'#9#9#9
+      'Ralf Muhr#Technischer Direktor;austria_wien'#9#9#9
+      '----------ADM--------------------------- '#9#9#9#9#9#9
+      'Amir Shapourzadeh#Manager;admira'#9#9
+      'Ernst Baumeister#Sportlicher Leiter;admira'#9#9#9
+      'Philip Thonhauser#Präsident;admira'#9#9#9
+      '----------STU---------------------------'#9#9#9#9#9#9
+      'Christian Jauk#Präsident;graz'#9#9#9
+      'Günter Kreissl#Geschäftsführer Sport;graz'#9#9#9
+      'Thomas Tebbich#Geschäftsführer Wirtschaft;'#9#9#9
+      '----------WAC---------------------------'#9#9#9#9#9#9
+      'Dietmar Riegler#Präsident;pellets'#9#9#9
+      '----------LASK---------------------------'#9#9#9#9#9#9
+      'Siegmund Gruber#Präsident;linz'#9#9#9
+      'Jürgen Werner#Sportlicher Berater;linz'
+      '----------ALT---------------------------'#9#9#9#9#9#9
+      'Karlheinz Kopf#Präsident;altach'#9#9#9
+      'Christoph Längle#Geschäftsführer Wirtschaft;altach'#9#9#9#9
+      'Georg Zellhofer#Geschäftsführer Sport;altach'#9#9#9#9
+      '----------SVM---------------------------'#9#9#9#9#9#9
+      'Martin Pucher#Präsident;mattersburg'#9#9#9
+      'Franz Lederer#Sportlicher Leiter;mattersburg'#9#9#9
+      '----------SKN---------------------------'#9#9#9#9#9#9
+      'Gottfried Tröstl#Präsident;st_poelten '
+      'Andreas Blumauer#General Manager;st_poelten'#9#9#9
+      'Markus Schupp#Sportdirektor;st_poelten'
+      '----------FCW---------------------------'#9#9#9#9#9#9
+      'Alfred Hörtnagl#General Manager;wacker_innsbruck'#9#9#9
+      'Gerhard Stocker#Präsident;wacker_innsbruck'
+      '----------HTB---------------------------'#9#9#9#9#9#9
+      'Brigitte Annerl#Präsidentin;hartberg'#9#9#9
+      'Erich Korherr#Obmann;hartberg'#9
+      ''
+      ''
+      ''
+      ''
+      ''
+      #9#9#9
+      '----------SVR---------------------------'#9#9#9#9#9#9
+      'Franz Schiemer#Manager;ried'#9#9#9
+      'Roland Daxl#Vorstand Finanzen & Geschäftsführer;ried'#9#9#9
+      '---------ALU---------------------------'#9#9#9#9#9#9
+      'Hubert Nagel#Präsident;austria_lustenau'#9#9#9
+      'Ernemann Daniel#Manager;austria_lustenau'#9#9#9
+      '----------KSV---------------------------'#9#9#9#9#9#9
+      'Erwin Fuchs#Präsident;kapfenberg'#9#9#9
+      'Günter Krenn#Obmann;kapfenberg'#9#9
+      '----------WRN---------------------------'#9#9#9#9#9#9
+      'Katja Putzenlechner#Vorstand;wiener_neustadt'#9#9#9
+      'Thomas Puchegger#Vorstand;wiener_neustadt'#9#9#9
+      'Andreas Schicker#Sportdirektor;wiener_neustadt'#9#9#9
+      'Ralph Spritzendorfer#Kaufmännische Leitung;wiener_neustadt'#9#9#9
+      '----------FAC---------------------------'#9#9#9#9#9#9
+      'Leopold Schneider#Obmann;fac'#9#9#9
+      'Peter Eigl#Geschäftsführer;fac'#9#9#9
+      'Walter Brand#Geschäftsführer;fac'#9#9#9
+      'Christian Kirchengast#Prokurist;fac'#9#9#9
+      'Michael Schüch#Aufsichtsratsvorsitzender;fac'#9#9#9
+      '----------BWL---------------------------'#9#9#9#9#9#9
+      'Walter Niedermayr#Präsident;fc_linz'#9#9#9
+      'David Wimleitner#Vorstand Sport;fc_linz'#9#9#9
+      '----------WSG---------------------------'#9#9#9#9#9#9
+      'Diana Langes#Präsidentin;wattens'#9#9#9
+      'Stefan Köck#Manager Sport;wattens'#9#9#9
+      'Bernhard Letzner#Manager Finanzen;wattens'#9#9#9
+      #9#9)
+    Items.WideStrings_UTF7 = (
+      'Anton Pfeffer#Sky Experte;'
+      'Hans Krankl#Sky Experte;'
+      'Andreas Herzog#Sky Experte;'
+      'Walter Kogler#Sky Experte;'
+      'Michael Konsel#Sky Experte; '
+      'Alfred Tatar#Sky Experte;'
+      'Manuel Ortlechner#Sky Experte;'
+      'Heribert Weber#Sky Experte;'
+      ''
+      '----------RBS---------------------------'
+      'Christoph Freund#Sportdirektor;salzburg'#9#9#9
+      'Stephan Reiter#Gesch+AOQ-ftsf+APw-hrer;salzburg'#9#9#9
+      '----------SCR---------------------------'#9#9#9#9#9#9
+      'Michael Krammer#Pr+AOQ-sident;rapid_wien'#9#9#9
+      
+        'Christoph Peschek#Gesch+AOQ-ftsf+APw-hrer Wirtschaft;rapid_wien'#9 +
+        #9#9
+      'Fredy Bickel#Gesch+AOQ-ftsf+APw-hrer Sport;rapid_wien'#9#9#9
+      '----------FAK---------------------------'#9#9#9#9#9#9
+      'Wolfgang Katzian#Pr+AOQ-sident;austria_wien'#9#9
+      'Markus Kraetschmer#Vorstand;austria_wien'#9#9#9
+      'Ralf Muhr#Technischer Direktor;austria_wien'#9#9#9
+      '----------ADM--------------------------- '#9#9#9#9#9#9
+      'Amir Shapourzadeh#Manager;admira'#9#9
+      'Ernst Baumeister#Sportlicher Leiter;admira'#9#9#9
+      'Philip Thonhauser#Pr+AOQ-sident;admira'#9#9#9
+      '----------STU---------------------------'#9#9#9#9#9#9
+      'Christian Jauk#Pr+AOQ-sident;graz'#9#9#9
+      'G+APw-nter Kreissl#Gesch+AOQ-ftsf+APw-hrer Sport;graz'#9#9#9
+      'Thomas Tebbich#Gesch+AOQ-ftsf+APw-hrer Wirtschaft;'#9#9#9
+      '----------WAC---------------------------'#9#9#9#9#9#9
+      'Dietmar Riegler#Pr+AOQ-sident;pellets'#9#9#9
+      '----------LASK---------------------------'#9#9#9#9#9#9
+      'Siegmund Gruber#Pr+AOQ-sident;linz'#9#9#9
+      'J+APw-rgen Werner#Sportlicher Berater;linz'
+      '----------ALT---------------------------'#9#9#9#9#9#9
+      'Karlheinz Kopf#Pr+AOQ-sident;altach'#9#9#9
+      
+        'Christoph L+AOQ-ngle#Gesch+AOQ-ftsf+APw-hrer Wirtschaft;altach'#9#9 +
+        #9#9
+      'Georg Zellhofer#Gesch+AOQ-ftsf+APw-hrer Sport;altach'#9#9#9#9
+      '----------SVM---------------------------'#9#9#9#9#9#9
+      'Martin Pucher#Pr+AOQ-sident;mattersburg'#9#9#9
+      'Franz Lederer#Sportlicher Leiter;mattersburg'#9#9#9
+      '----------SKN---------------------------'#9#9#9#9#9#9
+      'Gottfried Tr+APY-stl#Pr+AOQ-sident;st_poelten '
+      'Andreas Blumauer#General Manager;st_poelten'#9#9#9
+      'Markus Schupp#Sportdirektor;st_poelten'
+      '----------FCW---------------------------'#9#9#9#9#9#9
+      'Alfred H+APY-rtnagl#General Manager;wacker_innsbruck'#9#9#9
+      'Gerhard Stocker#Pr+AOQ-sident;wacker_innsbruck'
+      '----------HTB---------------------------'#9#9#9#9#9#9
+      'Brigitte Annerl#Pr+AOQ-sidentin;hartberg'#9#9#9
+      'Erich Korherr#Obmann;hartberg'#9
+      ''
+      ''
+      ''
+      ''
+      ''
+      #9#9#9
+      '----------SVR---------------------------'#9#9#9#9#9#9
+      'Franz Schiemer#Manager;ried'#9#9#9
+      'Roland Daxl#Vorstand Finanzen & Gesch+AOQ-ftsf+APw-hrer;ried'#9#9#9
+      '---------ALU---------------------------'#9#9#9#9#9#9
+      'Hubert Nagel#Pr+AOQ-sident;austria_lustenau'#9#9#9
+      'Ernemann Daniel#Manager;austria_lustenau'#9#9#9
+      '----------KSV---------------------------'#9#9#9#9#9#9
+      'Erwin Fuchs#Pr+AOQ-sident;kapfenberg'#9#9#9
+      'G+APw-nter Krenn#Obmann;kapfenberg'#9#9
+      '----------WRN---------------------------'#9#9#9#9#9#9
+      'Katja Putzenlechner#Vorstand;wiener_neustadt'#9#9#9
+      'Thomas Puchegger#Vorstand;wiener_neustadt'#9#9#9
+      'Andreas Schicker#Sportdirektor;wiener_neustadt'#9#9#9
+      
+        'Ralph Spritzendorfer#Kaufm+AOQ-nnische Leitung;wiener_neustadt'#9#9 +
+        #9
+      '----------FAC---------------------------'#9#9#9#9#9#9
+      'Leopold Schneider#Obmann;fac'#9#9#9
+      'Peter Eigl#Gesch+AOQ-ftsf+APw-hrer;fac'#9#9#9
+      'Walter Brand#Gesch+AOQ-ftsf+APw-hrer;fac'#9#9#9
+      'Christian Kirchengast#Prokurist;fac'#9#9#9
+      'Michael Sch+APw-ch#Aufsichtsratsvorsitzender;fac'#9#9#9
+      '----------BWL---------------------------'#9#9#9#9#9#9
+      'Walter Niedermayr#Pr+AOQ-sident;fc_linz'#9#9#9
+      'David Wimleitner#Vorstand Sport;fc_linz'#9#9#9
+      '----------WSG---------------------------'#9#9#9#9#9#9
+      'Diana Langes#Pr+AOQ-sidentin;wattens'#9#9#9
+      'Stefan K+APY-ck#Manager Sport;wattens'#9#9#9
+      'Bernhard Letzner#Manager Finanzen;wattens'#9#9#9
+      #9#9)
+    ItemIndex = 3
+    DroppedWidth = 271
+    DropDownAutoSize = False
+    FixedStyle = False
+    SaveStyle = cbssStandard
+    Locked = False
+    EventDataNames = 'OnChange=tw_moderator_cb_Moderator1Change'
+  end
+end

@@ -1,0 +1,220 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+Sub pgMain_Btn_PreLoad_VizScenesClick (Sender)
+    'tw_init_graphic.Show
+    AllTV.TV__InitLayouts tw_init_graphic.rg_type.ItemIndex
+    Sender.Color        = clBtnFace
+    Sender.ColorFocused = clBtnFace
+    Sender.ColorMouseOver = clBtnFace
+     pg_settings.cb_fastinit.Checked =true
+
+    pgMain.Btn_ShowDSSotherGames.Down=false
+    tw_konferenz.bt_show_karusell.down=false
+    ResetDSSButton pgMain.Btn_ShowDSS,"Show DSS <11>"
+    ResetDSSButton pgmain.Btn_DSS_Zusatz,"Show add. Info"
+    ResetDSSButton tw_Blitzerg.bt_show_dss,"Show DSS"
+    ResetDSSButton tw_blitztab.bt_show_goals_dss,"DSS (Goals) 6/12"
+    ResetDSSButton tw_blitztab.bt_show_diff1,"DSS (Diff) 6/12"
+    ResetDSSButton tw_cards.bt_show_dss,"Show DSS"
+    ResetDSSButton tw_goalscorer.bt_show_dss,"Show DSS"
+    ResetDSSButton tw_Restprogramm.bt_show_dss,"Show DSS"
+    ResetDSSButton tw_team_stats2.bt_show_DSS_ADD,"In DSS(3)"
+End Sub
+
+
+sub pg_settings_bt_Erg4Click (Sender)
+  dim i
+    dim tn
+    dim Data : Set Data = CreateObject("Scripting.Dictionary")
+    dim k : k = 0
+    for i = 1 to pg_settings.grid.RowCount - 1
+        if Trim(pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Club"))) <> "" then
+            k = k + 1
+            tn= pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Club"))
+            Data.Item("NAME"  & k) = split(tn,"#")(0)
+            Data.Item("PLACE" & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "#"))
+            Data.Item("GAMES" & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Games"))
+            Data.Item("GOALS" & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Goals"))
+            Data.Item("DIFF"  & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Diff"))
+            Data.Item("PTS"   & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Pts"))
+            Data.Item("HL"    & k) =(pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "HL?")) = "X")
+            Data.Item("TREND" & k) = pg_settings.grid.Cells(i, GetColIdx(pg_settings.grid, "Trend"))
+            if Instr(tn,"#") then Data.Item("LOGO"  & k) = split(tn,"#")(1)
+        end if
+    next
+    'cc.sf.DebugText k
+    Data.Item("ITEMCOUNTTAB")  = k
+    Data.Item("OPT_TITLE")      = pg_settings.ed_opt_title.Text
+    Data.Item("OPT_ZUSATZ") = pg_settings.ed_opt_zusatz.Text
+    Hide_DSS
+    HideVorlaufLogos
+    AllTV.TV__VB_Standing20 Data
+    Set Data = Nothing
+end sub
+
+sub pg_settings_bt_Erg1Click (Sender)
+  dim i
+  dim tn,tn2
+    dim Data : Set Data = CreateObject("Scripting.Dictionary")
+    dim k : k = 0
+    for i = 1 to pg_settings.grid2.RowCount - 1
+        if Trim(pg_settings.grid2.Cells(i, GetColIdx(pg_settings.grid2, "Team 1"))) <> "" then
+            k = k + 1
+            tn=pg_settings.grid2.Cells(i, GetColIdx(pg_settings.grid2, "Team 1"))
+            Data.Item("NAME_A" & k) = split(tn,"#")(0)
+            tn2= pg_settings.grid2.Cells(i, GetColIdx(pg_settings.grid2, "Team 2"))
+            Data.Item("NAME_B" & k) = split(tn2,"#")(0)
+            Data.Item("RESULT" & k) = pg_settings.grid2.Cells(i, GetColIdx(pg_settings.grid2, "Result"))
+            Data.Item("HL"    & k) =(pg_settings.grid2.Cells(i, GetColIdx(pg_settings.grid2, "HL?")) = "X")
+            if Instr(tn,"#") then Data.Item("LOGO_A" & k) = split(tn,"#")(1)
+            if Instr(tn2,"#") then Data.Item("LOGO_B" & k) = split(tn2,"#")(1)
+        end if
+    next
+    Data.Item("ITEMCOUNT")  = k
+
+    Data.Item("OPT_TITLE")      = pg_settings.ed_opt_title1.Text
+    Data.Item("OPT_ZUSATZ") = pg_settings.ed_opt_zusatz1.Text
+
+
+    Hide_DSS
+    HideVorlaufLogos
+    AllTV.TV__VB_Erg20 Data
+    Set Data = Nothing
+end sub
+
+sub pg_settings_PageShow (Sender)
+  save_gui_settings
+    LAST_TABSHEET = Sender.Name
+
+end sub
+
+sub pg_settings_bt_standings1Click (Sender)
+  tw_standing_CL.Visible=true
+  tw_standing_CL.BringToFront
+
+end sub
+
+sub pg_settings_bt_virtualClick (Sender)
+tw_virtuell.Visible=true
+tw_virtuell.BringToFront
+
+end sub
+
+sub pg_settings_btn_resetClick (Sender)
+    dim i
+    for i = 0 to cc.SF.CCParentComponentCount - 1
+        if cc.sf.CCParentComponent(i).ComponentType = "TccToolWindow" then
+            cc.sf.CCParentComponent(i).left = 1
+            cc.sf.CCParentComponent(i).top = 1
+        end if
+    next
+end sub
+
+sub pg_settings_ed_ar_image_path_localClick (Sender)
+    dim dir : dir =  CC.Dialogs.DirDialog(Sender.Text)
+    if trim(dir) = "" then exit sub
+    Sender.Text = dir
+end sub
+
+sub pg_settings_btn_updatepathClick (Sender)
+    AllTV.TV__UpdatePath
+end sub
+
+sub pg_settings_rb_opmodeClick (Sender)
+    dim option1
+    dim option2
+    if Sender.Itemindex=2 then
+        option1=false
+        option2=false
+        tw_gfx_select.cb_prepare_ar.Checked=false
+
+    elseif Sender.Itemindex=1 then
+        option1=true
+        option2=true
+    else
+        option1=true
+        option2=false
+    end if
+    pgMain.bt_Opta_Refresh.Visible=option1
+    tw_gfx_select.cb_prepare_ar.Visible=option1
+    pgData.Visible=option1
+
+    tw_konferenz.bt_show_karusell.Visible=option2
+    tw_konferenz.cb_manual_karusell.Visible=option2
+    tw_konferenz.bt_nextkarusell.Visible=option2
+    tw_konferenz.bt_advertise4.Visible=option2
+    tw_konferenz.bt_hash_goel.Visible=option2
+    tw_konferenz.bt_hash_tut.Visible=option2
+    tw_konferenz.bt_twittervoting.Visible=option2
+    pgMain.Btn_ShowDSSotherGames.Visible=option2
+    
+    tw_manualLineupCrawl.bt_show4.Visible=option2
+    tw_manualLineupCrawl.bt_show5.Visible=option2
+end sub
+
+
+
+
+sub pg_settings_bt_defaultgfx_on_1Click (Sender)
+    If not AllTV.obj_TVList(0) is Nothing Then
+        AllTV.obj_TVList(0).TVContent=0
+        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSANFANG"
+    end if
+end sub
+
+sub pg_settings_bt_defaultgfx_off_1Click (Sender)
+   If not AllTV.obj_TVList(0) is Nothing Then
+        AllTV.obj_TVList(0).TVContent=2
+        AllTV.obj_TVList(0).SetDefaultGFX 1, false ,""
+    end if
+
+end sub
+
+sub pg_settings_bt_defaultgfx_on_2Click (Sender)
+    If not AllTV.obj_TVList(1) is Nothing Then
+        AllTV.obj_TVList(1).TVContent=0
+        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSANFANG"
+    end if
+end sub
+
+sub pg_settings_bt_defaultgfx_off_2Click (Sender)
+   If not AllTV.obj_TVList(1) is Nothing Then
+        AllTV.obj_TVList(1).TVContent=2
+        AllTV.obj_TVList(1).SetDefaultGFX 2, false ,""
+    end if
+end sub
+
+sub pg_settings_bt_defaultgfx_on_out_1Click (Sender)
+    If not AllTV.obj_TVList(0) is Nothing Then
+        AllTV.obj_TVList(0).TVContent=0
+        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSENDE"
+    end if
+end sub
+
+sub pg_settings_bt_defaultgfx_on_out_2Click (Sender)
+  If not AllTV.obj_TVList(1) is Nothing Then
+        AllTV.obj_TVList(1).TVContent=0
+        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSENDE"
+    end if
+
+end sub
+
+sub pg_settings_bt_VIZ_connections1Click (Sender)
+    tw_connectionpreset.Visible=true
+    tw_connectionpreset.BringToFront
+end sub
+
+sub pg_settings_btn_reset1Click (Sender)
+ tsp.SaveSelection
+    dim tID_a : TSP.SetTeamPos(TSP_A) : tID_a = TSP.GetSTeam(TSP_DB_ID)
+    dim tID_b : TSP.SetTeamPos(TSP_B) : tID_b = TSP.GetSTeam(TSP_DB_ID)
+    tsp.RestoreSelection
+    ' Ich hoffe das stürzt nicht ab!
+    TSP.ExecSQL("UPDATE PLAYERS_2 SET STATUS='X' WHERE (team_id='" & tID_a & "') or (team_id='" & tID_b & "')")
+    TSP.ExecSQL("UPDATE PLAYERS_2 SET DUMMY_2='0' WHERE (team_id='" & tID_a & "') or (team_id='" & tID_b & "')")
+end sub
+
+</script_body>
+</script>

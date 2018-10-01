@@ -1,0 +1,26 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_connectionpreset_btn_setClick (Sender)
+    if CC.TVConnections.GetConnectionCount>0 then
+        cc.TVConnections.Connections(0).Active=false
+        cc.TVConnections.Connections(0).Address=tw_connectionpreset.tb_adress_1.Text
+    end if
+    if CC.TVConnections.GetConnectionCount>1 then
+        cc.TVConnections.Connections(1).Active=false
+        cc.TVConnections.Connections(1).Address=tw_connectionpreset.tb_adress_2.Text
+    end if
+    if CC.TVConnections.GetConnectionCount>2 then
+        cc.TVConnections.Connections(2).Active=false
+        cc.TVConnections.Connections(2).Address=tw_connectionpreset.tb_adress_3.Text
+    end if
+    if CC.TVConnections.GetConnectionCount>3 then
+        cc.TVConnections.Connections(3).Active=false
+        cc.TVConnections.Connections(3).Address=tw_connectionpreset.tb_adress_4.Text
+    end if
+end sub
+
+</script_body>
+</script>

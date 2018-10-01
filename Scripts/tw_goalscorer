@@ -1,0 +1,96 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+function ceil(num)
+    if round(num) = num then
+        ceil = num
+    else
+        ceil = round(num + 0.5)
+    end if
+end function
+
+sub tw_goalscorer_bt_showClick (Sender)
+    dim Data : Set Data = CreateObject("Scripting.Dictionary")
+    Data.Item("NAME")      = tw_goalscorer.ed_name.Text
+    Data.Item("FNAME")      = tw_goalscorer.ed_fname.Text
+    Data.Item("LOGO")      = tw_goalscorer.cb_logo.Text
+    Data.Item("LINE1")     = tw_goalscorer.ed_info.text
+    Data.Item("ITEMCOUNT") = 1
+    Data.Item("NR")     = tw_goalscorer.ed_NR.text
+    Data.Item("SHOWHS")     = tw_goalscorer.cb_showHS.Checked
+Data.Item("SHOWHS")=false
+    ' auto Highlights
+    dim min : min = ceil(tsp.GetTime(TSP_Time) / 60000)
+    dim logo_a, logo_b
+    tsp.SaveSelection
+    TSP.SetTeamPos(TSP_A)
+    logo_a = TSP.GetSTeam(TSP_logo)
+    TSP.SetTeamPos(TSP_B)
+    logo_b = TSP.GetSTeam(TSP_logo)
+    tsp.RestoreSelection
+
+    'tw_highlights.list.Items.Add  min & "'|" & Data.Item("NAME") & "|" & "" & tsp.GetScore(0,TSP_A) & ":" & tsp.GetScore(0,TSP_B) & "|" & logo_a & "|" & logo_b
+    'tw_highlights.list.Items.Add  min & "'|" & Data.Item("NAME") & "|" & "" & tsp.GetScore(0,TSP_A) & ":" & tsp.GetScore(0,TSP_B) & "|" & logo_a & "|" & logo_b
+    tw_highlights.cb_player.text=Data.Item("FNAME") &" "& Data.Item("NAME")
+    tw_highlights.ed_info.text= tsp.GetScore(0,TSP_A) & ":" & tsp.GetScore(0,TSP_B)
+    tw_highlights.ed_min.text= min
+    tw_highlights.cb_logo_home.text=logo_a
+    tw_highlights.cb_logo_away.text=logo_b
+    call tw_highlights_bt_addClick(Sender)
+    Data.Item("ISWF")=(getGFXV =2)
+    'tw_highlights.list.Items.add tw_highlights.cb_player.Text, tw_highlights.ed_min.Text, logo1, logo2
+    AllTV.TV__BB_Player Data, false
+    set Data = nothing
+end sub
+
+sub tw_goalscorer_btn_eigentorClick (Sender)
+  tw_goalscorer.ed_info.Text="Eigentor"
+
+end sub
+
+sub tw_goalscorer_bt_show_dssClick (Sender)
+    if Sender.Down=true then
+        dim Data : Set Data = CreateObject("Scripting.Dictionary")
+        Data.Item("NAME")      = tw_goalscorer.ed_name.Text
+        Data.Item("FNAME")      = tw_goalscorer.ed_fname.Text
+        Data.Item("LOGO")      = tw_goalscorer.cb_logo.Text
+        Data.Item("LINE1")     = tw_goalscorer.ed_info.text
+        Data.Item("ITEMCOUNT") = 1
+        Data.Item("NR")     = tw_goalscorer.ed_NR.text
+        Data.Item("SHOWHS")     = tw_goalscorer.cb_showHS.Checked
+        ' auto Highlights
+        dim min : min = ceil(tsp.GetTime(TSP_Time) / 60000)
+        dim logo_a, logo_b
+        tsp.SaveSelection
+        TSP.SetTeamPos(TSP_A)
+        logo_a = TSP.GetSTeam(TSP_logo)
+        TSP.SetTeamPos(TSP_B)
+        logo_b = TSP.GetSTeam(TSP_logo)
+        tsp.RestoreSelection
+
+        tw_highlights.cb_player.text=Data.Item("FNAME") &" "& Data.Item("NAME")
+        tw_highlights.ed_info.text= tsp.GetScore(0,TSP_A) & ":" & tsp.GetScore(0,TSP_B)
+        tw_highlights.ed_min.text= min
+        tw_highlights.cb_logo_home.text=logo_a
+        tw_highlights.cb_logo_away.text=logo_b
+        call tw_highlights_bt_addClick(Sender)
+        'tw_highlights.list.Items.add tw_highlights.cb_player.Text, tw_highlights.ed_min.Text, logo1, logo2
+        setDSSButton Sender,"Hide DSS"
+        if not AllTV.TV__DSS_GoalScorer_Show(Data) then ResetDSSButton Sender,"Show DSS"
+        set Data = Nothing
+    else
+        AllTV.TV__DSS_GoalScorer_Hide
+        ResetDSSButton Sender,"Show DSS"
+    end if
+
+end sub
+
+sub tw_goalscorer_bt_hide_dssClick (Sender)
+  AllTV.TV__DSS_GoalScorer_Hide
+
+end sub
+
+</script_body>
+</script>

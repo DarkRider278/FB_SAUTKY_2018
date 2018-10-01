@@ -1,0 +1,63 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_cards_bt_showClick (Sender)
+    Dim Data : Set Data = CreateObject("Scripting.Dictionary")
+    Data.Item("NAME")      = tw_cards.ed_name.text
+    Data.Item("FNAME")      = tw_cards.ed_fname.text
+    Data.Item("LOGO")      = tw_cards.cb_logo.text
+    Data.Item("CARD_CODE") = tw_cards.rg_card.ItemIndex + 1
+    Data.Item("SUBLINE")   = tw_cards.ed_info.text
+    Data.Item("NR")     = tw_cards.ed_NR.text
+    Data.Item("SHOWHS")     = tw_cards.cb_showHS.Checked
+    AllTV.TV__BB_Card Data
+    set Data = Nothing
+end sub
+
+sub tw_cards_rg_cardClick (Sender)
+   dim anzahl
+    if tw_cards.rg_card.ItemIndex = 0 then ' Gelbe Karte
+        anzahl = 1 + cInt(EmptyToZero(TSP_get_info_from_db("PLAYERS_2", PLAYER_STATS_SEASON.item("Gelbe Karten"), "PLAYER_ID",  TSP.GetTPlayer(TSP_player_id))))
+        tw_cards.ed_info.Text = anzahl & ". Gelbe Karte"
+    else
+        anzahl = 1 + cInt(EmptyToZero(TSP_get_info_from_db("PLAYERS_2", PLAYER_STATS_SEASON.item("Ausschlüsse"), "PLAYER_ID",  TSP.GetTPlayer(TSP_player_id))))
+        tw_cards.ed_info.Text = anzahl & ". Ausschluss"
+    end if
+
+end sub
+
+sub tw_cards_cb_logoChange (Sender)
+  ' script tw_cards_cb_logoChange generated on 7/1/2016 at 11:15:39 AM
+  ' description of params:
+  ' Sender as IccComboBox
+
+end sub
+
+sub tw_cards_bt_show_dssClick (Sender)
+    if Sender.Down=true then
+        Dim Data : Set Data = CreateObject("Scripting.Dictionary")
+        Data.Item("NAME")      = tw_cards.ed_name.text
+        Data.Item("FNAME")      = tw_cards.ed_fname.text
+        Data.Item("LOGO")      = tw_cards.cb_logo.text
+        Data.Item("CARD_CODE") = tw_cards.rg_card.ItemIndex + 1
+        Data.Item("SUBLINE")   = tw_cards.ed_info.text
+        Data.Item("NR")     = tw_cards.ed_NR.text
+        Data.Item("SHOWHS")     = tw_cards.cb_showHS.Checked
+        setDSSButton Sender,"Hide DSS"
+        if not AllTV.TV__DSS_Karte_Show(Data) then ResetDSSButton Sender,"Show DSS"
+        set Data = Nothing
+    else
+        AllTV.TV__DSS_Karte_Hide
+        ResetDSSButton Sender,"Show DSS"
+    end if
+end sub
+
+sub tw_cards_bt_hide_dssClick (Sender)
+AllTV.TV__DSS_Karte_Hide
+
+end sub
+
+</script_body>
+</script>

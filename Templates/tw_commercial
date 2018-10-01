@@ -1,0 +1,143 @@
+object tw_commercial: TccToolWindow
+  Tag = 3
+  Caption = 'tw_commercial'
+  Color = clGray
+  ClientAreaHeight = 133
+  ClientAreaWidth = 230
+  DockPos = 1518
+  DockRow = 8
+  TabOrder = 7
+  Floating = False
+  ParentColor = False
+  Float = False
+  SavedAtRunTime = True
+  object lbl_comout: TptLabel
+    Left = 10
+    Top = 45
+    Width = 106
+    Height = 24
+    Caption = 'Last 35 min'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Locked = False
+  end
+  object lbl_comshow: TptLabel
+    Left = 160
+    Top = 105
+    Width = 12
+    Height = 24
+    Caption = '0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clYellow
+    Font.Height = -19
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Locked = False
+  end
+  object lbl_comout1: TptLabel
+    Left = 10
+    Top = 75
+    Width = 64
+    Height = 24
+    Caption = 'In DSS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Locked = False
+  end
+  object lbl_comout2: TptLabel
+    Left = 10
+    Top = 105
+    Width = 67
+    Height = 24
+    Caption = 'In GFX'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Locked = False
+  end
+  object lbl_comshowdss: TptLabel
+    Left = 160
+    Top = 78
+    Width = 12
+    Height = 24
+    Caption = '0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Locked = False
+  end
+  object cb_nexttime: TptCheckBox
+    Left = 10
+    Top = 15
+    Width = 156
+    Height = 17
+    Caption = 'Show Commercial Nexttime'
+    Color = clGray
+    TabOrder = 0
+    Locked = False
+    ColorFocused = clGray
+    ColorMouseOver = clGray
+  end
+  object btn_reset: TptButton
+    Left = 170
+    Top = 10
+    Width = 51
+    Height = 25
+    Caption = 'R'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ModalResult = mrNone
+    ParentFont = False
+    TabOrder = 1
+    ParentColor = False
+    Color = clRed
+    ColorMouseOver = clGray
+    ColorFocused = clGray
+    DrawFocusRect = False
+    MultiLineCaption = False
+    Alignment = alMiddleCenter
+    FontFocused.Charset = DEFAULT_CHARSET
+    FontFocused.Color = clWindowText
+    FontFocused.Height = -11
+    FontFocused.Name = 'MS Sans Serif'
+    FontFocused.Style = []
+    FontMouseOver.Charset = DEFAULT_CHARSET
+    FontMouseOver.Color = clWindowText
+    FontMouseOver.Height = -11
+    FontMouseOver.Name = 'MS Sans Serif'
+    FontMouseOver.Style = []
+    PreferFocused = False
+    FrameSize = 2
+    BackgroundTransparent = False
+    BackgroundStretch = True
+    BackgroundTransparentColor = clBlack
+    Down = False
+    DrawFocusBorder = True
+    Checkable = False
+    RightPressDown = False
+    StoreBackground = True
+    Hotkey.Shift = []
+    Hotkey.IsLong = False
+    Hotkey.Enabled = True
+    Locked = False
+    EventDataNames = 'OnClick=tw_commercial_btn_resetClick'
+  end
+end

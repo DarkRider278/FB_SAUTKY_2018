@@ -1,0 +1,105 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_highlights_bt_showClick (Sender)
+    AllTV.TV__BB_Highlight tw_highlights.ed_min.Text, tw_highlights.cb_player.Text, tw_highlights.ed_info.Text, tw_highlights.cb_logo_home.text, tw_highlights.cb_logo_away.text
+end sub
+
+sub tw_highlights_cb_playerKeyDown (Sender, Key, Shift)
+    Sender.UserData = ( (Key < 65) or (Key > 172) ) ' Steuerzeichen ignorieren
+end sub
+
+sub tw_highlights_cb_playerChange (Sender)
+exit sub
+    if (Sender.UserData = True) then exit sub
+    dim i,k
+    if len(Sender.Text) < 1 then exit sub
+    for i = 0 to Sender.Items.Count - 1
+        if Sender.text = left(sender.Items.Strings(i), len(Sender.Text)) then
+            k = len(Sender.Text)
+            Sender.Text      = sender.Items.Strings(i)
+            Sender.SelStart  = k
+            Sender.SelLength = len(Sender.Text) - k
+            exit for
+        end if
+    next
+end sub
+
+sub tw_highlights_bt_addClick (Sender)
+    dim m
+    m= tw_highlights.ed_min.Text
+    if m<> "" Then
+        if len(m)=2 then m="0"&m
+        m=m & " - "
+    end if
+    tw_highlights.DataBar1.SaveData tw_highlights.cb_logo_home.Text & " - " &tw_highlights.cb_logo_away.Text & " - " & m & tw_highlights.cb_player.Text & " - " &tw_highlights.ed_info.text
+    tw_highlights_BB_list_refresh()
+    'tw_highlights.list.Items.Add  tw_highlights.ed_min.Text & "|" & tw_highlights.cb_player.Text & "|" & tw_highlights.ed_info.Text & "|" & tw_highlights.cb_logo_home.text & "|" & tw_highlights.cb_logo_away.text
+end sub
+
+sub tw_highlights_BB_list_refresh()
+    dim i
+    tw_highlights.list.Items.Clear
+    for i = 0 to tw_highlights.DataBar1.DataItemCount -1
+    'cc.SF.DebugText i& " "&tw_highlights.DataBar1.DataItems(i)
+        tw_highlights.list.Items.Add tw_highlights.DataBar1.DataItems(i)
+    next
+end sub
+
+sub tw_highlights_listDblClick (Sender)
+    call tw_highlights_listClick (Sender)
+     'call tw_highlights_bt_showClick (Sender)
+     call tw_highlights_bt_show_cbClick(Sender)
+    'dim tmp : tmp = Sender.Items.Strings(Sender.itemindex)
+'    if tmp <> "" then
+'        tmp = split(tmp, "|")
+'        AllTV.TV__Highlight tmp(0), tmp(1), tmp(2), tmp(3), tmp(4)
+'    end if
+end sub
+
+sub tw_highlights_listKeyDown (Sender, Key, Shift)
+    if (Key = 46) and (Sender.itemindex <> -1) then
+        'Sender.items.Delete(sender.itemindex)
+    end if
+end sub
+
+sub tw_highlights_listClick (Sender)
+    if Sender.ItemIndex <> -1 then
+        tw_highlights.DataBar1.LoadData tw_highlights.list.Items.Strings(Sender.itemindex)
+    end if
+    'dim tmp : tmp = Sender.Items.Strings(Sender.itemindex)
+'    if tmp <> "" then
+'        tmp = split(tmp, "|")
+'        tw_highlights.ed_min.Text       = tmp(0)
+'        tw_highlights.cb_player.Text    = tmp(1)
+'        tw_highlights.ed_info.Text      = tmp(2)
+'        tw_highlights.cb_logo_home.text = tmp(3)
+'        tw_highlights.cb_logo_away.text = tmp(4)
+'    end if
+end sub
+
+sub tw_highlights_ComboBox1Change (Sender)
+  tw_highlights.ed_info.Text = tw_highlights.cb_template.Text
+
+end sub
+
+sub tw_highlights_bt_show_cbClick (Sender)
+    AllTV.TV__CB_Highlight tw_highlights.ed_min.Text, tw_highlights.cb_player.Text, tw_highlights.ed_info.Text, tw_highlights.cb_logo_home.text, tw_highlights.cb_logo_away.text, tw_highlights.cb_rechts.Checked
+end sub
+
+sub tw_highlights_DataBar1BeforeDataDelete (Sender, ComboText)
+    if tw_highlights.list.Items.IndexOf(ComboText) <> -1 then
+        tw_highlights.list.Items.Delete(tw_highlights.list.Items.IndexOf(ComboText))
+    end if
+end sub
+
+sub tw_highlights_DataBar1BeforeDataSave (Sender, ComboText)
+    if tw_highlights.list.Items.IndexOf(ComboText) = -1 then
+        tw_highlights.list.Items.add ComboText
+    end if
+end sub
+
+</script_body>
+</script>

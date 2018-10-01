@@ -1,0 +1,2855 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+Class cls_Grafikaufrufe
+   Dim obj_TVList(), bConnFound, i
+   Public int_TVCount
+ 
+
+    Private Sub Class_Initialize
+       TV_InitConnections
+      ' Watermark
+       'get_Team_Logos
+       'getplayerlogo
+       'TV__UpdatePath
+    End Sub
+
+    Private Sub Class_Terminate
+
+    End Sub
+
+    public sub Get_Team_Logos()
+       dim flist,k
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If obj_TVList(i).TVContent > 0 Then
+                 flist = obj_TVList(i).get_available_logos
+                 exit for
+              End If
+           End If
+       Next
+       on error resume next
+       pgMain.ed_logo.Items.clear
+       tw_cards.cb_logo.Items.Clear
+       tw_goalscorer.cb_logo.Items.Clear
+       tw_highlights.cb_logo_away.Items.clear
+       tw_highlights.cb_logo_home.Items.clear
+       tw_player_compare.cb_logo1.Items.clear
+       tw_player_compare.cb_logo2.Items.clear
+       tw_megafacts.cb_name1_new.Items.clear
+       tw_megafacts.cb_name2_new.Items.clear
+       tw_twittervoting.cb_name1.Items.clear
+       tw_twittervoting.cb_name2.Items.clear
+       tw_ibspieler.cb_name1.Items.clear
+       tw_virtuell.cb_logo_1.Items.clear
+       tw_virtuell.cb_logo_2.Items.clear
+       tw_freetext.ed_logo.Items.Clear
+       for k = 0 to Ubound(flist)
+           pgMain.ed_logo.Items.add flist(k) 'check_logo(flist(k))    ' Fügt das Team Logo meiner Liste hinzu (pg_logos)
+           tw_cards.cb_logo.Items.add flist(k)
+           tw_goalscorer.cb_logo.Items.add flist(k)
+           tw_highlights.cb_logo_away.Items.add flist(k)
+           tw_highlights.cb_logo_home.Items.add flist(k)
+           tw_player_compare.cb_logo1.Items.Add flist(k)
+           tw_player_compare.cb_logo2.Items.Add flist(k)
+           tw_ibspieler.cb_name1.Items.Add flist(k)
+           tw_megafacts.cb_name1_new.Items.Add flist(k)
+            tw_megafacts.cb_name2_new.Items.Add flist(k)
+            tw_twittervoting.cb_name1.Items.Add flist(k)
+            tw_twittervoting.cb_name2.Items.Add flist(k)
+            tw_virtuell.cb_logo_1.Items.Add flist(k)
+            tw_virtuell.cb_logo_2.Items.Add flist(k)
+             tw_freetext.ed_logo.Items.Add flist(k)
+         next
+    end sub
+
+    sub Get_Player_Fotos
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 fList = obj_TVList(i).get_available_playerfotos()
+                 exit for
+              End If
+           End If
+        Next
+        on error resume next
+        tw_player_compare.cb_foto1.Items.Clear
+        tw_player_compare.cb_foto2.Items.Clear
+        tw_megafacts.cb_foto.Items.Clear
+        tw_megafacts.cb_foto_2.Items.Clear
+        tw_ibspieler.cb_foto.Items.Clear
+        for i = 0 to UBound(fList)
+            'cc.SF.DebugText fList(i)
+            tw_player_compare.cb_foto1.Items.add fList(i)
+            tw_player_compare.cb_foto2.Items.add fList(i)
+            tw_megafacts.cb_foto.Items.add  fList(i)
+            tw_megafacts.cb_foto_2.Items.add  fList(i)
+            tw_ibspieler.cb_foto.Items.add  fList(i)
+        next
+        on error goto 0
+    end sub
+    
+     sub Get_Fotos_Virtual
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 fList = obj_TVList(i).get_available_fotosvirtual()
+                 exit for
+              End If
+           End If
+        Next
+        on error resume next
+        tw_virtuell.cb_img_1.Items.Clear
+        tw_virtuell.cb_img_2.Items.Clear
+        for i = 0 to UBound(fList)
+            tw_virtuell.cb_img_1.Items.add fList(i)
+            tw_virtuell.cb_img_2.Items.add fList(i)
+        next
+        on error goto 0
+    end sub
+    
+    sub Get_Logo_Div
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 fList = obj_TVList(i).get_available_logodiv()
+                 exit for
+              End If
+           End If
+        Next
+        on error resume next
+        tw_xpromo.cb_img.Items.Clear
+        for i = 0 to UBound(fList)
+            tw_xpromo.cb_img.Items.add fList(i)
+        next
+        on error goto 0
+    end sub
+    
+    public sub Watermark
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If obj_TVList(i).TVContent > 0 Then
+                 obj_TVList(i).Watermark
+              End If
+           End If
+       Next
+    end sub
+    
+    public sub TV__Kill_Bill
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If obj_TVList(i).TVContent > 0 Then
+                 obj_TVList(i).Kill_Bill
+              End If
+           End If
+       Next
+    end sub
+
+    'Globale Clearroutine
+    Public Sub TV__ClearAll
+        dim bConnFound, i,isani
+        isani=false
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If obj_TVList(i).TVContent > 0 Then
+                    bConnFound = True
+                    isani=isani or obj_TVList(i).ClearAll
+                End If
+            End If
+        Next
+        if isani then
+            CC.SF.ShowSplashForm "Waiting for animation to finish...", clGreen
+            CC.SF.Wait 2000
+            CC.SF.HideSplashForm
+        end if
+        If bConnFound Then
+           'CC.SF.Wait 1000
+            For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                    If obj_TVList(i).TVContent > 0 Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                End If
+            Next
+        End If
+    End Sub
+
+
+
+    Public function TV__Anzeigen(ByVal InMessage)
+       dim strMsg, i
+       if tw_gfx_select.cb_prepare_ar.Checked=true then
+            sPrompt = chr(13) & chr(13) & "Enter Scenename"
+            sTitle = "Enter Scenename"
+            dim sn
+            For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                    sn=obj_TVList(i).s_ARScene
+                End If
+            Next
+            sn = InputBox(sPrompt,sTitle,sn,200,200)
+            if sn=false then
+            else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).SaveAR(sn)
+                    End If
+                Next
+            end if
+            exit function
+        end if
+        if pg_settings.rb_thumbsnail.ItemIndex=2  then
+                sPrompt = chr(13) & chr(13) & "Enter PNG Name"
+            sTitle = "Enter Name"
+            For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                    sn=TimeStampDate&"_"&obj_TVList(i).s_pngscene
+                End If
+            Next
+            sn = InputBox(sPrompt,sTitle,sn,200,200)
+            if sn=false then
+            else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(0).ExportPNG(sn)
+                    End If
+                Next
+            end if
+            exit function
+        end if
+       If InMessage Then
+          strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, CC.DEFS.ProjectName)
+       Else
+          strMsg = vbOk
+       End If
+
+       If strMsg = vbOk Then
+          bConnFound = False
+          For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                   bConnFound = True
+                   obj_TVList(i).Anzeigen
+                end if
+            End If
+          Next
+
+          If bConnFound Then
+             CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+             CC.SF.Wait 2500
+             cc.SF.HideSplashForm
+          End If
+          TV__Anzeigen = true
+       Else
+          For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    obj_TVList(i).ClearPreview
+                end if
+            End If
+          Next
+          TV__Anzeigen = false
+       End If
+    End function
+
+
+    Public Function TV_InitConnections()
+        dim i, intConnIdx
+        ReDim obj_TVList(3)
+        int_TVCount = -1
+
+        For i = 1 to 4
+            Set obj_TVList(i-1) = Nothing
+            intConnIdx = pnConnections.ComponentByName("cmb_Conn_" & i).ItemIndex      'ausgewählte Maschine
+            If intConnIdx <> - 1 Then
+              if intConnIdx < cc.TVConnections.GetConnectionCount then
+                  If CC.TVConnections.Connections(intConnIdx).Active Then             'Verbindung Activ?
+                      If pnConnections.ComponentByName("opt_Use" & CStr(i)).Checked Then   'Verbindung verwenden?
+                         int_TVCount = int_TVCount + 1
+
+                         select case i
+                            case 1      Set obj_TVList(int_TVCount) = New cls__TV_VIZ_SKY_AUSTRIA_2018  'Sky Feed
+                            case 2      Set obj_TVList(int_TVCount) = New cls__TV_VIZ_SKY_AUSTRIA_2018  'World Feed
+                         '   case 2      Set obj_TVList(int_TVCount) = New cls__TV_VIZ_SKY_AUSTRIA_2013_EL
+                         end select
+                         obj_TVList(int_TVCount).init(i)
+                         'Set obj_TVList(int_TVCount) = New cls__TV_VIZ_SKY_AUSTRIA_2016
+                         Set obj_TVList(int_TVCount).TVObj  = CC.TVConnections.Connections(intConnIdx).ScriptInterface
+                         obj_TVList(int_TVCount).TVContent  = 2'pnConnections.ComponentByName("cmb_ConnType_" & CStr(i)).ItemIndex
+                         obj_TVList(int_TVCount).TVLanguage = pnConnections.ComponentByName("cmb_Lang_" & CStr(i)).ItemIndex
+                      End If
+                  End If
+               end if
+            End If
+        Next
+
+        If int_TVCount < 0 Then
+            DbgErr "No proper and connected Viz provider found."
+            TV_InitConnections = False
+        else
+            'TV__InitLayouts
+            Get_Team_Logos
+            Get_Player_Fotos
+            TV__UpdatePath
+            TV_InitConnections = True
+        End If
+    End Function
+
+    Public Sub TV__InitLayouts(machine_type)
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              bConnFound = True
+              obj_TVList(i).Init_Layouts machine_type
+           End If
+       Next
+    End Sub
+    
+    '********************** SPIELER BAUCHBINDE *********************************
+    ' 1, 2 oder 3 Zeilig mit Wechsel Animation
+    ' optional LINE{1,..,ITEMCOUNT}
+    Public sub TV__BB_Player(ByRef Data, ByVal b3Zeilig)
+        dim bConnFound : bConnFound = False
+        dim i, k
+        dim o_Data : Set o_Data = CreateObject("Scripting.Dictionary")
+
+        o_data.Item("NAME")     = Data.Item("NAME")
+        o_data.Item("FNAME")     = Data.Item("FNAME")
+        o_data.Item("LOGO")     = Data.Item("LOGO")
+        o_data.Item("NR")     = Data.Item("NR")
+        o_data.Item("SHOWHS")     = Data.Item("SHOWHS")
+        o_data.Item("BBTYP")     = Data.Item("BBTYP")
+        o_data.Item("ISWF")=Data.Item("ISWF")
+        k = 0
+        do
+            k = k + 1
+            o_data.Item("SUBLINE1") = Data.Item("LINE" & k)     ' optionale 2. Zeile
+            if b3Zeilig then
+                o_data.Item("SUBLINE2") = Data.Item("LINE" & k + 1) ' optionale 3. Zeile
+                k = k + 1
+            end if
+
+            if i = 0 then
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                         bConnFound = True
+                         obj_TVList(i).BB_Player o_data, false
+                      End If
+                   End If
+                Next
+                If bConnFound Then AllTV.TV__Anzeigen True
+            else
+                bConnFound = false
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                         bConnFound = True
+                         obj_TVList(i).BB_Player o_data, True
+                      End If
+                   End If
+                Next
+                IF bConnFound THEN
+                   IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                        AllTV.TV__Anzeigen False
+                   END IF
+                END IF
+            END IF
+        loop while k < Data.Item("ITEMCOUNT")
+    end sub
+
+    '**************************** PLAYER STATS *********************************
+    ' 1 - 3 Statistiken
+    Public sub TV__BB_PlayerStats(ByRef Data)
+         For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_PlayerStats Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(true) and Data.Item("NEBENEINANDER") then     ' Spezial Fall
+                'For i = 0 to int_TVCount    ' HIGHLIGHTS
+'                    If not obj_TVList(i) is Nothing Then
+'                        If not obj_TVList(i).TVContent = 0 Then
+'                            obj_TVList(i).HL Data
+'                        End If
+'                    End If
+'                Next
+                 HL Data
+            end if
+       end if
+    end sub
+
+    private sub HL(ByRef Data)
+        dim i
+        for i = 1 to 6
+            if Data.Item("HL" & i) then
+                For j = 0 to int_TVCount
+                    If not obj_TVList(j) is Nothing Then
+                        If not obj_TVList(j).TVContent = 0 Then
+                            obj_TVList(j).HL2 "H" & i
+                        End If
+                    End If
+                Next
+                CC.SF.Wait 100
+            end if
+        next
+    end sub
+    '********************** TRENNER / ÜBERBLENDUNG *****************************
+    ' 1 - 4 Animationen im Moment
+    Public sub TV__Trenner(ByVal animation)
+        dim i
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 obj_TVList(i).Trenner animation
+              End If
+           End If
+        Next
+        if animation = "1" then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral Trenner"
+    end sub
+    
+
+    Public sub TV__DSS_Sponsor_Hide()
+        dim i
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 obj_TVList(i).DSS_Sponsor_Hide
+              End If
+           End If
+        Next
+    end sub
+    
+    '********************** CRAWL **********************************************
+    ' logo = optional, title = optional
+    Public Sub TV__BB_Crawl(ByVal title, ByVal text, ByVal logo, ByVal bLoop, ByVal speed)
+       dim i
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Crawl title, text, logo, bLoop, speed
+
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+    '**************** CRAWL OF TEAM PLAYERS LINEUP  ****************************
+    Public Sub TV__BB_LineupCrawl(ByRef Data)
+       dim i
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_LineupCrawl Data
+
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__BB_LineupCrawlSmall(ByRef Data)
+       dim i
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_LineupCrawlSmall Data
+
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__VB_LineupNum(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_LineupNum Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+
+    '******************** CRAWL ADMIRAL WERBUNG ********************************
+    Public Sub TV__AdmiralCrawl(msg)
+       dim i
+       bConnFound = False
+       call SetIniOption("ADMIRAL_CRAWL", msg)
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).AdmiralCrawl msg
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral Crawl " & msg
+        end if
+    End Sub
+    
+    '******************** ADMIRAL INSERT WERBUNG *******************************
+    Public Sub TV__AdmiralInsert()
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).AdmiralInsert
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral Insert"
+       end if
+    End Sub
+    
+    '******************** ADMIRAL EUROLEAGUE INSERT WERBUNG *******************************
+    Public Sub TV__Admiral_EL_Insert(id)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Admiral_EL_Insert id
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral EL Insert"
+       end if
+    End Sub
+
+   '******************** KURIER SkyScraper *******************************
+    Public Sub TV__Kurier_SkyScraper(nr)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Kurier_SS nr
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Kurier SkyScraper #" & nr
+       end if
+    End Sub
+    
+    Public Sub TV__FreeGfx(gfx)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FreeGfx gfx
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Free GFX #" & gfx
+       end if
+    End Sub
+
+    '******************** ADMIRAL SKYSKRAPER / WETTQUOTEN **********************
+    ' dim quoten(2)
+    Public Sub TV__Skyscraper(name1, name2, quoten, LFrame)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Skyscraper name1, name2, quoten, LFrame
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then
+                if LFrame then
+                    pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral L-Frame"
+                    cc.sf.Wait 8000, "Warten..."      ' Die Animation soll ursprünglich genau 8 Sekunden drin bleiben. Das haben wir aber im Grafik Archiv geändert. Sie muss nun manuell Raus
+                else
+                    pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral SkyScraper"
+                end if
+            end if
+        end if
+    End Sub
+    
+    Public Sub TV__Quoten(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Quoten Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then
+                    pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Admiral Quoten"
+            end if
+        end if
+    End Sub
+
+
+    '******************** SKY BUTTON WERBUNG ***********************************
+    Public Sub TV__SkyButton()
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).SkyButton
+              End If
+           End If
+       Next
+       If bConnFound Then
+        if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " SKY Button"
+       end if
+    End Sub
+
+    '******************** DEBUG - FÜR TESTZWECKE *******************************
+    Public Sub Debug_Test()
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Debug_Test
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+    '******************** SKY MEDIATHEK WERBUNG ********************************
+    Public Sub TV__SkyMediathek()
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).SkyMediathek
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " SKY Mediathek"
+        end if
+    End Sub
+
+    '*************************** TWITTER ***************************************
+    Public Sub TV__BB_SOCIAL(head, subline,subline2)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).bb_Social head, subline,subline2
+              End If
+           End If
+       Next
+       If bConnFound Then
+        if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Twitter BB"
+       end if
+    End Sub
+
+    '*********************** COMMENTATOR BB ************************************
+    Public Sub TV__BB_Comment(ByVal name, ByVal foto,ByVal sl,ByVal fname)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Comment name, foto ,sl,fname
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__BB_Comment2(ByVal name, ByVal foto,ByVal sl,ByVal name2, ByVal foto2,ByVal sl2,ByVal fname,ByVal fname2)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Comment2 name, foto ,sl,name2,foto2,sl2,fname,fname2
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+
+    '*********************** MATCH OPENING *************************************
+    Public Sub TV__MatchBB(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).MatchBB Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+
+    '******************** FULL PAGE OPENING GRAPHIC ****************************
+    Public Sub TV__VB_Opening(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Opening Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            TV__Anzeigen True
+            CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+            CC.SF.WaitAsyn 3000         ' Bei der GRafik darfs ein bisschen länger sein
+            cc.SF.HideSplashForm
+       end if
+    End Sub
+    
+
+    Public Sub TV__Nachspielzeit(time)
+       dim i
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+
+                 obj_TVList(i).DSS_Nachspielzeit time
+              End If
+           End If
+       Next
+    End Sub
+    
+    
+    '******************** FULL PAGE RESERVE PLAYER *****************************
+    Public Sub TV__vbReserve(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).vbReserve Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    '************ FULL PAGE BUNDESLIGA STANDING / TODAY'S RESULTS **************
+    Public Sub TV__VB_Standing(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Standing Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if not TV__Anzeigen(True) then exit sub
+            CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+            CC.SF.Wait 1000
+            'For i = 0 to int_TVCount
+'               If not obj_TVList(i) is Nothing Then
+'                  If not obj_TVList(i).TVContent = 0 Then
+'                        obj_TVList(i).vbStanding_HL Data
+'                  End If
+'               End If
+'            Next
+            vbStanding_HL Data
+            cc.sf.HideSplashForm
+            ' Zur nächsten Seite wechseln!
+            if (Data.Item("ANIM_TYPE") = 2) or (Data.Item("ANIM_TYPE") = 3) then
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                            obj_TVList(i).vbStanding_Preview Data
+                      End If
+                   End If
+                Next
+                IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                                    obj_TVList(i).Continue "Default"
+                          End If
+                       End If
+                    Next
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 1000
+                    'For i = 0 to int_TVCount
+'                       If not obj_TVList(i) is Nothing Then
+'                          If not obj_TVList(i).TVContent = 0 Then
+'                                if tw_Layout.layout.ItemIndex <> 2 then obj_TVList(i).vbStanding_HL Data
+'                          End If
+'                       End If
+'                    Next
+                    if tw_Layout.layout.ItemIndex <> 2 then vbStanding_HL Data
+                    cc.sf.HideSplashForm
+                end if
+            end if
+       end if
+    End Sub
+    
+    private sub vbStanding_HL(ByRef Data)
+        dim i,j
+        select case Data.Item("ANIM_TYPE")
+            case 1,2,3,5
+                for i = 1 to 5
+                    if Data.Item("THL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+                for i = 1 to 10
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding_HL2 "T" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+            case 4
+                for i = 1 to 10
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+        end select
+    end sub
+    
+    Public Sub TV__VB_Standing20(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Standing20 Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if not TV__Anzeigen(True) then exit sub
+            CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+            CC.SF.Wait 1000
+            'For i = 0 to int_TVCount
+'               If not obj_TVList(i) is Nothing Then
+'                  If not obj_TVList(i).TVContent = 0 Then
+'                        obj_TVList(i).vbStanding20_HL Data,1
+'                  End If
+'               End If
+'            Next
+            vbStanding20_HL Data,1
+            cc.sf.HideSplashForm
+            ' Zur nächsten Seite wechseln!
+            if Data.Item("ITEMCOUNTTAB") >10 then
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                            obj_TVList(i).vbStanding_Preview Data
+                      End If
+                   End If
+                Next
+                IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                              obj_TVList(i).Continue "WECHSEL"
+                          End If
+                       End If
+                    Next
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 1000
+                    'For i = 0 to int_TVCount
+'                       If not obj_TVList(i) is Nothing Then
+'                          If not obj_TVList(i).TVContent = 0 Then
+'                                obj_TVList(i).vbStanding20_HL Data,2
+'                          End If
+'                       End If
+'                    Next
+                    vbStanding20_HL Data,2
+                    cc.sf.HideSplashForm
+                end if
+            end if
+       end if
+    End Sub
+    
+    private sub vbStanding20_HL(ByRef Data,side)
+        dim i
+        dim count,hcount
+        count = Data.Item("ITEMCOUNTTAB")
+        hcount=count
+        if count>10 then
+            page2=true
+            hcount=Ceil(count/2.0)
+        end if
+        select case side
+            case 1
+                for i = 1 to hcount
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding20_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+            case 2
+                DIM k:k=10
+                for i = hcount to hcount*2
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding20_HL2 "H" & k
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                    k=k+1
+                next
+        end select
+    end sub
+    
+    Public Sub TV__VB_Erg20(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Erg20 Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if not TV__Anzeigen(True) then exit sub
+            CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+            CC.SF.Wait 1000
+            For i = 0 to int_TVCount
+               If not obj_TVList(i) is Nothing Then
+                  If not obj_TVList(i).TVContent = 0 Then
+                        obj_TVList(i).vbErg20_HL Data,1
+                  End If
+               End If
+            Next
+
+            cc.sf.HideSplashForm
+            ' Zur nächsten Seite wechseln!
+            if Data.Item("ITEMCOUNT") >10 then
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                            obj_TVList(i).vbStanding_Preview Data
+                      End If
+                   End If
+                Next
+                IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                              obj_TVList(i).Continue "WECHSEL"
+                          End If
+                       End If
+                    Next
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 1000
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                                obj_TVList(i).vberg20_HL Data,2
+                          End If
+                       End If
+                    Next
+                    cc.sf.HideSplashForm
+                end if
+            end if
+       end if
+    End Sub
+    
+    private sub vbErg20_HL(ByRef Data,side)
+        dim i
+        dim count,hcount
+        count = Data.Item("ITEMCOUNT")
+        hcount=count
+        if count>10 then
+            page2=true
+            hcount=Ceil(count/2.0)
+        end if
+        select case side
+            case 1
+                for i = 1 to hcount
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbErg20_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+            case 2
+                DIM k:k=10
+                for i = hcount to hcount*2
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbErg20_HL2 "H" & k
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                    k=k+1
+                next
+        end select
+    end sub
+    
+    '*********************** TV PROGAMM HINWEISE *******************************
+    Public Sub TV__TVTipps(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).TVTipps Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+
+    '********************* SPIELSTAND BB MIT TORSCHÜTZEN ***********************
+    Public Sub TV__BB_Score(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Score Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            TV__Anzeigen True
+            dim k
+            'if getGFXV = 1 then
+                for k = 2 to (1+Data.Item("ITEMCOUNT")) / 2'1 to Data.Item("ITEMCOUNT") / 2
+                   IF msgBox("Change Scorer?", vbOkCancel, "QUESTION") = vbOK THEN
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                            if getGFXV = 2 then
+                                obj_TVList(i).Continue "Default"
+                            else
+                                obj_TVList(i).Continue "WECHSEL"
+                            end if
+                          end if
+                       end if
+                    next
+                   END IF
+                next
+            'end if
+       end if
+    End Sub
+
+
+    '******************** FACEBOOK LINK OBEN ***********************************
+    Public Sub TV__Show_FB_Link()
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FBButton
+              End If
+           End If
+       Next
+       If bConnFound Then
+        if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Facebook Button"
+       end if
+    End Sub
+    
+    '******************** FACEBOOK BB UNTEN ***********************************
+    Public Sub TV__Show_FB_BB(head, subline)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FB_BB head, subline
+              End If
+           End If
+       Next
+       If bConnFound Then
+        if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Facebook BB"
+       end if
+    End Sub
+    
+    '******************** TWITTER CRAWL **********************************
+    Public Sub TV__Crawl_Social(msg, hashtag, speed,logo)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Crawl_Social msg, hashtag, speed ,logo
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & logo &"  Crawl"
+        end if
+    End Sub
+    
+
+    '******************** VARTAFEL SZENEN **************************************
+    Public Sub TV__Vartafel(scene)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Vartafel scene
+              End If
+           End If
+       Next
+       If bConnFound Then
+             TV__Anzeigen True
+             while msgBox("Continue? Abort if graphic is done...", vbOkCancel, "QUESTION") = vbOK
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                         obj_TVList(i).Continue "Default"
+                      end if
+                   end if
+                next
+             wend
+       end if
+    End Sub
+    
+    
+    '******************** FACEBOOK FRAGE (BB) **********************************
+    Public Sub TV__FB_Frage(msg, msg2)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FB_Frage_BB msg, msg2
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Facebook Crawl"
+       end if
+    End Sub
+
+    '******************* FACEBOOK FREETEXT TABELLE *****************************
+    Public Sub TV__FB_Freetable(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FB_FreeTable Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+    '******************* SPIELER STRAFKARTEN BB *******************************
+    ' card_code: 1 = gelb, 2 = gelbrot, 3 = rot
+    ' Subline ist optional
+    Public Sub TV__BB_Card(byRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Card Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+    '******************* EINFACHER FREETEXT ************************************
+    ' Type:  1 = VB, 2 = IB, 3 = FB
+    Public Sub TV__VB_IB_BB_FreeText(ByRef Data,msg)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_IB_BB_FreeText Data,msg
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+
+    '********************* HIGHLIGHTS INFOBOX **********************************
+    '* NAME ist Optional
+    Public Sub TV__BB_Highlight(min, name, info, logo1, logo2)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Highlight min, name, info, logo1, logo2
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__CB_Highlight(min, name, info, logo1, logo2, rechts)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).CB_Highlight min, name, info, logo1, logo2,rechts
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    '************************** INFOBOX ****************************************
+    '* Subline ist Optional
+    Public Sub TV__IB_Infobox(title, subtitle, subtitle2, subtitle3)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_Infobox title, subtitle, subtitle2, subtitle3
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+
+    Public Sub TV__HashTag(ByVal bTUT, ByVal bLinks)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Hashtag bTUT, bLinks
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+
+    '************************** ANRUF QUIZ *************************************
+    Public Sub TV__Quiz(ByRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Quiz_BB Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+    '************************** REFEREE BB *************************************
+    ' Speichert den aktuellen Referee Namen direkt mal mit
+    Public Sub TV__BB_Referee(ByRef Data)
+       'if Trim(name) = "" then exit sub
+       'Call SetIniOption("LAST_REFEREE", name)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_Referee Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+       if getGFXV =2 then
+            IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                         obj_TVList(i).Continue "WECHSEL"
+                   end if
+                next
+           END IF
+           IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                         obj_TVList(i).Continue "WECHSEL"
+                   end if
+                next
+           END IF
+       end if
+
+    End Sub
+
+    '************************** MEGAFACTS  *************************************
+    Public Sub TV__VB_Megafacts(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_MegaFacts Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__IB_Spieler(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_Spieler Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__IB_Megafacts(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_MegaFacts Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+
+
+    
+    '*********************** Torwand Schiessen Tabelle  ************************
+    Public Sub TV__Show_Torwand_Table(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Torwand_Table Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    '*********************** Torwand Schiessen BB ******************************
+    Public Sub TV__Show_Torwand_BB(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Torwand_BB Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen false    ' Hier muss ich die Preview Abfrage mal abklemmen
+    End Sub
+
+    '***************************** RESTPROGRAMM ********************************
+    Public Sub TV__VB_IB_RestProgramm(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_IB_RestProgramm Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+    End Sub
+
+    Public function TV__DSS_RestProgramm_Show(ByRef Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    bConnFound = True
+                    obj_TVList(i).DSS_RestProgramm_Show Data
+                End If
+            End If
+        Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+           If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        obj_TVList(i).PlayFL("RESTPROGRAMM")
+                    End If
+                Next
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_RestProgramm_Show=true
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_RestProgramm_Show=false
+           End If
+       end if
+    End function
+    
+    public Sub  TV__DSS_RestProgramm_Hide()
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                obj_TVList(i).ContinueFL("RESTPROGRAMM")
+            End If
+        Next
+    end Sub
+    
+    Public Function TV__DSS_Stat_Show(ByRef Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    bConnFound = True
+                    obj_TVList(i).DSS_STAT_Show Data
+                End If
+            End If
+        Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+           If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        obj_TVList(i).PlayFL("STAT")
+                    End If
+                Next
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_Stat_Show=true
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_Stat_Show=false
+           End If
+       end if
+    End Function
+
+    public Sub  TV__DSS_Stat_Hide()
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                obj_TVList(i).ContinueFL("STAT")
+            End If
+        Next
+    end Sub
+    
+    Public function TV__DSS_Karte_Show(ByRef Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    bConnFound = True
+                    obj_TVList(i).DSS_Karte_Show Data
+                End If
+            End If
+        Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+           If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        obj_TVList(i).PlayFL("KARTE")
+                    End If
+                Next
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_Karte_Show=true
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_Karte_Show=false
+           End If
+       end if
+    End function
+
+    public Sub  TV__DSS_Karte_Hide()
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                obj_TVList(i).ContinueFL("KARTE")
+            End If
+        Next
+    end Sub
+    
+    Public function TV__DSS_GoalScorer_Show(ByRef Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    bConnFound = True
+                    obj_TVList(i).DSS_GoalScorer_Show Data
+                End If
+            End If
+        Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+           If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        obj_TVList(i).PlayFL("TORSCHUETZE")
+                    End If
+                Next
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_GoalScorer_Show=true
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_GoalScorer_Show=false
+           End If
+       end if
+    End function
+
+    public Sub  TV__DSS_GoalScorer_Hide()
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                obj_TVList(i).ContinueFL("TORSCHUETZE")
+            End If
+        Next
+    end Sub
+    
+    '***************************** BLITZERGEBNISSE *****************************
+    Public Sub TV__IB_BlitzErgebnisse(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_BlitzErgebnisse Data
+              End If
+           End If
+       Next
+       If bConnFound Then
+            if TV__Anzeigen(true) then
+                'For i = 0 to int_TVCount
+'                    If not obj_TVList(i) is Nothing Then
+'                        If not obj_TVList(i).TVContent = 0 Then
+'                           obj_TVList(i).HL Data
+'                        End If
+'                    End If
+'                Next
+                HL Data
+            end if
+       end if
+    End Sub
+    
+
+    '***************************** BLITZTABELLE *****************************
+    Public Sub TV__IB_BlitzTabelle(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_BlitzTabelle Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+       
+        If bConnFound Then
+            'For i = 0 to int_TVCount
+'                If not obj_TVList(i) is Nothing Then
+'                    If not obj_TVList(i).TVContent = 0 Then
+'                        if Data.Item("ITEMCOUNT") >7 then
+'                            obj_TVList(i).HL_FREE Data,1, 5, "HL","H",0
+'                        else
+'                            obj_TVList(i).HL_FREE Data,1, 7, "HL","H",0
+'                        end if
+'                    End If
+'                End If
+'            Next
+            if Data.Item("ITEMCOUNT") >7 then
+                HL_FREE Data,1, 5, "HL","H",0
+            else
+                HL_FREE Data,1, 7, "HL","H",0
+            end if
+       end if
+       if Data.Item("ITEMCOUNT") >7 then
+           IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                         obj_TVList(i).Continue "WECHSEL"
+                      end if
+                   end if
+                next
+           END IF
+           If bConnFound Then
+                'For i = 0 to int_TVCount
+'                    If not obj_TVList(i) is Nothing Then
+'                        If not obj_TVList(i).TVContent = 0 Then
+'                           obj_TVList(i).HL_FREE Data,6, 10, "HL","H",5
+'                        End If
+'                    End If
+'                Next
+                HL_FREE Data,6, 10, "HL","H",5
+           end if
+       end if
+    End Sub
+    
+    private sub HL_FREE(ByRef Data,min, max,refhl,dir,offset)
+        dim i
+        for i = min to max
+            if Data.Item(refhl & i) then
+                For j = 0 to int_TVCount
+                    If not obj_TVList(j) is Nothing Then
+                        If not obj_TVList(j).TVContent = 0 Then
+                            obj_TVList(j).HL_FREE2 dir &i +offset
+                        End If
+                    End If
+                Next
+                CC.SF.Wait 100
+            end if
+        next
+    end sub
+
+    Public function TV__DSS_BlitzTabelle_Show(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).DSS_BlitzTabelle_Show Data
+              End If
+           End If
+       Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+            If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        if Data.Item("ITEMCOUNT")<7 and getGFXV =2 then
+                            obj_TVList(i).PlayFL("BLITZTABELLE_OHNE_WECHSEL")
+                        else
+                            obj_TVList(i).PlayFL("BLITZTABELLE")
+                        end if
+                    End If
+                Next
+
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_BlitzTabelle_Show=true
+                if getGFXV =2 and Data.Item("ITEMCOUNT")>6 then
+                   IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                        For i = 0 to int_TVCount
+                           If not obj_TVList(i) is Nothing Then
+                              If not obj_TVList(i).TVContent = 0 Then
+                                  obj_TVList(i).ContinueFL("BLITZTABELLE")
+                              End If
+                           End If
+                        Next
+                    end if
+                end if
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_BlitzTabelle_Show=false
+           End If
+        end if
+        If bConnFound Then
+            HL_FREE_FL Data,1, 6, "HL","H"
+        end if
+    End function
+
+    Public Sub TV__DSS_BlitzTabelle_Hide(dsscount)
+            bConnFound = False
+              For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                   bConnFound = True
+                   if dsscount<7 and getGFXV =2 then
+                            obj_TVList(i).ContinueFL("BLITZTABELLE_OHNE_WECHSEL")
+                        else
+                            obj_TVList(i).ContinueFL("BLITZTABELLE")
+                        end if
+
+                End If
+              Next
+    end sub
+    
+    Public Function TV__DSS_BlitzErgebnisse_Show(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).DSS_BlitzErgebnisse_Show Data
+              End If
+           End If
+       Next
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+
+            If strMsg = vbOk Then
+                bConnFound = False
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        bConnFound = True
+                        obj_TVList(i).PlayFL("BLITZERG")
+                    End If
+                Next
+
+                If bConnFound Then
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 2500
+                    cc.SF.HideSplashForm
+                End If
+                TV__DSS_BlitzErgebnisse_Show=true
+            Else
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        obj_TVList(i).ClearPreview
+                    End If
+                Next
+                TV__DSS_BlitzErgebnisse_Show=false
+           End If
+        end if
+        If bConnFound Then
+            HL_FREE_FL Data,1, 6, "HL","H"
+        end if
+    End Function
+
+    Public Sub TV__DSS_BlitzErgebnisse_Hide()
+            bConnFound = False
+              For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                   bConnFound = True
+                   obj_TVList(i).ContinueFL("BLITZERG")
+                End If
+              Next
+    end sub
+    
+    private sub HL_FREE_FL(ByRef Data,min, max,refhl,dir)
+        dim i
+        for i = min to max
+            if Data.Item(refhl & i) then
+                For j = 0 to int_TVCount
+                    If not obj_TVList(j) is Nothing Then
+                        If not obj_TVList(j).TVContent = 0 Then
+                            obj_TVList(j).HL_FREE_FL2 dir & i
+                        End If
+                    End If
+                Next
+                CC.SF.Wait 100
+            end if
+        next
+    end sub
+    
+
+    
+   '***************************** TV PROGRAMM HINWEISE *************************
+    Public Sub TV__VB_IB_Programm(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_IB_Programm Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+       cc.sf.Wait 500
+       if (Data.Item("ITEMCOUNT") > 6) and (Data.Item("AS_INFOBOX") = false) then
+            For i = 0 to int_TVCount
+               If not obj_TVList(i) is Nothing Then
+                  If not obj_TVList(i).TVContent = 0 Then
+                     obj_TVList(i).Programm_continue
+                  end if
+               end if
+            next
+            IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN TV__Anzeigen false
+       end if
+   End Sub
+   
+   Public Sub TV__QuotenStart()
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).QuotenStart
+              End If
+           End If
+       Next
+    end sub
+
+    
+    '********************* SPIELER STATISTIKEN TABELLE *************************
+    ' ein oder Zwei Parameter, Infobox oder FP
+    Public Sub TV__VB_IB_PlayerStatsTable(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_IB_PlayerStatsTable Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+    
+    '********************* TEAM STATS VERGLEICH ********************************
+    Public Sub TV__VB_TeamStats(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_TeamStats Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+   
+   Public Sub TV__IB_TeamStats(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_TeamStats Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+   
+   '********************* PLAYER STATS VERGLEICH ********************************
+    Public Sub TV__VB_PlayerStatCompare(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_PlayerStatsCompare Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+   
+   Public Sub TV__VB_PlayerStat(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_PlayerStat Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+   
+   Public Sub TV__IB_PlayerStatCompare(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_PlayerStatsCompare Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+    
+
+    '*************** VERGLEICH EINER STATISTIK FÜR BEIDE TEAMS *****************
+    Public Sub TV__StatBB(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Stat_BB Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+       dim k
+       for k = 1 to Data.Item("ITEMCOUNT")
+           IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                         obj_TVList(i).Continue "WECHSEL"
+                      end if
+                   end if
+                next
+           else
+               exit sub
+           END IF
+       next
+   End Sub
+    
+
+    '*************** VERGLEICH EINER STATISTIK FÜR ZWEI BELIEBIGE TEAMS *****************
+    Public Sub TV__BB_TeamStats(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_TeamStat Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   End Sub
+   
+    '*********************** DSS EINBLENDEN ************************************
+    Public Sub TV__DSS_Show(ByRef Data)
+        dim ot
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    bConnFound = True
+                    ot=obj_TVList(i).DSS_Show(Data)
+                End If
+            End If
+        next
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    obj_TVList(i).DSS_Show_Start Data
+
+                End If
+            End If
+        Next
+        if pg_settings.rb_opmode.ItemIndex=0 then
+            cc.SF.Wait 2000
+            For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    obj_TVList(i).DSS_Show_Start_Sponsor
+
+                End If
+            End If
+        Next
+        end if
+        if ot =true then
+            cc.sf.wait 500
+            For i = 0 to int_TVCount
+                If not obj_TVList(i) is Nothing Then
+                    If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                        obj_TVList(i).DSS_Show_Start_OT
+                    End If
+                End If
+            Next
+        end if
+    End Sub
+
+    '*********************** DSS AUSBLENDEN ************************************
+    Public Sub TV__DSS_Hide()
+        dim wait
+        wait=false
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    wait=wait or obj_TVList(i).DSS_Hide_OT
+                End If
+            End If
+        Next
+        if wait then cc.sf.Wait 350
+        wait=false
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    wait=wait or obj_TVList(i).DSS_Hide_Text
+                End If
+            End If
+        Next
+        if wait then cc.sf.Wait 350
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                    obj_TVList(i).DSS_Hide
+                End If
+            End If
+        Next
+    End Sub
+    
+    '*********************** SPIELUHR im DSS STARTEN ***************************
+    Public Sub TV__Start_MainClock(Data)
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+                 bConnFound = True
+                 obj_TVList(i).Start_MainClock Data
+           End If
+       Next
+    End Sub
+
+    '*********************** SCORE IM DSS AKTUALISIEREN ************************
+    Public Sub TV__Update_MainScore()
+       dim oData : set oData = GetTeamData()
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 obj_TVList(i).Update_MainScore oData
+              End If
+           End If
+       Next
+       set oData = Nothing
+    End Sub
+
+    '*********************** SPIELUHR im DSS STOPPEN ***************************
+    Public Sub TV__Stop_MainClock(Data)
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+                 bConnFound = True
+                 obj_TVList(i).Stop_MainClock Data
+           End If
+       Next
+    End Sub
+
+    '********************** ZUSATZ INFO IM DSS *********************************
+    Public Sub TV__DSS_Zusatz_Show(msg)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).DSS_Zusatz_Show msg
+              End If
+           End If
+       Next
+    End Sub
+
+    '*********************** ZUSATZINFO RAUS ***********************************
+    Public Sub TV__DSS_Zusatz_Hide()
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).DSS_Zusatz_Hide
+              End If
+           End If
+       Next
+    End Sub
+    
+    Public sub TV__DSS_Card_Show(ch,cg)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).DSS_Card_Show ch,cg
+              End If
+           End If
+       Next
+    End Sub
+
+    Public Sub TV__DSS_Card_Hide(dir)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).DSS_Card_Hide dir
+              End If
+           End If
+       Next
+    End Sub
+
+    '************************* DSS SPONSOR *************************************
+    ' Blendet sich selber aus!
+    Public Sub TV__DSS_Sponsor_Show(nr)
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).Dss_Sponsor_Show nr
+              End If
+           End If
+       Next
+       if bConnFound then
+            pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " DSS Sponsor #" & nr
+            lastcom=time()
+            comcountdss=comcountdss+1
+        end if
+    End Sub
+
+    '************************** BLENDET NACHSPIELZEIT UHR EIN ******************
+    ' Wird automatisch vom OCX aufgerufen
+    Public Sub TV__OnAdditionalTime(atime)
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).OnAdditionalTime(atime)
+              End If
+           End If
+       Next
+    End Sub
+
+    '********************** FP GRAFIK MIT SPIELERAUFSTELLUNG *******************
+    ' wird vom LineUP OCX aufgerufen
+    Public Sub TV__FP_TactLineup(byRef oData)
+        dim li
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                 bConnFound = True
+                 obj_TVList(i).FP_TactLineup oData
+              End If
+           End If
+       Next
+
+       If bConnFound Then AllTV.TV__Anzeigen True
+        li=oData.item("LIVEIN")
+        if li=0 or getGFXV=1 then
+            IF msgBox("Reservebank/LiveIn?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i) is Nothing Then
+                        If not obj_TVList(i).TVContent = 0 Then
+                            obj_TVList(i).FP_TactLineupShowReserve
+                        end if
+                    end if
+                next
+                if li=0 then
+                    cc.SF.Wait 300
+                    For i = 0 to int_TVCount
+                       If not obj_TVList(i) is Nothing Then
+                          If not obj_TVList(i).TVContent = 0 Then
+                             obj_TVList(i).FP_TactLineupShowReserveLI
+                          end if
+                       end if
+                    next
+                end if
+                if li = 0 then
+                    IF msgBox("Vollbild?", vbOkCancel, "QUESTION") = vbOK THEN
+                        For i = 0 to int_TVCount
+                            If not obj_TVList(i) is Nothing Then
+                                If not obj_TVList(i).TVContent = 0 Then
+                                    obj_TVList(i).FP_TactLineupHideReserveLI
+                                end if
+                            end if
+                        next
+                        cc.sf.Wait 600
+                        For i = 0 to int_TVCount
+                            If not obj_TVList(i) is Nothing Then
+                                If not obj_TVList(i).TVContent = 0 Then
+                                    obj_TVList(i).FP_TactLineupHideReserve
+                                end if
+                            end if
+                        next
+                    end if
+                end if
+            END IF
+        end if
+    End Sub
+
+    '********************** SPIELERAUFSTELLUNG UPDATE **************************
+    ' wird vom LineUP OCX aufgerufen
+    Public Sub TV__FP_TactLineupUpdate()
+       dim oData : set oData = CreateObject("Scripting.Dictionary")
+       bConnFound = False
+       oData.Item("Curr") = Lineup.GetLastChangedPlayer
+
+       oData.Item("myX")  = MakeNumber(Lineup.GetPlayer(Lineup_Name_X, oData.Item("Curr"), Lineup_ACT),1,0,"",-1) - MakeNumber(Lineup.GetPlayer(Lineup_Nr_W, oData.Item("Curr"), Lineup_ACT, "True"),1,0,"",-1)
+       oData.Item("myY")  = MakeNumber(Lineup.GetPlayer(Lineup_Name_Y, oData.Item("Curr"), Lineup_ACT),1,0,"",-1) + 8 + MakeNumber(Lineup.GetPlayer(Lineup_Name_H, oData.Item("Curr"), Lineup_ACT, "True"),1,0,"",-1)
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                 bConnFound = True
+                 obj_TVList(i).FP_TactLineupLiveUpdate oData
+              End If
+           End If
+       Next
+       set oData = Nothing
+   END SUB
+   Public Sub TV__FP_TactLineupUpdateLF()
+       dim oData : set oData = CreateObject("Scripting.Dictionary")
+       bConnFound = False
+       dim LineupID
+       Team = UCASE(split(Lineup.ActiveLineup)(1))
+
+       if Team = "A" then
+            LineupID = Lineup_A
+
+       else
+        LineupID = Lineup_B
+
+       end if
+
+       oData.Item("Curr") = Lineup.GetLastChangedPlayer
+
+       oData.Item("myX")  = MakeNumber(Lineup.GetPlayer(Lineup_Name_X, oData.Item("Curr"), LineupID),1,0,"",-1) - MakeNumber(Lineup.GetPlayer(Lineup_Nr_W, oData.Item("Curr"), LineupID, "True"),1,0,"",-1)
+       oData.Item("myY")  = MakeNumber(Lineup.GetPlayer(Lineup_Name_Y, oData.Item("Curr"), LineupID),1,0,"",-1) + 8 + MakeNumber(Lineup.GetPlayer(Lineup_Name_H, oData.Item("Curr"), LineupID, "True"),1,0,"",-1)
+       'cc.sf.DebugText  oData.Item("myX")&" <> "& oData.Item("myY")
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                 bConnFound = True
+                 obj_TVList(i).FP_TactLineupLiveUpdateLF oData
+              End If
+           End If
+       Next
+       set oData = Nothing
+   END SUB
+
+
+
+
+    ' Wird vom OCX aufgerufen
+    Public Sub TV__BB_Substitution(Data)
+
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                 bConnFound = True
+                 obj_TVList(i).BB_Wechsel Data
+              End If
+           End If
+       Next
+
+        If bConnFound Then
+            AllTV.TV__Anzeigen True
+            bConnFound = false
+            For i = 0 to int_TVCount
+               If not obj_TVList(i) is Nothing Then
+                  If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                     bConnFound = True
+                     obj_TVList(i).PageChange Data
+                  End If
+               End If
+           Next
+           'if getGFXV =1 then
+               IF bConnFound THEN
+                   IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                        AllTV.TV__Anzeigen False
+                   END IF
+               END IF
+           'end if
+        END IF
+       
+    End Sub
+    
+    Public Sub TV__DSS_Substitution(Data)
+
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Uhrfeed allein
+                 bConnFound = True
+                 obj_TVList(i).DSS_Wechsel_WF Data
+              End If
+           End If
+       Next
+
+        If bConnFound Then
+            dim strMsg, i
+            strMsg = Msgbox("Grafik anzeigen?", vbOkCancel, "QUESTION")
+           If strMsg = vbOk Then
+                bConnFound = false
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                       obj_TVList(i).PlayFL("SPIELERWECHSEL")
+                   End If
+               Next
+           end if
+
+        END IF
+
+    End Sub
+
+
+    '*********************** L-FORM **************
+    Public Sub TV__LF_Info(Data)
+        bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).LF_Info Data
+              End If
+           End If
+       Next
+        If bConnFound Then TV__Anzeigen true
+        CC.SF.Wait 1000
+        'For i = 0 to int_TVCount
+'            If not obj_TVList(i) is Nothing Then
+'                If not obj_TVList(i).TVContent = 0 Then
+'                   select case Data.item("STYP")
+'                        case "1"
+'                            obj_TVList(i).HL_FREE Data,1,10,"TABHL","T",0
+'                        case "2"
+'                            obj_TVList(i).HL_FREE Data,1,5,"REHL","B" ,0
+'                    end select
+'                End If
+'            End If
+'        Next
+        select case Data.item("STYP")
+            case "1"
+                HL_FREE Data,1,10,"TABHL","T",0
+            case "2"
+                HL_FREE Data,1,5,"REHL","B" ,0
+        end select
+    end sub
+    
+    Public Sub TV__LF_Interview(Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).LF_Interview Data
+              End If
+           End If
+        Next
+        If bConnFound Then TV__Anzeigen true
+         CC.SF.Wait 1000
+        'For i = 0 to int_TVCount
+'            If not obj_TVList(i) is Nothing Then
+'                If not obj_TVList(i).TVContent = 0 Then
+'                   select case Data.item("STYP")
+'                        case "1"
+'                            obj_TVList(i).HL_FREE Data,1,10,"TABHL","T",0
+'                        case "2"
+'                            obj_TVList(i).HL_FREE Data,1,5,"REHL","B",0
+'                        case "3"
+'                            obj_TVList(i).HL_FREE Data,1,8,"STHL","V",0
+'                    end select
+'                End If
+'            End If
+'        Next
+        select case Data.item("STYP")
+            case "1"
+                HL_FREE Data,1,10,"TABHL","T",0
+            case "2"
+                HL_FREE Data,1,5,"REHL","B",0
+            case "3"
+                HL_FREE Data,1,8,"STHL","V",0
+        end select
+    end sub
+    
+    Public Sub TV__LF_PlayerStat(Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).LF_PlayerStat Data
+              End If
+           End If
+        Next
+        If bConnFound Then TV__Anzeigen true
+    end sub
+    
+    Public Sub TV__LF_Lineup(Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).LF_Lineup Data
+              End If
+           End If
+        Next
+        If bConnFound Then TV__Anzeigen true
+    end sub
+
+    Public sub TV__PlayDir(dir)
+         For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Continue dir
+              End If
+           End If
+       Next
+    end sub
+
+     Public sub TV__PlayChange(dir,dir2)
+         For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).PlayChange dir,dir2
+              End If
+           End If
+       Next
+    end sub
+    
+    Public Sub TV__VorlaufLogo_Show(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).VorlaufLogo_Show Data
+              End If
+           End If
+       Next
+    End Sub
+    
+
+    Public Sub TV__VorlaufLogo_Hide
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).VorlaufLogo_Hide
+              End If
+           End If
+       Next
+    End Sub
+
+    Public Sub TV__BB_ColdOpen(Data)
+        bConnFound = False
+        For i = 0 to int_TVCount
+            If not obj_TVList(i) is Nothing Then
+                If not obj_TVList(i).TVContent = 0 Then
+                    bConnFound = True
+                    obj_TVList(i).BB_ColdOpen Data
+                End If
+            End If
+        Next
+        If bConnFound Then TV__Anzeigen true
+        if Data.Item("PAGE2") <> "" then
+            IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                    If not obj_TVList(i).TVContent = 0 Then
+                        obj_TVList(i).Continue "WECHSEL"
+                        End If
+                    Next
+                    CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                    CC.SF.Wait 1000
+                    cc.sf.HideSplashForm
+                    if Data.Item("PAGE3") <> "" then
+                    IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                        For i = 0 to int_TVCount
+                            If not obj_TVList(i).TVContent = 0 Then
+                                obj_TVList(i).Continue "WECHSEL"
+                            End If
+                        Next
+                        CC.SF.ShowSplashForm "Animation läuft .... ", clYellow
+                        CC.SF.Wait 1000
+                        cc.sf.HideSplashForm
+                    end if
+                end if
+                end if
+            end if
+    end sub
+    
+    Public Sub TV__Karusell_Show(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).Karusell_Show Data
+              End If
+           End If
+       Next
+    End Sub
+    
+    Public Sub TV__Karusell_Hide
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).Karusell_Hide
+              End If
+           End If
+       Next
+    End Sub
+    
+     Public Sub TV__Karusell_Next(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).Karusell_Next Data
+              End If
+           End If
+       Next
+    End Sub
+    
+    Public Sub TV__TeamErg(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).TeamErg Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+       
+       if Data.Item("ITEMCOUNT") >8 then
+           IF msgBox("Change?", vbOkCancel, "QUESTION") = vbOK THEN
+                For i = 0 to int_TVCount
+                   If not obj_TVList(i) is Nothing Then
+                      If not obj_TVList(i).TVContent = 0 Then
+                         obj_TVList(i).Continue "WECHSEL"
+                      end if
+                   end if
+                next
+           END IF
+       end if
+   End Sub
+   
+   Public Sub TV__Butterfly (ByRef Data)
+    bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).Butterfly Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   end sub
+   
+    Public Sub TV__IB_PENALTY (ByRef Data)
+        bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_PENALTY Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   end sub
+   
+   Public Sub TV__IB_Twittervoting (ByRef Data)
+        bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).IB_Twittervoting Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen true
+   end sub
+
+   Public Sub TV__VB_Virtual(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Virtual Data
+              End If
+           End If
+       Next
+       'If bConnFound Then TV__Anzeigen true
+   End Sub
+   Public Sub TV__VB_Virtual_set(ByRef Data)
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).VB_Virtual_Set Data
+              End If
+           End If
+       Next
+   End Sub
+   Public Sub TV__GFX_Cmd(cmd,nr)
+    For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+
+                 obj_TVList(i).GFX_Cmd cmd,nr
+              End If
+           End If
+       Next
+   end sub
+    Public Sub TV__VIRTUAL_Cmd(cmd)
+    For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+
+                 obj_TVList(i).VIRTUAL_Cmd cmd
+              End If
+           End If
+       Next
+   end sub
+   
+   Public Sub TV__GetValue()
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+
+                 obj_TVList(i).GetValue
+              End If
+           End If
+       Next
+   end sub
+    Public Sub TV__SetValue(nr)
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+
+                 obj_TVList(i).SetValue nr
+              End If
+           End If
+       Next
+   end sub
+   Public Sub TV__BB_XPromo(byRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).BB_XPromo Data
+              End If
+           End If
+       Next
+       If bConnFound Then TV__Anzeigen True
+    End Sub
+    Public Sub TV__PP(byRef Data)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).PP
+              End If
+           End If
+       Next
+       'If bConnFound Then TV__Anzeigen True
+    End Sub
+    
+    Public Sub TV__GetARScenes()
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              bConnFound = True
+              obj_TVList(i).getARScenes
+           End If
+       Next
+    End Sub
+    
+    Public Sub TV__UpdatePath()
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              bConnFound = True
+              obj_TVList(i).s__PhotoVirtual=replace(pg_settings.ed_ar_image_path_viz.Text,"\","/")
+              obj_TVList(i).s__VizPathAR =replace(pg_settings.ed_ar_saveas_path.Text,"\","/")
+           End If
+       Next
+    End Sub
+    
+    Public Sub TV__CamSelect(cam)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).CamSelect cam
+              End If
+           End If
+       Next
+    end sub
+    
+    Public Sub TV__SetDefaultGFX(channel, onoff,scene)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).SetDefaultGFX channel, onoff,scene
+              End If
+           End If
+       Next
+    end sub
+End Class
+
+</script_body>
+</script>

@@ -1,0 +1,32 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_freetext_bt_show_vbClick (Sender)
+    dim typ
+    Dim Data : Set Data = CreateObject("Scripting.Dictionary")
+    
+    Data.Item("title")= tw_freetext.ed_Title1.Text
+    Data.Item("subline")= tw_freetext.ed_Title2.Text
+    Data.Item("msg")= tw_freetext.freetext.Lines.Text
+    Data.Item("maxcount")= tw_freetext.freetext.Lines.Count
+    Data.Item("SUB1")= tw_freetext.ed_Title3.Text
+    Data.Item("SUB2")= tw_freetext.ed_Title4.Text
+    Data.Item("LOGO")= tw_freetext.ed_logo.Text
+    if     Sender is tw_freetext.bt_show_vb then
+        Data.Item("typ")=1
+    elseif Sender is tw_freetext.bt_show_ib then
+        Data.Item("typ")=2
+    elseif Sender is tw_freetext.bt_show_fb then
+        Data.Item("typ")=3
+    elseif Sender is tw_freetext.bt_show_tw then
+        Data.Item("typ")=4
+    end if
+    AllTV.TV__VB_IB_BB_FreeText Data,tw_freetext.freetext.Lines
+    set Data = Nothing
+    tw_freetext.freetext.Lines.Count
+end sub
+
+</script_body>
+</script>

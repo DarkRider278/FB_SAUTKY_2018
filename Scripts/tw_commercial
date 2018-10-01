@@ -1,0 +1,20 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+
+
+
+
+sub tw_commercial_btn_resetClick (Sender)
+    lastcom=time()
+    comcount=0
+    comcountdss=0
+    tw_commercial.lbl_comshow.Font.Color=clBlack
+    tw_commercial.lbl_comshowdss.Font.Color=clBlack
+end sub
+
+
+</script_body>
+</script>

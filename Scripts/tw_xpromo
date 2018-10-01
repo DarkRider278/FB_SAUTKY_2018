@@ -1,0 +1,21 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_xpromo_bt_showClick (Sender)
+    dim Data : set Data = CreateObject("Scripting.Dictionary")
+    dim i, k
+
+
+    Data.Item("LINE1")  = tw_xpromo.edt_line1.text
+    Data.Item("LINE2")  = tw_xpromo.edt_line2.text
+    Data.Item("LINE3")  = tw_xpromo.edt_line3.text
+
+    Data.Item("IMG")  = tw_xpromo.cb_img.text
+    AllTV.TV__BB_XPromo Data
+    set Data = Nothing
+end sub
+
+</script_body>
+</script>

@@ -1,0 +1,23 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_vorlauf_bt_freetextClick (Sender)
+  ' script tw_vorlauf_bt_freetextClick generated on 12.04.2017 at 16:46:30
+  ' description of params:
+  ' Sender as IccButton
+
+    tw_freetext.Visible = true
+
+    tw_freetext.BringToFront
+end sub
+
+sub tw_vorlauf_bt_promoClick (Sender)
+
+tw_xpromo.Visible=true
+tw_xpromo.BringToFront
+end sub
+
+</script_body>
+</script>

@@ -1,0 +1,1297 @@
+object tw_virtuell: TccToolWindow
+  Tag = 3
+  FloatingBorderStyle = bsNone
+  Caption = 'AR Modus'
+  Color = clBtnFace
+  ClientAreaHeight = 728
+  ClientAreaWidth = 540
+  DockableTo = []
+  DockRow = 1
+  LastDock = frmMain.dckTop
+  Resizable = False
+  TabOrder = 0
+  Visible = False
+  Floating = True
+  ParentColor = False
+  Float = True
+  SavedAtRunTime = True
+  object Panel1: TptPanel
+    Left = 0
+    Top = 0
+    Width = 540
+    Height = 456
+    Locked = False
+    TabOrder = 0
+    object Label25: TptLabel
+      Left = 10
+      Top = 115
+      Width = 26
+      Height = 13
+      Caption = 'Bild 1'
+      Locked = False
+    end
+    object Label26: TptLabel
+      Left = 10
+      Top = 165
+      Width = 33
+      Height = 13
+      Caption = 'Logo 1'
+      Locked = False
+    end
+    object Label27: TptLabel
+      Left = 225
+      Top = 165
+      Width = 33
+      Height = 13
+      Caption = 'Logo 2'
+      Locked = False
+    end
+    object Label28: TptLabel
+      Left = 225
+      Top = 115
+      Width = 26
+      Height = 13
+      Caption = 'Bild 2'
+      Locked = False
+    end
+    object Label1: TptLabel
+      Left = 10
+      Top = 70
+      Width = 21
+      Height = 13
+      Caption = 'GFX'
+      Locked = False
+    end
+    object btn_load: TptButton
+      Left = 280
+      Top = 40
+      Width = 106
+      Height = 25
+      Caption = 'Load Virtuell'
+      ModalResult = mrNone
+      TabOrder = 0
+      Color = clBtnFace
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_loadClick'
+    end
+    object DataBar3: TptDataBar
+      Left = 1
+      Top = 1
+      Width = 538
+      Height = 35
+      Align = alTop
+      Color = 13816530
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+      DataGroupName = 'tw_virtuell_ts_control'
+      DataGroupStyle = dsLocal
+      DataComboBoxWidth = 180
+      ButtonStyle = bsImageOnly
+      BorderWidth = 4
+      VisibleDataCbx = True
+      VisibleSaveBtn = True
+      VisibleRefreshBtn = True
+      VisibleDeleteBtn = True
+      VisibleNextBtn = False
+      VisiblePreviousBtn = False
+      DataVisibility = kfNone
+      Locked = False
+    end
+    object edt_scene: TptEdit
+      Left = 10
+      Top = 40
+      Width = 266
+      Height = 21
+      MaxLength = 0
+      TabOrder = 2
+      Text = 'AR_102'
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+    end
+    object cb_img_1: TptComboBox
+      Left = 10
+      Top = 135
+      Width = 201
+      Height = 21
+      DropDownCount = 25
+      TabOrder = 3
+      Text = '1364378234-ga-kho-gung.jpg'
+      Items.WideStrings = (
+        '1364378234-ga-kho-gung.jpg'
+        '5e5dc9bf28.jpg'
+        'agrob.PNG'
+        'AR_Trainer.png')
+      ItemIndex = 0
+      DroppedWidth = 201
+      DropDownAutoSize = False
+      FixedStyle = False
+      SaveStyle = cbssStandard
+      Locked = False
+    end
+    object cb_img_2: TptComboBox
+      Left = 225
+      Top = 135
+      Width = 201
+      Height = 21
+      DropDownCount = 25
+      TabOrder = 4
+      Text = 'agrob.PNG'
+      Items.WideStrings = (
+        '1364378234-ga-kho-gung.jpg'
+        '5e5dc9bf28.jpg'
+        'agrob.PNG'
+        'AR_Trainer.png')
+      ItemIndex = 2
+      DroppedWidth = 201
+      DropDownAutoSize = False
+      FixedStyle = False
+      SaveStyle = cbssStandard
+      Locked = False
+    end
+    object btn_refresh: TptButton
+      Left = 335
+      Top = 210
+      Width = 75
+      Height = 25
+      Caption = 'Refresh'
+      ModalResult = mrNone
+      TabOrder = 5
+      Color = clBtnFace
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_refreshClick'
+    end
+    object btn_set: TptButton
+      Left = 10
+      Top = 280
+      Width = 90
+      Height = 40
+      Caption = 'SET Data'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ModalResult = mrNone
+      ParentFont = False
+      TabOrder = 6
+      ParentColor = False
+      Color = clRed
+      ColorMouseOver = clRed
+      ColorFocused = clRed
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_setClick'
+    end
+    object pa_gfx_4: TptPanel
+      Left = 10
+      Top = 380
+      Width = 471
+      Height = 66
+      Locked = False
+      TabOrder = 7
+      object Label3: TptLabel
+        Left = 15
+        Top = 5
+        Width = 30
+        Height = 13
+        Caption = 'GFX 1'
+        Locked = False
+      end
+      object btn_play_1: TptButton
+        Left = 10
+        Top = 30
+        Width = 75
+        Height = 25
+        Caption = 'Play'
+        ModalResult = mrNone
+        TabOrder = 0
+        Color = clBtnFace
+        ColorMouseOver = clBtnFace
+        ColorFocused = clBtnFace
+        DrawFocusRect = False
+        MultiLineCaption = False
+        Alignment = alMiddleCenter
+        FontFocused.Charset = DEFAULT_CHARSET
+        FontFocused.Color = clWindowText
+        FontFocused.Height = -11
+        FontFocused.Name = 'MS Sans Serif'
+        FontFocused.Style = []
+        FontMouseOver.Charset = DEFAULT_CHARSET
+        FontMouseOver.Color = clWindowText
+        FontMouseOver.Height = -11
+        FontMouseOver.Name = 'MS Sans Serif'
+        FontMouseOver.Style = []
+        PreferFocused = False
+        FrameSize = 2
+        BackgroundTransparent = False
+        BackgroundStretch = True
+        BackgroundTransparentColor = clBlack
+        Down = False
+        DrawFocusBorder = True
+        Checkable = False
+        RightPressDown = False
+        StoreBackground = True
+        Hotkey.Shift = []
+        Hotkey.IsLong = False
+        Hotkey.Enabled = True
+        Locked = False
+        EventDataNames = 'OnClick=tw_virtuell_btn_play_1Click'
+      end
+      object btn_cont_1: TptButton
+        Left = 95
+        Top = 30
+        Width = 75
+        Height = 25
+        Caption = 'Continue'
+        ModalResult = mrNone
+        TabOrder = 1
+        Color = clBtnFace
+        ColorMouseOver = clBtnFace
+        ColorFocused = clBtnFace
+        DrawFocusRect = False
+        MultiLineCaption = False
+        Alignment = alMiddleCenter
+        FontFocused.Charset = DEFAULT_CHARSET
+        FontFocused.Color = clWindowText
+        FontFocused.Height = -11
+        FontFocused.Name = 'MS Sans Serif'
+        FontFocused.Style = []
+        FontMouseOver.Charset = DEFAULT_CHARSET
+        FontMouseOver.Color = clWindowText
+        FontMouseOver.Height = -11
+        FontMouseOver.Name = 'MS Sans Serif'
+        FontMouseOver.Style = []
+        PreferFocused = False
+        FrameSize = 2
+        BackgroundTransparent = False
+        BackgroundStretch = True
+        BackgroundTransparentColor = clBlack
+        Down = False
+        DrawFocusBorder = True
+        Checkable = False
+        RightPressDown = False
+        StoreBackground = True
+        Hotkey.Shift = []
+        Hotkey.IsLong = False
+        Hotkey.Enabled = True
+        Locked = False
+        EventDataNames = 'OnClick=tw_virtuell_btn_cont_1Click'
+      end
+      object btn_reset_1: TptButton
+        Left = 380
+        Top = 30
+        Width = 75
+        Height = 25
+        Caption = 'Reset'
+        ModalResult = mrNone
+        TabOrder = 2
+        Color = clBtnFace
+        ColorMouseOver = clBtnFace
+        ColorFocused = clBtnFace
+        DrawFocusRect = False
+        MultiLineCaption = False
+        Alignment = alMiddleCenter
+        FontFocused.Charset = DEFAULT_CHARSET
+        FontFocused.Color = clWindowText
+        FontFocused.Height = -11
+        FontFocused.Name = 'MS Sans Serif'
+        FontFocused.Style = []
+        FontMouseOver.Charset = DEFAULT_CHARSET
+        FontMouseOver.Color = clWindowText
+        FontMouseOver.Height = -11
+        FontMouseOver.Name = 'MS Sans Serif'
+        FontMouseOver.Style = []
+        PreferFocused = False
+        FrameSize = 2
+        BackgroundTransparent = False
+        BackgroundStretch = True
+        BackgroundTransparentColor = clBlack
+        Down = False
+        DrawFocusBorder = True
+        Checkable = False
+        RightPressDown = False
+        StoreBackground = True
+        Hotkey.Shift = []
+        Hotkey.IsLong = False
+        Hotkey.Enabled = True
+        Locked = False
+        EventDataNames = 'OnClick=tw_virtuell_btn_reset_1Click'
+      end
+      object btn_wechsel_1: TptButton
+        Left = 250
+        Top = 30
+        Width = 75
+        Height = 25
+        Caption = 'Wechsel'
+        ModalResult = mrNone
+        TabOrder = 3
+        Color = clBtnFace
+        ColorMouseOver = clBtnFace
+        ColorFocused = clBtnFace
+        DrawFocusRect = False
+        MultiLineCaption = False
+        Alignment = alMiddleCenter
+        FontFocused.Charset = DEFAULT_CHARSET
+        FontFocused.Color = clWindowText
+        FontFocused.Height = -11
+        FontFocused.Name = 'MS Sans Serif'
+        FontFocused.Style = []
+        FontMouseOver.Charset = DEFAULT_CHARSET
+        FontMouseOver.Color = clWindowText
+        FontMouseOver.Height = -11
+        FontMouseOver.Name = 'MS Sans Serif'
+        FontMouseOver.Style = []
+        PreferFocused = False
+        FrameSize = 2
+        BackgroundTransparent = False
+        BackgroundStretch = True
+        BackgroundTransparentColor = clBlack
+        Down = False
+        DrawFocusBorder = True
+        Checkable = False
+        RightPressDown = False
+        StoreBackground = True
+        Hotkey.Shift = []
+        Hotkey.IsLong = False
+        Hotkey.Enabled = True
+        Locked = False
+        EventDataNames = 'OnClick=tw_virtuell_btn_wechsel_1Click'
+      end
+    end
+    object btn_play_main: TptButton
+      Left = 10
+      Top = 335
+      Width = 90
+      Height = 40
+      Caption = 'Play'
+      ModalResult = mrNone
+      TabOrder = 8
+      ParentColor = False
+      Color = clYellow
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_play_mainClick'
+    end
+    object btn_cont_main: TptButton
+      Left = 120
+      Top = 335
+      Width = 90
+      Height = 40
+      Caption = 'Continue'
+      ModalResult = mrNone
+      TabOrder = 9
+      ParentColor = False
+      Color = clYellow
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_cont_mainClick'
+    end
+    object btn_reset_main: TptButton
+      Left = 390
+      Top = 335
+      Width = 90
+      Height = 40
+      Caption = 'Reset'
+      ModalResult = mrNone
+      TabOrder = 10
+      ParentColor = False
+      Color = clYellow
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_reset_mainClick'
+    end
+    object cb_logo_1: TptComboBox
+      Left = 10
+      Top = 185
+      Width = 201
+      Height = 21
+      DropDownCount = 25
+      TabOrder = 11
+      Text = 'austria_wien'
+      Items.WideStrings = (
+        '1860'
+        'admira'
+        'altach'
+        'austria_lustenau'
+        'austria_wien'
+        'fac'
+        'fc_liefering'
+        'fc_linz'
+        'graz'
+        'horn'
+        'kapfenberg'
+        'linz'
+        'mattersburg'
+        'pellets'
+        'rapid_wien'
+        'ried'
+        'salzburg'
+        'st_poelten'
+        'wacker_innsbruck'
+        'wattens'
+        'wiener_neustadt'
+        'wuerzburg')
+      ItemIndex = -1
+      DroppedWidth = 201
+      DropDownAutoSize = False
+      FixedStyle = False
+      SaveStyle = cbssStandard
+      Locked = False
+    end
+    object cb_logo_2: TptComboBox
+      Left = 225
+      Top = 185
+      Width = 196
+      Height = 21
+      DropDownCount = 25
+      TabOrder = 12
+      Text = 'mattersburg'
+      Items.WideStrings = (
+        '1860'
+        'admira'
+        'altach'
+        'austria_lustenau'
+        'austria_wien'
+        'fac'
+        'fc_liefering'
+        'fc_linz'
+        'graz'
+        'horn'
+        'kapfenberg'
+        'linz'
+        'mattersburg'
+        'pellets'
+        'rapid_wien'
+        'ried'
+        'salzburg'
+        'st_poelten'
+        'wacker_innsbruck'
+        'wattens'
+        'wiener_neustadt'
+        'wuerzburg')
+      ItemIndex = -1
+      DroppedWidth = 196
+      DropDownAutoSize = False
+      FixedStyle = False
+      SaveStyle = cbssStandard
+      Locked = False
+    end
+    object cb_onoff_1: TptCheckBox
+      Left = 10
+      Top = 220
+      Width = 97
+      Height = 17
+      Caption = 'OnOff  Text 1'
+      Checked = True
+      Color = clBtnFace
+      ParentColor = False
+      State = cbChecked
+      TabOrder = 13
+      Locked = False
+      ColorFocused = clBtnFace
+      ColorMouseOver = clBtnFace
+    end
+    object edt_text_1: TptEdit
+      Left = 10
+      Top = 245
+      Width = 196
+      Height = 21
+      MaxLength = 0
+      TabOrder = 14
+      Text = '0:0'
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+    end
+    object rb_botton: TptRadioGroup
+      Left = 435
+      Top = 80
+      Width = 91
+      Height = 105
+      Caption = 'Plane'
+      ItemIndex = 1
+      Items.WideStrings = (
+        'Off'
+        'Mirror'
+        'Shadow')
+      TabOrder = 15
+      Data = '1'
+      Locked = False
+      ExtendedFocusing = True
+      EventDataNames = 'OnClick=tw_virtuell_rb_bottonClick'
+    end
+    object cb_gfx: TptComboBox
+      Left = 10
+      Top = 85
+      Width = 266
+      Height = 21
+      TabOrder = 16
+      Text = 'NONE'
+      Items.WideStrings = (
+        'NONE'
+        'SVB_Megafacts_AR'
+        'SVB_Statistikvgl_AR'
+        'test'
+        'VB_Tab_AR')
+      ItemIndex = 0
+      DroppedWidth = 266
+      DropDownAutoSize = False
+      FixedStyle = False
+      SaveStyle = cbssStandard
+      Locked = False
+    end
+    object btn_refresh_scene: TptButton
+      Left = 280
+      Top = 80
+      Width = 106
+      Height = 25
+      Caption = 'Refresh Scenes'
+      ModalResult = mrNone
+      TabOrder = 17
+      Color = clBtnFace
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_refresh_sceneClick'
+    end
+  end
+  object Panel3: TptPanel
+    Left = 15
+    Top = 470
+    Width = 266
+    Height = 246
+    Locked = False
+    TabOrder = 1
+    object Label4: TptLabel
+      Left = 10
+      Top = 70
+      Width = 7
+      Height = 13
+      Caption = 'X'
+      Locked = False
+    end
+    object Label8: TptLabel
+      Left = 10
+      Top = 95
+      Width = 7
+      Height = 13
+      Caption = 'Y'
+      Locked = False
+    end
+    object Label18: TptLabel
+      Left = 10
+      Top = 120
+      Width = 8
+      Height = 13
+      Caption = 'H'
+      Locked = False
+    end
+    object Label20: TptLabel
+      Left = 10
+      Top = 150
+      Width = 8
+      Height = 13
+      Caption = 'R'
+      Locked = False
+    end
+    object lbl_1: TptLabel
+      Left = 25
+      Top = 45
+      Width = 23
+      Height = 13
+      Caption = 'Main'
+      Locked = False
+      EventDataNames = 'OnDblClick=tw_virtuell_lbl_1DblClick'
+    end
+    object lbl_2: TptLabel
+      Left = 85
+      Top = 45
+      Width = 55
+      Height = 13
+      Caption = 'Bild/Logo 1'
+      Locked = False
+      EventDataNames = 'OnDblClick=tw_virtuell_lbl_1DblClick'
+    end
+    object lbl_3: TptLabel
+      Left = 145
+      Top = 45
+      Width = 55
+      Height = 13
+      Caption = 'Bild/Logo 2'
+      Locked = False
+      EventDataNames = 'OnDblClick=tw_virtuell_lbl_1DblClick'
+    end
+    object Label23: TptLabel
+      Left = 10
+      Top = 175
+      Width = 7
+      Height = 13
+      Caption = 'S'
+      Locked = False
+    end
+    object lbl_4: TptLabel
+      Left = 205
+      Top = 45
+      Width = 45
+      Height = 13
+      Caption = 'Sky Logo'
+      Locked = False
+      EventDataNames = 'OnDblClick=tw_virtuell_lbl_1DblClick'
+    end
+    object edt_pos_x: TptEdit
+      Left = 25
+      Top = 65
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 0
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000031003100}
+    end
+    object edt_pos_z: TptEdit
+      Left = 25
+      Top = 90
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 1
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000031003100}
+    end
+    object edt_pos_y: TptEdit
+      Left = 25
+      Top = 115
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 2
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000031003100}
+    end
+    object edt_pos_pan: TptEdit
+      Left = 25
+      Top = 145
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 3
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_panMouseDown,OnMouseMove=tw_virt' +
+        'uell_edt_pos_panMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000031003200}
+    end
+    object DataBar4: TptDataBar
+      Left = 1
+      Top = 1
+      Width = 264
+      Height = 35
+      Align = alTop
+      Color = 13816530
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 4
+      DataGroupName = 'tw_virtuell_Panel1'
+      DataGroupStyle = dsLocal
+      DataComboBoxWidth = 100
+      ButtonStyle = bsImageOnly
+      BorderWidth = 4
+      VisibleDataCbx = True
+      VisibleSaveBtn = True
+      VisibleRefreshBtn = True
+      VisibleDeleteBtn = True
+      VisibleNextBtn = False
+      VisiblePreviousBtn = False
+      DataVisibility = kfNone
+      Locked = False
+    end
+    object btn_pos_set: TptButton
+      Left = 15
+      Top = 211
+      Width = 75
+      Height = 25
+      Caption = 'SET'
+      ModalResult = mrNone
+      TabOrder = 5
+      Color = clBtnFace
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_pos_setClick'
+    end
+    object btn_pos_get: TptButton
+      Left = 175
+      Top = 211
+      Width = 75
+      Height = 25
+      Caption = 'GET'
+      ModalResult = mrNone
+      TabOrder = 6
+      Color = clBtnFace
+      ColorMouseOver = clBtnFace
+      ColorFocused = clBtnFace
+      DrawFocusRect = False
+      MultiLineCaption = False
+      Alignment = alMiddleCenter
+      FontFocused.Charset = DEFAULT_CHARSET
+      FontFocused.Color = clWindowText
+      FontFocused.Height = -11
+      FontFocused.Name = 'MS Sans Serif'
+      FontFocused.Style = []
+      FontMouseOver.Charset = DEFAULT_CHARSET
+      FontMouseOver.Color = clWindowText
+      FontMouseOver.Height = -11
+      FontMouseOver.Name = 'MS Sans Serif'
+      FontMouseOver.Style = []
+      PreferFocused = False
+      FrameSize = 2
+      BackgroundTransparent = False
+      BackgroundStretch = True
+      BackgroundTransparentColor = clBlack
+      Down = False
+      DrawFocusBorder = True
+      Checkable = False
+      RightPressDown = False
+      StoreBackground = True
+      Hotkey.Shift = []
+      Hotkey.IsLong = False
+      Hotkey.Enabled = True
+      Locked = False
+      EventDataNames = 'OnClick=tw_virtuell_btn_pos_getClick'
+    end
+    object edt_pos_x1: TptEdit
+      Left = 85
+      Top = 65
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 7
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000032003100}
+    end
+    object edt_pos_z1: TptEdit
+      Left = 85
+      Top = 90
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 8
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000032003100}
+    end
+    object edt_pos_y1: TptEdit
+      Left = 85
+      Top = 115
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 9
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000032003100}
+    end
+    object edt_pos_pan1: TptEdit
+      Left = 85
+      Top = 145
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 10
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_panMouseDown,OnMouseMove=tw_virt' +
+        'uell_edt_pos_panMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000032003200}
+    end
+    object edt_pos_x2: TptEdit
+      Left = 145
+      Top = 65
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 11
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000033003100}
+    end
+    object edt_pos_z2: TptEdit
+      Left = 145
+      Top = 90
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 12
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000033003100}
+    end
+    object edt_pos_y2: TptEdit
+      Left = 145
+      Top = 115
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 13
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000033003100}
+    end
+    object edt_pos_pan2: TptEdit
+      Left = 145
+      Top = 145
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 14
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_panMouseDown,OnMouseMove=tw_virt' +
+        'uell_edt_pos_panMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000033003200}
+    end
+    object edt_scale: TptEdit
+      Left = 25
+      Top = 170
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 15
+      Text = '1'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_scaleMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_scaleMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000031003300}
+    end
+    object edt_scale1: TptEdit
+      Left = 85
+      Top = 170
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 16
+      Text = '1'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_scaleMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_scaleMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000032003300}
+    end
+    object edt_scale2: TptEdit
+      Left = 145
+      Top = 170
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 17
+      Text = '1'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_scaleMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_scaleMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000033003300}
+    end
+    object edt_pos_x3: TptEdit
+      Left = 205
+      Top = 65
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 18
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000035003100}
+    end
+    object edt_pos_z3: TptEdit
+      Left = 205
+      Top = 90
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 19
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000035003100}
+    end
+    object edt_pos_y3: TptEdit
+      Left = 205
+      Top = 115
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 20
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_xMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_pos_xMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000035003100}
+    end
+    object edt_pos_pan3: TptEdit
+      Left = 205
+      Top = 145
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 21
+      Text = '0'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_pos_panMouseDown,OnMouseMove=tw_virt' +
+        'uell_edt_pos_panMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000035003200}
+    end
+    object edt_scale3: TptEdit
+      Left = 205
+      Top = 170
+      Width = 50
+      Height = 21
+      MaxLength = 0
+      TabOrder = 22
+      Text = '1'
+      Numeric = False
+      InputType = itFloat
+      Locked = False
+      EventDataNames = 
+        'OnMouseDown=tw_virtuell_edt_scaleMouseDown,OnMouseMove=tw_virtue' +
+        'll_edt_scaleMouseMove'
+      StoreUserData = True
+      UserDataVer1 = {08000400000035003300}
+    end
+  end
+  object cb_camselect: TptCheckBox
+    Left = 375
+    Top = 495
+    Width = 97
+    Height = 17
+    Caption = 'Show cam 5'
+    Color = clBtnFace
+    TabOrder = 2
+    Locked = False
+    ColorFocused = clBtnFace
+    ColorMouseOver = clBtnFace
+    EventDataNames = 'OnClick=tw_virtuell_cb_camselectClick'
+  end
+end

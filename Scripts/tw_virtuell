@@ -1,0 +1,357 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub tw_virtuell_btn_loadClick (Sender)
+    AllTV.TV__VB_Virtual tw_virtuell.edt_scene.text
+end sub
+
+sub tw_virtuell_btn_play_1Click (Sender)
+    dim n
+    n=right(sender.name,1)
+    AllTV.TV__GFX_Cmd "PLAY",n
+end sub
+
+sub tw_virtuell_btn_cont_1Click (Sender)
+        dim n
+    n=right(sender.name,1)
+    AllTV.TV__GFX_Cmd "CONTINUE",n
+
+end sub
+
+sub tw_virtuell_btn_reset_1Click (Sender)
+    dim n
+    n=right(sender.name,1)
+    AllTV.TV__GFX_Cmd "RESET",n
+
+end sub
+
+sub tw_virtuell_btn_wechsel_1Click (Sender)
+dim n
+    n=right(sender.name,1)
+    AllTV.TV__GFX_Cmd "WECHSEL",n
+
+end sub
+
+sub tw_virtuell_btn_play_mainClick (Sender)
+    AllTV.TV__VIRTUAL_Cmd "PLAY"
+end sub
+
+sub tw_virtuell_btn_cont_mainClick (Sender)
+    AllTV.TV__VIRTUAL_Cmd "CONTINUE"
+end sub
+
+sub tw_virtuell_btn_reset_mainClick (Sender)
+    AllTV.TV__VIRTUAL_Cmd "RESET"
+end sub
+
+sub tw_virtuell_btn_setClick (Sender)
+
+    dim Data : Set Data = CreateObject("Scripting.Dictionary")
+
+    Data.Item("GFX") =tw_virtuell.cb_gfx.Text
+
+    Data.Item("X") = tw_virtuell.edt_pos_x.text
+    Data.Item("Z") = tw_virtuell.edt_pos_z.text
+    Data.Item("Y") = tw_virtuell.edt_pos_y.text
+    Data.Item("PAN") = tw_virtuell.edt_pos_pan.text
+    Data.Item("SCALE") = tw_virtuell.edt_scale.text
+    
+    Data.Item("X1") = tw_virtuell.edt_pos_x1.text
+    Data.Item("Z1") = tw_virtuell.edt_pos_z1.text
+    Data.Item("Y1") = tw_virtuell.edt_pos_y1.text
+    Data.Item("PAN1") = tw_virtuell.edt_pos_pan1.text
+    Data.Item("SCALE1") = tw_virtuell.edt_scale1.text
+    
+    Data.Item("X2") = tw_virtuell.edt_pos_x2.text
+    Data.Item("Z2") = tw_virtuell.edt_pos_z2.text
+    Data.Item("Y2") = tw_virtuell.edt_pos_y2.text
+    Data.Item("PAN2") = tw_virtuell.edt_pos_pan2.text
+    Data.Item("SCALE2") = tw_virtuell.edt_scale2.text
+    
+    Data.Item("X3") = tw_virtuell.edt_pos_x3.text
+    Data.Item("Z3") = tw_virtuell.edt_pos_z3.text
+    Data.Item("Y3") = tw_virtuell.edt_pos_y3.text
+    Data.Item("PAN3") = tw_virtuell.edt_pos_pan3.text
+    Data.Item("SCALE3") = tw_virtuell.edt_scale3.text
+    
+    Data.Item("PLANE")=tw_virtuell.rb_botton.ItemIndex
+
+    
+    Data.Item("IMG1") = tw_virtuell.cb_img_1.text
+    Data.Item("IMG2") = tw_virtuell.cb_img_2.text
+    
+    Data.Item("LOGO1") = tw_virtuell.cb_logo_1.text
+    Data.Item("LOGO2") = tw_virtuell.cb_logo_2.text
+    if tw_virtuell.cb_onoff_1.checked then
+        Data.Item("ONOFF1") = 1
+    else
+        Data.Item("ONOFF1") = 0
+    end if
+    Data.Item("TEXT1") = tw_virtuell.edt_text_1.text
+
+    AllTV.TV__VB_Virtual_Set Data
+    set Data = Nothing
+end sub
+
+sub tw_virtuell_btn_refreshClick (Sender)
+ 'AllTV.getfotosvirtual
+     dim files
+    files=cc.Files.GetFileList(pg_settings.ed_ar_image_path_local.text,"*.*")
+    tw_virtuell.cb_img_1.Items.Clear
+    tw_virtuell.cb_img_2.Items.Clear
+
+    For Each i in files
+    'for i=1 to ubound(files)-1
+        tw_virtuell.cb_img_1.Items.Add(i)
+        tw_virtuell.cb_img_2.Items.Add(i)
+    next
+end sub
+
+dim pvalue
+sub tw_virtuell_edt_pos_xMouseDown (Sender, Button, Shift, X, Y)
+    pvalue=X
+end sub
+
+sub tw_virtuell_edt_pos_xMouseMove (Sender, Shift, X, Y)
+    Dim thelp
+    Dim f_min,f_max,f_step,b_cycle,f_res
+    thelp = sender.UserData
+    f_min= -100000000
+    f_max= 100000000
+    f_step= 1
+    b_cycle=0
+
+    select case shift
+    case 8
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)
+        pvalue = x
+    case 9
+       f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/10
+       pvalue = x
+'    case 12
+'        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/100
+'        pvalue = x
+    case 10
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)*10
+        pvalue = x
+    case else
+        exit sub
+    end select
+    if f_res>f_max then
+        if b_cycle=1 then
+            Sender.Text = f_min + (f_res-f_max)
+        else
+            Sender.Text =f_max
+        end if
+    else
+        if f_res<f_min then
+            if b_cycle=1 then
+                Sender.Text = f_max - abs(f_res-f_min)
+            else
+                Sender.Text =f_min
+            end if
+        else
+           Sender.Text =f_res
+        end if
+    end if
+    'cc.sf.DebugText  "UV "& Sender.UserData
+    AllTV.TV__SetValue Sender.UserData
+end sub
+
+function Valnumber(byVal TEXT)
+    Dim i, text2, help
+    Dim numbers,n
+    Dim goex
+    numbers=Array("0","1","2","3","4","5","6","7","8","9",",",".","+","-","E")
+	valnumber = 0
+    text2 = ""
+    Text = trim(Text)
+    goex = false
+    if len(text)>0 then
+    for i = 1 to len(Text)
+        help = mid(text,i,1)
+        goex=true
+        for each n in numbers
+        if help=n then
+            text2 = text2 & help
+            goex=false
+        end if
+        next
+        if goex then exit for
+    next
+    end if
+	On Error resume next
+	valnumber = cDbl(trim(TEXT2))
+	IF Err.Number>0 then valnumber = 0
+	Err.Clear
+	On Error Goto 0
+End function
+
+sub tw_virtuell_edt_pos_panMouseDown (Sender, Button, Shift, X, Y)
+    pvalue=X
+end sub
+
+sub tw_virtuell_edt_pos_panMouseMove (Sender, Shift, X, Y)
+ Dim f_min,f_max,f_step,b_cycle,f_res
+    thelp = sender.UserData
+    f_min= -180
+    f_max= 180
+    f_step= 1
+    b_cycle=1
+
+    select case shift
+    case 8
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)
+        pvalue = x
+   ' case 9
+'        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/10
+'        pvalue = x
+'    case 12
+'        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/100
+'        pvalue = x
+    case 10
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)*10
+        pvalue = x
+    case else
+        exit sub
+    end select
+    if f_res>f_max then
+        if b_cycle=1 then
+            Sender.Text = f_min + (f_res-f_max)
+        else
+            Sender.Text =f_max
+        end if
+    else
+        if f_res<f_min then
+            if b_cycle=1 then
+                Sender.Text = f_max - abs(f_res-f_min)
+            else
+                Sender.Text =f_min
+            end if
+        else
+           Sender.Text =f_res
+        end if
+    end if
+    AllTV.TV__SetValue Sender.UserData
+end sub
+
+sub tw_virtuell_btn_pos_setClick (Sender)
+    AllTV.TV__SetValue 11
+    AllTV.TV__SetValue 12
+    AllTV.TV__SetValue 13
+    AllTV.TV__SetValue 21
+    AllTV.TV__SetValue 22
+    AllTV.TV__SetValue 23
+    AllTV.TV__SetValue 31
+    AllTV.TV__SetValue 32
+    AllTV.TV__SetValue 33
+    AllTV.TV__SetValue 51
+    AllTV.TV__SetValue 52
+    AllTV.TV__SetValue 53
+end sub
+
+sub tw_virtuell_btn_pos_getClick (Sender)
+    AllTV.TV__GetValue
+end sub
+
+sub tw_virtuell_edt_scaleMouseDown (Sender, Button, Shift, X, Y)
+    pvalue=X
+end sub
+
+sub tw_virtuell_edt_scaleMouseMove (Sender, Shift, X, Y)
+Dim thelp
+    Dim f_min,f_max,f_step,b_cycle,f_res
+    thelp = sender.UserData
+    f_min= 0.1
+    f_max= 100
+    f_step= 0.1
+    b_cycle=0
+
+    select case shift
+    case 8
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)
+        pvalue = x
+    case 9
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/10
+        pvalue = x
+        '    case 12
+'        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)/100
+'        pvalue = x
+    case 10
+        f_res = valnumber(Sender.Text) + ((X - pvalue)*f_step/1)*10
+        pvalue = x
+    case else
+        exit sub
+    end select
+    if f_res>f_max then
+        if b_cycle=1 then
+            Sender.Text = f_min + (f_res-f_max)
+        else
+            Sender.Text =f_max
+        end if
+    else
+        if f_res<f_min then
+            if b_cycle=1 then
+                Sender.Text = f_max - abs(f_res-f_min)
+            else
+                Sender.Text =f_min
+            end if
+        else
+           Sender.Text =f_res
+        end if
+    end if
+    AllTV.TV__SetValue Sender.UserData
+end sub
+
+sub tw_virtuell_rb_bottonClick (Sender)
+    AllTV.TV__SetValue 41
+end sub
+
+sub tw_virtuell_btn_refresh_sceneClick (Sender)
+    AllTV.TV__GetARScenes
+end sub
+
+sub tw_virtuell_lbl_1DblClick (Sender)
+    dim slot
+    slot=right(Sender.name,1)
+    select case(slot)
+    case 1
+        tw_virtuell.edt_pos_pan.text=0
+        tw_virtuell.edt_pos_x.text=0
+        tw_virtuell.edt_pos_y.Text=0
+        tw_virtuell.edt_pos_z.Text=0
+        tw_virtuell.edt_scale.text=1
+    case 2
+        tw_virtuell.edt_pos_pan1.text=0
+        tw_virtuell.edt_pos_x1.text=0
+        tw_virtuell.edt_pos_y1.Text=0
+        tw_virtuell.edt_pos_z1.Text=0
+        tw_virtuell.edt_scale1.text=1
+    case 3
+        tw_virtuell.edt_pos_pan2.text=0
+        tw_virtuell.edt_pos_x2.text=0
+        tw_virtuell.edt_pos_y2.Text=0
+        tw_virtuell.edt_pos_z2.Text=0
+        tw_virtuell.edt_scale2.text=1
+    case 4
+        tw_virtuell.edt_pos_pan3.text=0
+        tw_virtuell.edt_pos_x3.text=0
+        tw_virtuell.edt_pos_y3.Text=0
+        tw_virtuell.edt_pos_z3.Text=0
+        tw_virtuell.edt_scale3.text=1
+    end select
+    call tw_virtuell_btn_pos_setClick(0)
+end sub
+
+sub tw_virtuell_cb_camselectClick (Sender)
+    if tw_virtuell.cb_camselect.Checked then
+        AllTV.TV__CamSelect 5
+    else
+        AllTV.TV__CamSelect 1
+    end if
+end sub
+
+</script_body>
+</script>

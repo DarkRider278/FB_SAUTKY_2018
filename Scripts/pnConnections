@@ -1,0 +1,13 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub pnConnections_Btn_refresh_imgClick (Sender)
+    AllTV.Get_Team_Logos
+    AllTV.Get_Player_Fotos
+    AllTV.Get_Logo_Div
+end sub
+
+</script_body>
+</script>
