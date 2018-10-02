@@ -38,8 +38,9 @@ end sub
 sub System_ScriptHotkey2Execute (Sender)
     pgMain_Btn_Hide_DSS_ZusatzClick (Sender)
 end sub
-
+dim ignorechange
 sub System_AppEventsTVConnectionChange (Sender, ConnID)
+    if ignorechange then exit sub
     cc.SF.DebugText "TV CONNECTIONS CHANGED!! ", clRed
     ReadTVConnections
 end sub
@@ -47,7 +48,50 @@ end sub
 sub System_AppEventsOpenProject (Sender)
     cc.sf.ClearDebugWindow
     LAST_TABSHEET = pgMain.Name
+    ignorechange=true
+    LoadGfxConfig
     ReadTVConnections
+    ignorechange=false
+end sub
+
+sub LoadGFXConfig()
+    dim data
+    data=cc.Strings.LoadFromFile("d:\SKYAUT_FB.ini",false)
+    dim ccount
+    ccount=0
+    if data<> "" then
+        'cc.sf.DebugText data
+        CC.Strings.StringsObj.Clear
+        CC.Strings.StringsObj.CommaText = data
+        IF CC.Strings.StringsObj.IndexOfName("NAME") = -1 THEN
+            cc.sf.DebugText "Config Loaded"
+        ELSE
+            cc.sf.DebugText "Config Loaded: "+CC.Strings.StringsObj.Values("NAME")
+        END IF
+        IF CC.Strings.StringsObj.IndexOfName("MODE") = -1 THEN
+            pg_settings.rb_opmode.ItemIndex=0
+        ELSE
+            pg_settings.rb_opmode.ItemIndex=CC.Strings.StringsObj.Values("MODE")
+        END IF
+        if CC.TVConnections.GetConnectionCount>0 then
+            IF CC.Strings.StringsObj.IndexOfName("IP1") = -1 THEN
+                cc.TVConnections.Connections(0).Active=false
+                cc.TVConnections.Connections(0).Address=""
+            ELSE
+                cc.TVConnections.Connections(0).Active=false
+                cc.TVConnections.Connections(0).Address=CC.Strings.StringsObj.Values("IP1")
+            END IF
+        end if
+        if CC.TVConnections.GetConnectionCount>1 then
+            IF CC.Strings.StringsObj.IndexOfName("IP2") = -1 THEN
+                cc.TVConnections.Connections(1).Active=false
+                cc.TVConnections.Connections(1).Address=""
+            ELSE
+                cc.TVConnections.Connections(1).Active=false
+                cc.TVConnections.Connections(1).Address=CC.Strings.StringsObj.Values("IP2")
+            END IF
+        end if
+    end if
 end sub
 
 sub System_AppEventsDesignMode (Sender)

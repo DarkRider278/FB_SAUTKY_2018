@@ -4,6 +4,7 @@
 <script_body>
 
 sub tw_connectionpreset_btn_setClick (Sender)
+    ignorechange=true
     if CC.TVConnections.GetConnectionCount>0 then
         cc.TVConnections.Connections(0).Active=false
         cc.TVConnections.Connections(0).Address=tw_connectionpreset.tb_adress_1.Text
@@ -20,6 +21,10 @@ sub tw_connectionpreset_btn_setClick (Sender)
         cc.TVConnections.Connections(3).Active=false
         cc.TVConnections.Connections(3).Address=tw_connectionpreset.tb_adress_4.Text
     end if
+
+    'LoadGfxConfig
+    ReadTVConnections
+    ignorechange=false
 end sub
 
 </script_body>

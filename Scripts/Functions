@@ -433,40 +433,37 @@ Sub ReadTVConnections()
 
     dim previous    ' store the previous selection
     dim prefix
+    dim add
     For k = 1 to 4
 
-        with pnConnections.ComponentByName("cmb_Conn_" & CStr(k))
+        'with pnConnections.ComponentByName("cmb_Conn_" & CStr(k))
             ' Remember the actual selection
-            if .Itemindex <> -1 Then
-               previous = .Items.strings(.itemIndex)
+            if pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Itemindex <> -1 Then
+               previous = pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Items.strings(pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).itemIndex)
             else
                previous = ""
             end if
-
-            .Items.Clear    ' Clear all items
+            pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Items.Clear    ' Clear all items
             For i = 0 To CC.TVConnections.GetConnectionCount - 1    ' Add all available connections
-                'if i= 0 then
-'                    prefix="SKY Feed "
-'                elseif i=1 then
-'                    prefix="WF Feed "
-'                else
-'                    prefix=""
-'                end if
                 prefix="C"&i+1&" "
-                .Items.Add(prefix&CC.TVConnections.Connections(i).Address)
+                add=CC.TVConnections.Connections(i).Address
+                if add <> "" then pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Items.Add(prefix&add)
             next
             
-            .ItemIndex = .Items.IndexOf(previous)   ' reselect previous selection (if possible)
-            if .ItemIndex = -1 Then
-                .ItemIndex=i
+            pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).ItemIndex = pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Items.IndexOf(previous)   ' reselect previous selection (if possible)
+
+            if pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).ItemIndex = -1 AND k<=pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).Items.Count Then
+                pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).ItemIndex =k-1
+            end if
+            if pnConnections.ComponentByName("cmb_Conn_" & CStr(k)).ItemIndex >-1 Then
                 pnConnections.ComponentByName("cmb_ConnType_" & k).ItemIndex = 2
-                pnConnections.ComponentByName("opt_Use"       & k).Checked   = false
+                pnConnections.ComponentByName("opt_Use"       & k).Checked   = true
                 pnConnections.ComponentByName("cmb_Lang_"     & k).ItemIndex = 0
             end if
-        end with
+        'end with
     Next
 
-    on error goto 0
+    'on error goto 0
     Enable_apply_button Nothing     ' Check current settings
     pnConnections.Btn_SaveConnections.Visible = True
     pnConnections.Visible = True
