@@ -3410,40 +3410,27 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetVizDataUpperFL ids+1,Data.Item("NAME" & k)
             SetVizDataFL ids+2,Data.Item("GOALS" & k)
             SetVizDataFL ids+3,Data.Item("POINTS" & k)
-            if k=1 then
-                if p="1." then
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE1$img_cl_icon*ACTIVE SET 1"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE1$gfx_area_Line1*MATERIAL*COLOR SET 0.784 0.784 0.784"
-                else
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE1$img_cl_icon*ACTIVE SET 0"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE1$gfx_area_Line1*MATERIAL*COLOR SET 1.0 1.0 1.0"
+            if p="1." or p="2." then
+                SetVizDataFL ids+4,0
+                if k<3 then
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/cl_icon")
                 end if
-            end if
-            if k=2 then
-                if p="2." then
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE2$img_cl_icon*ACTIVE SET 1"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE2$gfx_area_Line1*MATERIAL*COLOR SET 0.784 0.784 0.784"
-                else
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE2$img_cl_icon*ACTIVE SET 0"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE2$gfx_area_Line1*MATERIAL*COLOR SET 1.0 1.0 1.0"
+            elseif p="3." or p="4." then
+                SetVizDataFL ids+4,1
+                if k<5 then
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/el_icon")
                 end if
-            end if
-            if k=3 then
-                if p="3." then
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE3$img_cl_icon*ACTIVE SET 1"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE3$gfx_area_Line1*MATERIAL*COLOR SET 0.902 0.902 0.902"
-                else
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE3$img_cl_icon*ACTIVE SET 0"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE3$gfx_area_Line1*MATERIAL*COLOR SET 1.0 1.0 1.0"
+            elseif p="12." then
+                SetVizDataFL ids+4,1
+                if k<5 then
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 0")
                 end if
-            end if
-            if k=4 then
-                if p="4." then
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE4$img_cl_icon*ACTIVE SET 1"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE4$gfx_area_Line1*MATERIAL*COLOR SET 0.902 0.902 0.902"
-                else
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE4$img_cl_icon*ACTIVE SET 0"
-                    obj__TV.SendCommand "RENDERER*FRONT_LAYER*TREE*$BLITZTABELLE$LINE4$gfx_area_Line1*MATERIAL*COLOR SET 1.0 1.0 1.0"
+            else
+                SetVizDataFL ids+4,2
+                if k<5 then
+                    obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 0")
                 end if
             end if
             ids=ids+10
@@ -4680,6 +4667,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetVizDataFL "0011",""
         if nr = "3" then    ' "Unterstützt durch Produkt Platzierung"
             sScene = "DSS_Uhr"
+            'if not i_variant=1 then exit sub
             obj__TV.RendererUpdate false
             obj__TV.SetScene sScene
             obj__TV.LoadScene elFrontLayer
