@@ -1586,6 +1586,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 3  sScene = "VB_Tab_Erg"
             case 4  sScene = "VB_Tab_12"
             case 5  sScene = "VB_Erg3_Tab6"
+            case 6  sScene = "VB_Tab_M"
+            case 7  sScene = "VB_Tab_Q"
         end select
         LoadScene elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1597,18 +1599,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE")= 5 then
             SetTitleLogo "el_logo_quer",true
         end if
-        
-        SetTitle Data.item("OPT_TITLE")
-        SetTitleSubLine Data.item("TITLE")
-        SetDropLine ""
-        if Data.Item("ANIM_TYPE")=4 or Data.Item("ANIM_TYPE")=2 then
-            'SetSubLine "Klub"
-        else
-            'SetSubLine "Ergebnisse"
+        if Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
+            SetTitle Data.item("OPT_TITLE")
+            SetTitleSubLine Data.item("TITLE")
+            SetDropLine ""
         end if
 
-
-        if Data.Item("ANIM_TYPE") <> 4 then
+        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
             dim ids : ids=1101
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
@@ -1631,7 +1628,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
 
 
-        if Data.Item("ANIM_TYPE") <> 1 then
+        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
             ids =1100
             if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =3 then ids=ids+1000
             if Data.Item("ANIM_TYPE") =4  then ids=ids+1000
@@ -1653,50 +1650,40 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 SetVizDataBufferOff
                 ids=ids+100
               next
-              ids =1100
-              if Data.Item("ANIM_TYPE") =2 then ids=ids+1000
-              if false then
-              for i = 1 to 10
-                if i = 1 then
-                    SetVizData ids+8 ,4
-                elseif i = 2 then
-                    if CURRENT_LEAGUE = "119" then  ' 1. Liga PLatz 2 = Dunkelrot
-                        SetVizData ids+8 ,4
-                    else                           ' 2. Liga = Grau
-                         SetVizData ids+8 ,4
-                    end if
-                elseif i = 3 then
-                    if CURRENT_LEAGUE = "119" then  ' 1. Liga PLatz 2 = Dunkelrot
-                        SetVizData ids+8 ,5
-                    else                           ' 2. Liga = Grau
-                         SetVizData ids+8 ,5
-                    end if
-                elseif i = 4 then
-                    if CURRENT_LEAGUE = "119" then  ' 1. Liga PLatz 2 = Dunkelrot
-                        SetVizData ids+8 ,5
-                    else                           ' 2. Liga = Grau
-                         SetVizData ids+8 ,0
-                    end if
-                elseif i = 11 then
-                    if CURRENT_LEAGUE = "119" then  ' 1. Liga PLatz 2 = Dunkelrot
-                        'SetVizData ids+8 ,0
-                    else                           ' 2. Liga = Grau
-                        ' SetVizData ids+8 ,0
-                    end if
-                elseif i = 12 then
-                    if CURRENT_LEAGUE = "119" then  ' 1. Liga PLatz 2 = Dunkelrot
-                        SetVizData ids+8 ,6
-                    else                           ' 2. Liga = Grau
-                         SetVizData ids+8 ,6
-                    end if
-                end if
 
+            SetVizData "0004",Data.Item("ITEMCOUNTTAB")
 
-                ids=ids+100
-            next
+        end if
+        
+        if Data.Item("ANIM_TYPE") = 6 or Data.Item("ANIM_TYPE") = 7 then
+            ids =1100
+            dim s,e,count
+            count=1
+            if  Data.Item("ANIM_TYPE") = 6 then
+                s=1
+                e=6
+            else
+                s=7
+                e=12
             end if
-                SetVizData "0004",Data.Item("ITEMCOUNTTAB")
-
+            for i = s to e
+                SetVizDataBufferOn
+                SetVizData ids,count&"."
+                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
+                SetVizData ids+2,Data.Item("NAME" & i)
+                SetVizData ids+3,Data.Item("GAMES" & i)
+                SetVizData ids+4,Data.Item("GOALS" & i)
+                SetVizData ids+5,Data.Item("DIFF" & i)
+                SetVizData ids+6,Data.Item("PTSH" & i)
+                select case Data.Item("TREND" & i)
+                    case "+"    SetVizData ids+9,1
+                    case ""     SetVizData ids+9,0
+                    case "-"    SetVizData ids+9,2
+                end select
+                SetVizDataBufferOff
+                ids=ids+100
+                count=count+1
+              next
         end if
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5 L11 3.5 L12 3.5", sScene
