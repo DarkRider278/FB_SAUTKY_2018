@@ -76,6 +76,8 @@ sub setButtonSky(onoff)
     tw_team_stats2.bt_show_BB.Visible=onoff
     
     tw_standing.bt_Erg2.Visible=onoff
+    tw_standing.bt_Erg6.Visible=onoff
+    tw_standing.bt_Erg7.Visible=onoff
     
     tw_blitztab.bt_show_goals.Visible=onoff
     tw_blitztab.bt_show_diff.Visible=onoff
