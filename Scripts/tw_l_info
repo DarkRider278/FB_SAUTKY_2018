@@ -353,6 +353,7 @@ sub refreshTabelle_L_I
     dim rank, games,i
     games = TSP.GetRound(TSP_ROUND)
     i = 0
+    tw_l_info.ed_s_tab_headline.Text=  games & ". Runde"
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
