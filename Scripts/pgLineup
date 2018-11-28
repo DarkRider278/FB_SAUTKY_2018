@@ -223,5 +223,143 @@ function isPlayerHL(nr,team)
     isPlayerHL=false
 end function
 
+sub setPlayerHL(i,nr,team,v)
+    if team="A" then
+        pgLineup.gr_lineup_hl_a.Cells(i,0) = nr
+        pgLineup.gr_lineup_hl_a.Cells(i,1) = v
+    else
+        pgLineup.gr_lineup_hl_b.Cells(i,0) = nr
+        pgLineup.gr_lineup_hl_b.Cells(i,1) = v
+    end if
+end sub
+
+sub pgLineup_Btn_ExportLineupClick (Sender)
+    dim Auswahl : Auswahl = Right(Lineup.ActiveLineup, 1)
+    If (Auswahl <> "A") and (Auswahl <> "B") then Exit Sub
+    dim data,team
+    If Auswahl = "A" then TSP.SetTeamPos "A" else TSP.SetTeamPos "B"
+    team = TSP.GetSTeam(TSP_LONG_NAME)
+    cc.Strings.StringsObj.Clear
+    cc.Strings.StringsObj.Add("TEAM="&team)
+    cc.Strings.StringsObj.Add("SIDE="&Auswahl)
+    dim P_Nr,P_Name,x_Pos,y_Pos,x_W,y_H,P_HL
+    dim i,LineupID,cs
+    If Auswahl = "A" Then
+        LineupID = Lineup_A
+    else
+        LineupID = Lineup_B
+    end if
+    For i = 1 to 11
+        P_Nr   = Trim(Lineup.GetPlayer(Lineup_Nr, i, LineupID))
+        P_Name = Trim(Lineup.GetPlayer(Lineup_Name, i, LineupID))
+        x_Pos  = Lineup.GetPlayer(Lineup_Name_X, i, LineupID)
+        x_W    = Lineup.GetPlayer(Lineup_Nr_X, i, LineupID)
+        y_Pos  = Lineup.GetPlayer(Lineup_Name_Y, i, LineupID)
+        y_H    = Lineup.GetPlayer(Lineup_Nr_Y, i, LineupID)
+        if isPlayerHL(P_Nr,Auswahl) then
+            P_HL="X"
+        else
+            P_HL=""
+        end if
+        'cs="PLAYER"&i&"="&P_Nr&"#"&P_Name&"#"&x_Pos&"#"&y_Pos&"#"&P_HL
+        cc.Strings.StringsObj.Add("PLAYER"&i&"="&P_Nr&"#"&P_Name&"#"&x_Pos&"#"&y_Pos&"#"&x_W&"#"&y_H&"#"&P_HL)
+    Next
+    
+    
+    data=cc.Strings.StringsObj.CommaText
+    dim sn,sPrompt
+    sPrompt= "Export "&team&" from Slot "&Auswahl&"?"
+    sn=TSP.GetRound(TSP_ROUND)&"ST_"&team&"_01"
+    sn = InputBox(sPrompt,"Export Team",sn,200,200)
+    if sn=false then
+    else
+        cc.Strings.SaveToFile pg_settings.tb_teamexportpath.text&"\"&Replace(sn," ","_")&".team",data
+        'cc.Strings.SaveToFile "d:\testexport.team",data
+    end if
+
+end sub
+
+sub pgLineup_Btn_ImportLineupClick (Sender)
+    dim data,team,side,i,player,p
+    i= pglineup.lb_teamfiles.ItemIndex
+    if i<0 then exit sub
+    team = pglineup.lb_teamfiles.Items.Strings(i)
+    team=trim(split(team,"<>")(1))
+    data=cc.Strings.LoadFromFile(pg_settings.tb_teamexportpath.text&"\"&team&".team",false)
+    if data<> "" then
+        'cc.sf.DebugText data
+        CC.Strings.StringsObj.Clear
+        CC.Strings.StringsObj.CommaText = data
+        IF CC.Strings.StringsObj.IndexOfName("TEAM") = -1 THEN
+            exit sub
+        ELSE
+            team=CC.Strings.StringsObj.Values("TEAM")
+            cc.sf.DebugText "Team import: "& team
+        END IF
+        side =CC.Strings.StringsObj.Values("SIDE")
+        if pgLineup.cb_changeslot.Checked=true then
+           If side = "A" Then
+                side="B"
+            else
+                side="A"
+            end if
+        end if
+        'side="B"
+        If side = "A" Then
+            Lineup.ActiveLineup = "Team A"
+        else
+            Lineup.ActiveLineup = "Team B"
+        end if
+
+        strMsg = Msgbox("Import "&team &" in Slot "&side&"?", vbOkCancel, "Import Team")
+
+       If strMsg <> vbOk Then exit sub
+
+        Lineup.ClearPlayers(side)
+        dim c
+        dim r
+        if side ="A" then
+            for r=1 to 11
+                pgLineup.gr_lineup_hl_a.Cells(r,0)=""
+                pgLineup.gr_lineup_hl_a.Cells(r,1)=""
+            next
+        else
+            for r=1 to 11
+                pgLineup.gr_lineup_hl_b.Cells(r,0)=""
+                pgLineup.gr_lineup_hl_b.Cells(r,1)=""
+            next
+        end if
+        for i=1 to 11
+           if CC.Strings.StringsObj.IndexOfName("PLAYER"&i) <> -1 THEN
+                player= CC.Strings.StringsObj.Values("PLAYER"&i)
+                p=split(player,"#")
+                'cc.sf.DebugText p
+                Lineup.Addplayer p(1), p(0), side
+                Lineup.SetPlayer p(2),Lineup_Name_X,i,side
+                Lineup.SetPlayer p(3),Lineup_Name_Y,i,side
+                Lineup.SetPlayer p(4),Lineup_Nr_X,i,side
+                Lineup.SetPlayer p(5),Lineup_Nr_Y,i,side
+                SetPlayerHL i,p(0),side,p(6)
+           end if
+        next
+    end if
+end sub
+
+sub pgLineup_btn_refreshimportteamsClick (Sender)
+    pgLineup.lb_teamfiles.Items.Clear
+    dim objFSO
+    set objFSO = CreateObject("Scripting.FileSystemObject")
+    dim of
+    set of = objFSO.GetFolder(pg_settings.tb_teamexportpath.text)
+
+    for each file in of.files
+        if Instr(file.Name,".team") then
+            'cc.sf.DebugText file.name
+            'cc.sf.DebugText file.DateLastModified
+            pgLineup.lb_teamfiles.Items.Add file.DateLastModified  &" <> "&Replace(file.name,".team","")
+        end if
+    next
+end sub
+
 </script_body>
 </script>
