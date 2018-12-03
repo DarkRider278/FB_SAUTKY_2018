@@ -158,45 +158,82 @@ end sub
 
 
 sub pg_settings_bt_defaultgfx_on_1Click (Sender)
+    dim t
+    t=""
+    on error resume next
+    TSP.SaveSelection
+    TSP.SetTeamPos("A") 'Werte TeamA
+    t = TSP.GetSTeam(TSP_Short_name)
+    TSP.SetTeamPos("B") 'Werte Team B
+    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    TSP.RestoreSelection
+    on error goto 0
     If not AllTV.obj_TVList(0) is Nothing Then
         AllTV.obj_TVList(0).TVContent=0
-        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSANFANG"
+        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSANFANG" , t
     end if
 end sub
 
 sub pg_settings_bt_defaultgfx_off_1Click (Sender)
    If not AllTV.obj_TVList(0) is Nothing Then
         AllTV.obj_TVList(0).TVContent=2
-        AllTV.obj_TVList(0).SetDefaultGFX 1, false ,""
+        AllTV.obj_TVList(0).SetDefaultGFX 1, false ,"",""
     end if
 
 end sub
 
 sub pg_settings_bt_defaultgfx_on_2Click (Sender)
+    dim t
+    t=""
+    on error resume next
+    TSP.SaveSelection
+    TSP.SetTeamPos("A") 'Werte TeamA
+    t = TSP.GetSTeam(TSP_Short_name)
+    TSP.SetTeamPos("B") 'Werte Team B
+    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    TSP.RestoreSelection
     If not AllTV.obj_TVList(1) is Nothing Then
         AllTV.obj_TVList(1).TVContent=0
-        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSANFANG"
+        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSANFANG",t
     end if
 end sub
 
 sub pg_settings_bt_defaultgfx_off_2Click (Sender)
    If not AllTV.obj_TVList(1) is Nothing Then
         AllTV.obj_TVList(1).TVContent=2
-        AllTV.obj_TVList(1).SetDefaultGFX 2, false ,""
+        AllTV.obj_TVList(1).SetDefaultGFX 2, false ,"",""
     end if
 end sub
 
 sub pg_settings_bt_defaultgfx_on_out_1Click (Sender)
+    dim t
+    t=""
+    on error resume next
+    TSP.SaveSelection
+    TSP.SetTeamPos("A") 'Werte TeamA
+    t = TSP.GetSTeam(TSP_Short_name)
+    TSP.SetTeamPos("B") 'Werte Team B
+    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    TSP.RestoreSelection
     If not AllTV.obj_TVList(0) is Nothing Then
         AllTV.obj_TVList(0).TVContent=0
-        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSENDE"
+        AllTV.obj_TVList(0).SetDefaultGFX 1, true,"VB_LEITUNGSENDE" ,t
     end if
 end sub
 
 sub pg_settings_bt_defaultgfx_on_out_2Click (Sender)
+    dim t
+    t=""
+    on error resume next
+    TSP.SaveSelection
+    TSP.SetTeamPos("A") 'Werte TeamA
+    t = TSP.GetSTeam(TSP_Short_name)
+    TSP.SetTeamPos("B") 'Werte Team B
+    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    TSP.RestoreSelection
   If not AllTV.obj_TVList(1) is Nothing Then
         AllTV.obj_TVList(1).TVContent=0
-        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSENDE"
+        AllTV.obj_TVList(1).SetDefaultGFX 2, true ,"VB_LEITUNGSENDE",t
     end if
 
 end sub

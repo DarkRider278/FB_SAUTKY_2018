@@ -6287,7 +6287,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         obj__TV.SendCommandEx("RENDERER SET_CAMERA "&cam)
     end sub
     
-    public sub SetDefaultGFX(channel,onoff,scene)
+    public sub SetDefaultGFX(channel,onoff,scene,team)
         if channel=i_variant then
             if onoff then
                 obj__TV.OpenProject s__VizPathWF
@@ -6299,7 +6299,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 dim sResult
                 sResult = obj__TV.SendCommandEx("RENDERER*MAIN_LAYER SET_OBJECT SCENE*" & s__VizPathWF & "/" & scene)
                 sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & "*NAME GET")
-
+                SetVizData "1114", team
 
                 obj__TV.RendererUpdate true
             else
