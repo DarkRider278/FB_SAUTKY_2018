@@ -24,6 +24,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public s_pngscene
     
     private displaysponsor
+    
+    dim ExportData
+    dim ExportDataTyp
+    dim ExportDataDesc
 
     Private Sub Class_Initialize
     End Sub
@@ -53,6 +57,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dssishiding=false
          databuffer=off
          displaysponsor=""
+         set ExportData = CreateObject("Scripting.Dictionary")
+         set ExportDataTyp = CreateObject("Scripting.Dictionary")
+         set ExportDataDesc = CreateObject("Scripting.Dictionary")
     End function
 
     Private Sub Class_Terminate()
@@ -62,6 +69,26 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim uuid
         uuid = obj__TV.SendCommandEx("RENDERER*MAIN_LAYER*UUID GET")
         obj__TV.SendCommandEx("SCENE SAVE_AS "&uuid&" """&s__VizPathARTemp&"/"&name&"""")
+    end sub
+    
+    public sub ExportARXml(name)
+        dim outtxt
+        outtxt="<?xml version=""1.0""?>"&vbCrLf&"<data>"&vbCrLf
+        for each param in ExportData.keys()
+            outtxt=outtxt&"<entry key="""&param&""" value="""&ExportData.Item(param)&""" typ="""&ExportDataTyp.Item(param)&""" desc="""&ExportDataDesc.Item(param)&"""></entry>"&vbCrLf
+        next
+        
+        outtxt=outtxt&"</data>"
+        dim   objFSO, outFile
+        Set objFSO=CreateObject("Scripting.FileSystemObject")
+        'datu+zeit
+        'TimeStamp
+
+        outFile=pg_settings.tb_arexportpath.text &"\"&TimeStamp&"_"&name&".xml"
+        
+        Set objFile = objFSO.CreateTextFile(outFile,True)
+        objFile.Write outtxt
+        objFile.Close
     end sub
     
     public sub GetARScenes()
@@ -76,22 +103,33 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
     end sub
 
-    public Sub SetVizData(id, value)
+
+    public Sub SetVizData(id, value,typ,desc)
         If obj__TV is Nothing Then Exit Sub
         if databuffer then
             data=data & id&" SET "&value&"\0"
         else
             obj__TV.SendCommand("RENDERER*MAIN_LAYER*TREE*$object*FUNCTION*ControlObject*in SET ON " &id&" SET "&value)
         end if
+        if ExportData.Exists(id) then
+            ExportData.Item(id)=value
+        else
+            ExportData.add id,value
+        end if
+        if ExportDataTyp.Exists(id) then
+            ExportDataTyp.Item(id)=typ
+        else
+            ExportDataTyp.add id,typ
+        end if
+        if ExportDataDesc.Exists(id) then
+            ExportDataDesc.Item(id)=desc
+        else
+            ExportDataDesc.add id,desc
+        end if
     end sub
 
-    public Sub SetVizDataUpper(id, value)
-        If obj__TV is Nothing Then Exit Sub
-        if databuffer then
-            data=data & id&" SET "&ucase(value)&"\0"
-        else
-            obj__TV.SendCommand("RENDERER*MAIN_LAYER*TREE*$object*FUNCTION*ControlObject*in SET ON " &id&" SET "&ucase(value))
-        end if
+    public Sub SetVizDataUpper(id, value,typ,desc)	
+		SetVizData id,ucase(value),typ,desc       
     end sub
     
     public sub SetVizDataBufferOn
@@ -124,84 +162,84 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     end sub
     
     public Sub SetPFirstName(value)
-        SetVizData "0100",value
+        SetVizData "0100",value,"string","Player First name"
     end sub
     public Sub SetPLastName(value)
-        SetVizData "0102",value
+        SetVizData "0102",value,"string" ,"Player Last Name"
     end sub
     
     public Sub SetPFirstName2(value)
-        SetVizData "0104",value
+        SetVizData "0104",value,"string" ,"Player B First Name"
     end sub
     public Sub SetPLastName2(value)
-        SetVizData "0106",value
+        SetVizData "0106",value,"string", "Player B Last Name"
     end sub
     public Sub SetPNummer(value)
-        SetVizData "0095",value
+        SetVizData "0095",value,"string", "Player Number"
     end sub
     public Sub SetTName(value)
-        SetVizData "0100",value
+        SetVizData "0100",value,"string" ,"Team Name"
     end sub
     public Sub SetTLogo(value)
         if value="" then
-            SetVizData "0089" ,0
+            SetVizData "0089" ,0,"int","Team Logo On/Off"
         else
-            SetVizData "0089",1
-            SetVizData "0090","IMAGE*"&s__LogoPath & "/" &value
+            SetVizData "0089",1 ,"int","Team Logo On/Off"
+            SetVizData "0090","IMAGE*"&s__LogoPath & "/" &value,"image","Team Logo"
         end if
     end sub
     public Sub SetTName2(value)
-        SetVizData "0200",value
+        SetVizData "0200",value,"string","Team 2 Name"
     end sub
     public Sub SetTLogo2(value)
-        SetVizData "0190","IMAGE*"&s__LogoPath & "/" &value
+        SetVizData "0190","IMAGE*"&s__LogoPath & "/" &value,"image","Team 2 Logo"
     end sub
     public Sub SetTLogo2_WF(value)
-        SetVizData "0095","IMAGE*"&s__LogoPath & "/" &value
+        SetVizData "0095","IMAGE*"&s__LogoPath & "/" &value,"image","Team 2 Logo(WF)"
     end sub
     public Sub SetPHSOff()
-        SetVizData "0092",0
+        SetVizData "0092",0,"int","Player Headshot On/Off"
     end sub
     public Sub SetPHS(team,value)
-        SetVizData "0092",1
-        SetVizData "0093","IMAGE*"&s__PlayerFotoPath & "/" & team & "/"&value
+        SetVizData "0092",1 ,"int","Player Headshot On/Off"
+        SetVizData "0093","IMAGE*"&s__PlayerFotoPath & "/" & team & "/"&value,"image","Player Headshot"
     end sub
     
     public Sub SetMHS(valuel, valuer)
-        SetVizData "0092",1
-        SetVizData "0093","IMAGE*"&s__FotoPath & "/" & valuel
-        SetVizData "0094","IMAGE*"&s__FotoPath & "/" & valuer
+        SetVizData "0092",1 ,"int","Mod/Com Headshot On/Off"
+        SetVizData "0093","IMAGE*"&s__FotoPath & "/" & valuel,"image","Mod/Com Headshot"
+        SetVizData "0094","IMAGE*"&s__FotoPath & "/" & valuer,"image","Mod/Com Headshot"
     end sub
     
    public sub SetScore(value)
-        SetVizData "0149",1
-        SetVizData "0150",value
+        SetVizData "0149",1 ,"int","Score On/Off"
+        SetVizData "0150",value,"string","Score"
    end sub
    
    public Sub SetSubLine (value)
-        SetVizData "0500",value
+        SetVizData "0500",value,"string","Subline"
     end sub
     public Sub SetTitle(value)
-        SetVizData "0100",value
-        SetVizData "0102",""
+        SetVizData "0100",value,"string","Title"
+        SetVizData "0102","","string","Title 2.Part"
     end sub
     public Sub SetTitleSubLine (value)
-        SetVizData "0200",value
+        SetVizData "0200",value,"string","Title Subline"
     end sub
     public Sub SetDropLine (value)
-        SetVizData "9000",value
+        SetVizData "9000",value,"string","Dropline"
     end sub
     
     public Sub SetTitleLogo(value,league)
         if value="" then
-            SetVizData "0085" ,0
+            SetVizData "0085" ,0,"int","Title Logo VAR/Off"
         else
             if league = true then
-                SetVizData "0085" ,2
-                SetVizData "0095","IMAGE*"&s__LogoPathDiv & "/" &value
+                SetVizData "0085" ,2 ,"int","Title Logo VAR/Off"
+                SetVizData "0095","IMAGE*"&s__LogoPathDiv & "/" &value ,"image","Title Logo"
             else
-                SetVizData "0085" ,1
-                SetVizData "0090","IMAGE*"&s__LogoPath & "/" &value
+                SetVizData "0085" ,1 ,"int","Title Logo VAR/Off"
+                SetVizData "0090","IMAGE*"&s__LogoPath & "/" &value ,"image","Title Logo"
             end if
         end if
     end sub
@@ -224,14 +262,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     
     public Sub SetTitleLogoLF(value,league)
         if value="" then
-            SetVizData "000085" ,0
+            SetVizData "000085" ,0 ,"int","Title Logo VAR/Off"
         else
             if league = true then
-                SetVizData "000085" ,2
-                SetVizData "000095","IMAGE*"&s__LogoPathDiv & "/" &value
+                SetVizData "000085" ,2 ,"int","Title Logo VAR/Off"
+                SetVizData "000095","IMAGE*"&s__LogoPathDiv & "/" &value ,"image","Title Logo"
             else
-                SetVizData "000085" ,1
-                SetVizData "000090","IMAGE*"&s__LogoPath & "/" &value
+                SetVizData "000085" ,1 ,"int","Title Logo VAR/Off"
+                SetVizData "000090","IMAGE*"&s__LogoPath & "/" &value ,"image","Title Logo"
             end if
         end if
     end sub
@@ -252,11 +290,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
     end sub
     
-    public Sub SetTeamLogo(id,value)
-        SetVizData id,"IMAGE*"&s__LogoPath & "/" &value
+    public Sub SetTeamLogo(id,value,desc)
+        SetVizData id,"IMAGE*"&s__LogoPath & "/" &value ,"image",desc
     end sub
-    public Sub SetPlayerHS(id,team,value)
-        SetVizData id,"IMAGE*"&s__PlayerFotoPath & "/" & team & "/"&value
+    public Sub SetPlayerHS(id,team,value,desc)
+        SetVizData id,"IMAGE*"&s__PlayerFotoPath & "/" & team & "/"&value ,"image",desc
     end sub
     
     public Sub SetPlayerHSFL(id,team,value)
@@ -265,53 +303,53 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     
     
     public Sub SetLFTitle(value)
-        SetVizData "000100",value
-        SetVizData "000102",""
+        SetVizData "000100",value,"string","L-Form Title"
+        SetVizData "000102","" ,"string",""
     end sub
 
     public sub SetBGOnOff()
         if pgmain.cb_background.Checked then
-            SetVizData "0002",1
+            SetVizData "0002",1,"int","BG On/Off"
         else
-            SetVizData "0002",0
+            SetVizData "0002",0 ,"int","BG On/Off"
         end if
     end sub
     
     public sub SetCommercialOnOff(scene)
         if tw_commercial.cb_nexttime.Checked=true  then
-            SetVizData "0007",1
+            SetVizData "0007",1 ,"commercial","Sponsor"
             displaysponsor=scene
         else
-            SetVizData "0007",0
+            SetVizData "0007",0 ,"commercial","Sponsor"
             displaysponsor=""
         end if
     end sub
     
     public sub SetCommercialOnOffManual(onoff,scene)
         if onoff=true  then
-            SetVizData "0007",1
+            SetVizData "0007",1 ,"commercial","Sponsor"
             displaysponsor=scene
         else
-            SetVizData "0007",0
+            SetVizData "0007",0 ,"commercial","Sponsor"
             displaysponsor=""
         end if
     end sub
     
     public sub SetBGOnOffWF()
         if pgmain.cb_background.Checked then
-            SetVizData "0001",1
-            SetVizData "0008",0
+            SetVizData "0001",1,"int" ,"BG On/Off (WF)"
+            SetVizData "0008",0 ,"int","BG 2 On/Off (WF)"
         else
-            SetVizData "0001",0
-            SetVizData "0008",1
+            SetVizData "0001",0 ,"int","BG On/Off (WF)"
+            SetVizData "0008",1 ,"int","BG 2 On/Off (WF)"
         end if
     end sub
     
     public sub SetIBSide()
         if pgmain.cb_ib_right.Checked = true then
-            SetVizData "0002",1
+            SetVizData "0002",1 ,"int","IB Side"
         else
-            SetVizData "0002",0
+            SetVizData "0002",0 ,"int","IB Side"
         end if
     end sub
     
@@ -325,7 +363,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 4      i=8
             case 5      i=9
         end select
-        SetVizData "0000",i
+        SetVizData "0000",i ,"int","Show"
     end sub
     
     public function get_available_logos()
@@ -592,7 +630,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             LoadScene elMainLayer, sScene
             SetShow
-            SetVizData "0475", 0
+            SetVizData "0475", 0,"int",""
             SetPLastName Data.Item("NAME")
             SetPFirstName Data.Item("FNAME")
             if Data.Item("NR")<>"00" then
@@ -611,11 +649,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             dim st,tag,st2,tag2
             select case Data.item("BBTYP")
                 case 0
-                    SetVizData "0190",0
-                    SetVizData "0200",Data.Item("SUBLINE1")
-                    SetVizData "0300",Data.Item("SUBLINE2")
-                    SetVizData "0195",0
-                    SetVizData "0196",0
+                    SetVizData "0190",0 ,"int",""
+                    SetVizData "0200",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                    SetVizData "0300",Data.Item("SUBLINE2") ,"string","Zeile 2"
+                    SetVizData "0195",0 ,"int",""
+                    SetVizData "0196",0 ,"int",""
                 case 1
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -629,14 +667,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",2
-                    SetVizData "0196",2
-                    SetVizData "0197",2
-                    SetVizData "0210", st
-                    SetVizData "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1 ,"int",""
+                    SetVizData "0195",2 ,"int",""
+                    SetVizData "0196",2 ,"int",""
+                    SetVizData "0197",2 ,"int",""
+                    SetVizData "0210", st ,"string","Zeile 1"
+                    SetVizData "0212",st2 ,"string","Zeile 2"
+                    SetVizData "0211",tag ,"string","Tag 1"
+                    SetVizData "0213",tag2 ,"string","Tag 2"
                 case 2
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -650,18 +688,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",1
-                    SetVizData "0196",1
-                    SetVizData "0197",1
-                    SetVizData "0210",st
-                    SetVizData "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1 ,"int",""
+                    SetVizData "0195",1 ,"int",""
+                    SetVizData "0196",1 ,"int",""
+                    SetVizData "0197",1 ,"int",""
+                    SetVizData "0210",st ,"string","Zeile 1"
+                    SetVizData "0212",st2 ,"string","Zeile 2"
+                    SetVizData "0211",tag  ,"string","Tag 1"
+                    SetVizData "0213",tag2 ,"string","Tag 2"
                 case 3
-                    SetVizData "0190",2
-                    SetVizData "0220",Data.Item("SUBLINE1")
-                    SetVizData "0222",Data.Item("SUBLINE2")
+                    SetVizData "0190",2 ,"int",""
+                    SetVizData "0220",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                    SetVizData "0222",Data.Item("SUBLINE2") ,"string","Zeile 2"
                 case 4
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -675,14 +713,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",3
-                    SetVizData "0196",3
-                    SetVizData "0197",3
-                    SetVizData "0210",st
-                    SetVizData "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1  ,"int",""
+                    SetVizData "0195",3  ,"int",""
+                    SetVizData "0196",3 ,"int",""
+                    SetVizData "0197",3   ,"int",""
+                    SetVizData "0210",st ,"string","Zeile 1"
+                    SetVizData "0212",st2 ,"string","Zeile 2"
+                    SetVizData "0211",tag ,"string","Tag 1"
+                    SetVizData "0213",tag2 ,"string","Tag 2"
             end select
 
 
@@ -695,20 +733,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             PAGE_IDX = 1
         else
             if PAGE_IDX mod 2 then
-                SetVizData "0202",Data.Item("SUBLINE1")
-                SetVizData "0302",Data.Item("SUBLINE2")
-                SetVizData "0201",Data.Item("SUBLINE1")
-                SetVizData "0301",Data.Item("SUBLINE2")
+                SetVizData "0202",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                SetVizData "0302",Data.Item("SUBLINE2") ,"string","Zeile 2"
+                SetVizData "0201",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                SetVizData "0301",Data.Item("SUBLINE2") ,"string","Zeile 2"
                 GetPreview "Default 2.0", "WECHSEL 1.0", sScene
                 Redim ActionList(2, 1)
                 ActionList(1, 0) = "Default"
                 ActionList(1, 1) = "WECHSEL"
                 ActionList(2, 1) = efPlay
             else
-                SetVizData "0202",Data.Item("SUBLINE1")
-                SetVizData "0302",Data.Item("SUBLINE2")
-                SetVizData "0204",Data.Item("SUBLINE1")
-                SetVizData "0304",Data.Item("SUBLINE2")
+                SetVizData "0202",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                SetVizData "0302",Data.Item("SUBLINE2") ,"string","Zeile 2"
+                SetVizData "0204",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                SetVizData "0304",Data.Item("SUBLINE2") ,"string","Zeile 2"
                 GetPreview "Default 2.0", "WECHSEL 2.0", sScene
                 Redim ActionList(2, 1)
                 ActionList(1, 0) = "Default"
@@ -744,7 +782,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             LoadSceneWF elMainLayer, sScene
             SetCommercialOnOff "BB Player"
-            SetVizData "0004", 0
+            SetVizData "0004", 0 ,"int",""
             SetPLastName ucase(Data.Item("NAME"))
             SetPFirstName ucase(Data.Item("FNAME") )
             if Data.Item("NR")<>"00" then
@@ -755,7 +793,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             if Data.Item("LOGO") <> "" then
                 SetTLogo LCase(Data.Item("LOGO"))
             else
-                SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball"
+                SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball","image","Logo Div"
             end if
             if Data.item("SHOWHS") and Data.Item("NR")<>"" then
                 SetPHS LCase(Data.Item("LOGO")),Data.Item("NR")
@@ -765,11 +803,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             dim st,tag,st2,tag2
             select case Data.item("BBTYP")
                 case 0
-                    SetVizData "0190",0
-                    SetVizDataUpper "0200",Data.Item("SUBLINE1")
-                    SetVizDataUpper "0300",Data.Item("SUBLINE2")
-                    SetVizData "0195",0
-                    SetVizData "0196",0
+                    SetVizData "0190",0 ,"int",""
+                    SetVizDataUpper "0200",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                    SetVizDataUpper "0300",Data.Item("SUBLINE2"),"string","Zeile 2"
+                    SetVizData "0195",0 ,"int",""
+                    SetVizData "0196",0 ,"int",""
                 case 1
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -783,14 +821,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",2
-                    SetVizData "0196",2
-                    SetVizData "0197",2
-                    SetVizDataUpper "0210", st
-                    SetVizDataUpper "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1  ,"int",""
+                    SetVizData "0195",2  ,"int",""
+                    SetVizData "0196",2  ,"int",""
+                    SetVizData "0197",2  ,"int",""
+                    SetVizDataUpper "0210", st  ,"string","Zeile 1"
+                    SetVizDataUpper "0212",st2 ,"string","Zeile 2"
+                    SetVizData "0211",tag     ,"string","Tag 1"
+                    SetVizData "0213",tag2    ,"string","Tag 2"
                 case 2
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -804,18 +842,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",1
-                    SetVizData "0196",1
-                    SetVizData "0197",1
-                    SetVizDataUpper "0210",st
-                    SetVizDataUpper "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1 ,"int",""
+                    SetVizData "0195",1 ,"int",""
+                    SetVizData "0196",1 ,"int",""
+                    SetVizData "0197",1  ,"int",""
+                    SetVizDataUpper "0210",st  ,"string","Zeile 1"
+                    SetVizDataUpper "0212",st2  ,"string","Zeile 2"
+                    SetVizData "0211",tag     ,"string","Tag 1"
+                    SetVizData "0213",tag2    ,"string","Tag 2"
                 case 3
-                    SetVizData "0190",2
-                    SetVizData "0220",Data.Item("SUBLINE1")
-                    SetVizData "0222",Data.Item("SUBLINE2")
+                    SetVizData "0190",2 ,"int",""
+                    SetVizData "0220",Data.Item("SUBLINE1") ,"string","Zeile 1"
+                    SetVizData "0222",Data.Item("SUBLINE2") ,"string","Zeile 2"
                 case 4
                     st= Data.Item("SUBLINE1")
                     if instr(st,"/")>0 then
@@ -829,14 +867,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                         st2= trim(split(st2,"/")(0))
                         if st2<>"" then st2=st2&"/"
                     end if
-                    SetVizData "0190",1
-                    SetVizData "0195",3
-                    SetVizData "0196",3
-                    SetVizData "0197",3
-                    SetVizDataUpper "0210",st
-                    SetVizDataUpper "0212",st2
-                    SetVizData "0211",tag
-                    SetVizData "0213",tag2
+                    SetVizData "0190",1  ,"int",""
+                    SetVizData "0195",3  ,"int",""
+                    SetVizData "0196",3  ,"int",""
+                    SetVizData "0197",3         ,"int",""
+                    SetVizDataUpper "0210",st   ,"string","Zeile 1"
+                    SetVizDataUpper "0212",st2  ,"string","Zeile 2"
+                    SetVizData "0211",tag      ,"string","Tag 1"
+                    SetVizData "0213",tag2      ,"string","Tag 2"
             end select
 
 
@@ -849,20 +887,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             PAGE_IDX = 1
         else
             if PAGE_IDX mod 2 then
-                SetVizDataUpper "0202",Data.Item("SUBLINE1")
-                SetVizDataUpper "0302",Data.Item("SUBLINE2")
-                SetVizDataUpper "0201",Data.Item("SUBLINE1")
-                SetVizDataUpper "0301",Data.Item("SUBLINE2")
+                SetVizDataUpper "0202",Data.Item("SUBLINE1")  ,"string","Zeile 1"
+                SetVizDataUpper "0302",Data.Item("SUBLINE2") ,"string","Zeile 2"
+                SetVizDataUpper "0201",Data.Item("SUBLINE1")  ,"string","Zeile 1"
+                SetVizDataUpper "0301",Data.Item("SUBLINE2")  ,"string","Zeile 2"
                 GetPreview "Default 2.78", "WECHSEL 1.0", sScene
                 Redim ActionList(2, 1)
                 ActionList(1, 0) = "Default"
                 ActionList(1, 1) = "WECHSEL"
                 ActionList(2, 1) = efPlay
             else
-                SetVizDataUpper "0202",Data.Item("SUBLINE1")
-                SetVizDataUpper "0302",Data.Item("SUBLINE2")
-                SetVizDataUpper "0204",Data.Item("SUBLINE1")
-                SetVizDataUpper "0304",Data.Item("SUBLINE2")
+                SetVizDataUpper "0202",Data.Item("SUBLINE1")  ,"string","Zeile 1"
+                SetVizDataUpper "0302",Data.Item("SUBLINE2") ,"string","Zeile 2"
+                SetVizDataUpper "0204",Data.Item("SUBLINE1")  ,"string","Zeile 1"
+                SetVizDataUpper "0304",Data.Item("SUBLINE2")   ,"string","Zeile 2"
                 GetPreview "Default 2.0", "WECHSEL 2.0", sScene
                 Redim ActionList(2, 1)
                 ActionList(1, 0) = "Default"
@@ -907,17 +945,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim side
 
         if bLinks then
-            SetVizData "0002",0
+            SetVizData "0002",0 ,"int","Position"
         else
-            SetVizData "0002",1
+            SetVizData "0002",1 ,"int","Position"
         end if
 
         if typ=0 then
-            SetVizData "1100","#SkyTuT"
+            SetVizData "1100","#SkyTuT","string","Hashtag"
         elseif typ=1 then
-            SetVizData "1100","#SkyBuliAT"
+            SetVizData "1100","#SkyBuliAT" ,"string","Hashtag"
         else
-            SetVizData "1100","#SkyGoEL"
+            SetVizData "1100","#SkyGoEL","string","Hashtag"
         end if
 
         GetPreview "Default", "2.0", sScene
@@ -985,23 +1023,25 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTLogo LCase(Data.Item("LOGO"))
          dim ids: ids=1100
         for i = 1 to 11
-            SetVizData ids+1,Data.Item("BIB"  & i)
-            SetVizData ids+2,Data.Item("NAME" & i)
-            SetVizData ids+3, GetString(Data.Item("TEXT" & i), i__TVLanguage)
+            SetVizData ids+1,Data.Item("BIB"  & i),"string","Player Number"
+            SetVizData ids+2,Data.Item("NAME" & i) ,"string","Player Name"
+            SetVizData ids+3, GetString(Data.Item("TEXT" & i), i__TVLanguage) ,"string","Player Position"
             if Data.Item("FOTO") = true then
-                SetPlayerHS ids,LCase(Data.Item("LOGO")),Data.Item("BIB"  & i)
+                SetPlayerHS ids,LCase(Data.Item("LOGO")),Data.Item("BIB"  & i),"Player HS"
             end if
 
             if  Data.Item("HL"  & i) then
                 obj__TV.SendCommand "RENDERER*MAIN_LAYER*TREE*$ANIM_CRAWL$"&i&"$img_Showcolor*TEXTURE*POSITION SET -10.0 5.5"
                 obj__TV.SendCommand "RENDERER*MAIN_LAYER*TREE*$ANIM_CRAWL$"&i&"$txt_Number*MATERIAL*COLOR SET 1.0 1.0 1.0"
+                'SetVizData "LUCRAWL"&i,"true","special"
             else
                obj__TV.SendCommand "RENDERER*MAIN_LAYER*TREE*$ANIM_CRAWL$"&i&"$img_Showcolor*TEXTURE*POSITION SET 500.0 5.5"
                obj__TV.SendCommand "RENDERER*MAIN_LAYER*TREE*$ANIM_CRAWL$"&i&"$txt_Number*MATERIAL*COLOR SET 0.0 0.0 0.0"
+               'SetVizData "LUCRAWL"&i,"false","special"
             end if
             ids=ids+100
         next
-        SetVizData "0005",Data.Item("ITEMCOUNT")
+        SetVizData "0005",Data.Item("ITEMCOUNT"),"int","Count"
 
         GetPreview "Default 2.0", "CRAWL 1.0", sScene
         Redim ActionList(2, 1)
@@ -1028,16 +1068,16 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             else
                 zero=""
             end if
-           SetVizData zero&(ids+0),Data.Item("BIB"  & i)
-            SetVizDataUpper zero&(ids+10),Data.Item("NAME" & i)
-            SetVizData zero&(ids+20), GetString(Data.Item("TEXT" & i), i__TVLanguage)
+           SetVizData zero&(ids+0),Data.Item("BIB"  & i) ,"string","Player Number"
+            SetVizDataUpper zero&(ids+10),Data.Item("NAME" & i) ,"string","Player Name"
+            SetVizData zero&(ids+20), GetString(Data.Item("TEXT" & i), i__TVLanguage) ,"string","Player Position"
             if Data.Item("FOTO") = true then
-                SetPlayerHS zero&(ids-5),LCase(Data.Item("LOGO")),Data.Item("BIB"  & i)
+                SetPlayerHS zero&(ids-5),LCase(Data.Item("LOGO")),Data.Item("BIB"  & i),"Player HS"
             end if
             if  Data.Item("HL"  & i) then
-               SetVizData zero&(ids-10),1
+               SetVizData zero&(ids-10),1 ,"int","HL On/Off"
             else
-                SetVizData zero&(ids-10),0
+                SetVizData zero&(ids-10),0,"int","HL On/Off"
             end if
             'if  Data.Item("HL"  & i) then
             '    obj__TV.SendCommand "RENDERER*MAIN_LAYER*TREE*$ANIM_CRAWL$"&i&"$img_Showcolor*TEXTURE*POSITION SET -10.0 5.5"
@@ -1048,7 +1088,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'end if
             ids=ids+100
         next
-        SetVizData "0002",Data.Item("ITEMCOUNT")
+        SetVizData "0002",Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreviewWF "Default 1.98", "CRAWL 5.0", sScene
         Redim ActionList(2, 1)
@@ -1072,20 +1112,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadSceneWF elMainLayer, sScene
         SetBGOnOffWF
         SetCommercialOnOff "VB Lineup Num"
-        SetVizDataUpper "0100","Aufstellung"
-        SetVizData "0110",""
-        SetVizDataUpper "0094",Data.Item("TNAMES")
-        SetVizdata "0095",""
-        SetTeamLogo "0090",  LCase(Data.Item("LOGO"))
-        SetVizDataUpper "0098",Data.Item("TNAMES2")
-        SetVizdata "0099",""
-        SetTeamLogo  "0096",LCase(Data.Item("LOGO2"))
+        SetVizDataUpper "0100","Aufstellung" ,"string","Title"
+        SetVizData "0110","" ,"string",""
+        SetVizDataUpper "0094",Data.Item("TNAMES") ,"string","Team Name"
+        SetVizdata "0095","" ,"string",""
+        SetTeamLogo "0090",  LCase(Data.Item("LOGO")),"Team Logo"
+        SetVizDataUpper "0098",Data.Item("TNAMES2") ,"string","Team 2 Name"
+        SetVizdata "0099","" ,"string",""
+        SetTeamLogo  "0096",LCase(Data.Item("LOGO2")),"Team 2 Logo"
 
 
         dim ids: ids=1110
         for i = 1 to 22
-            SetVizData ids,Data.Item("BIB"  & i)
-            SetVizDataUpper ids+1,Trim(Data.Item("FNAME" & i)& " "&Data.Item("NAME" & i))
+            SetVizData ids,Data.Item("BIB"  & i) ,"string","Player Number"
+            SetVizDataUpper ids+1,Trim(Data.Item("FNAME" & i)& " "&Data.Item("NAME" & i)) ,"string","Player Name"
 
             ids=ids+100
         next
@@ -1105,22 +1145,22 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
 
         SetShow
-        SetVizData "4100", "Aufstellung "&Data.Item("TNAME")
-        SetVizData "4101", Data.Item("TNAME")
-        SetVizData "4200", "Aufstellung "&Data.Item("TNAME2")
-        SetVizData "4201", Data.Item("TNAME2")
+        SetVizData "4100", "Aufstellung "&Data.Item("TNAME"),"string","Team Name"
+        SetVizData "4101", Data.Item("TNAME") ,"string","TEam Name"
+        SetVizData "4200", "Aufstellung "&Data.Item("TNAME2")  ,"string","Team 2 Name"
+        SetVizData "4201", Data.Item("TNAME2") ,"string","Team 2 Name"
         if tw_Layout.layout.ItemIndex = 0 then
             if CURRENT_LEAGUE = "119" then
-                SetVizData "9000","tipico Bundesliga"
+                SetVizData "9000","tipico Bundesliga" ,"string","Title"
             else
-                SetVizData "9000",""'"sky Go Erste Liga"
+                SetVizData "9000","","string","Title" '"sky Go Erste Liga","string"
             end if
         elseif tw_Layout.layout.ItemIndex =1 then
-            SetVizData "9000","Champions League"
+            SetVizData "9000","Champions League" ,"string","Title"
         elseif tw_Layout.layout.ItemIndex =2 then
-            SetVizData "9000","Europa League"
+            SetVizData "9000","Europa League" ,"string","Title"
         else
-            SetVizData "9000","Talk und Tore"
+            SetVizData "9000","Talk und Tore" ,"string","Title"
         end if
 
         strCmd    = "SCENE*" & s__VizPath & "/" & sScene & "*TREE*$txt_Crawl_Aufstellung_1"
@@ -1286,10 +1326,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         sScene = "BB_Facebook_Twitter"
         LoadScene elMainLayer, sScene
         SetShow
-        SetVizData "0110",head
-        SetVizData "0120",head
-        SetVizData "0210",subline
-        SetVizData "0220",subline2
+        SetVizData "0110",head ,"string","Headline"
+        SetVizData "0120",head ,"string","Headline"
+        SetVizData "0210",subline ,"string","Subline"
+        SetVizData "0220",subline2 ,"string","Subline 2"
         
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -1308,9 +1348,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPLastName name
 
 
-        SetVizData "0200",sl
-        SetVizData "0190",0
-        SetVizData "0195",0
+        SetVizData "0200",sl ,"string","Subline"
+        SetVizData "0190",0 ,"int",""
+        SetVizData "0195",0 ,"int",""
 
 
         if foto <> "" then
@@ -1337,8 +1377,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPLastName name
         SetPLastName2 name2
         
-        SetVizData "0200",sl
-        SetVizData "0205",sl2
+        SetVizData "0200",sl ,"string","Subline"
+        SetVizData "0205",sl2 ,"string","Subline 2"
 
         if foto <> "" then
             SetMHS foto,foto2
@@ -1389,19 +1429,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
         SetShow
         SetTName Data.Item("TEAMNAME")
-        SetVizData "1100",Data.Item("P_NR_OUT")
-        SetVizData "1101" ,Data.Item("P_LNAME_OUT")
-        SetVizData "1102",""
-        SetVizData "1200",Data.Item("P_NR_IN")
-        SetVizData "1201" ,Data.Item("P_LNAME_IN")
+        SetVizData "1100",Data.Item("P_NR_OUT") ,"string","Player Out Number"
+        SetVizData "1101" ,Data.Item("P_LNAME_OUT") ,"string","Player Out Name"
+        SetVizData "1102","" ,"string",""
+        SetVizData "1200",Data.Item("P_NR_IN") ,"string","Player In Number"
+        SetVizData "1201" ,Data.Item("P_LNAME_IN") ,"string","Player In Name"
 
         SetTLogo Data.Item("LOGO")
         if Data.Item("DOPPEL") = true then
-            SetVizData "1103",Data.Item("P_NR_OUT2")
-            SetVizData "1104" ,Data.Item("P_LNAME_OUT2")
-            SetVizData "1105",""
-            SetVizData "1203",Data.Item("P_NR_IN2")
-            SetVizData "1204" ,Data.Item("P_LNAME_IN2")
+            SetVizData "1103",Data.Item("P_NR_OUT2") ,"string","Player 2 Out Number"
+            SetVizData "1104" ,Data.Item("P_LNAME_OUT2"),"string","Player 2 Out Name"
+            SetVizData "1105",""  ,"string",""
+            SetVizData "1203",Data.Item("P_NR_IN2")  ,"string","Player 2 In Number"
+            SetVizData "1204" ,Data.Item("P_LNAME_IN2") ,"string","Player 2 In Name"
         end if
 
 
@@ -1423,19 +1463,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadSceneWF elMainLayer, sScene
         SetCommercialOnOff "BB Wechsel"
         'SetTName Data.Item("TEAMNAME")
-        SetVizData "0100",Data.Item("P_NR_OUT")
-        SetVizData "0102" ,UCase(Data.Item("P_LNAME_OUT") )
-        SetVizData "0200",Data.Item("P_NR_IN")
-        SetVizData "0202" ,UCase(Data.Item("P_LNAME_IN"))
+        SetVizData "0100",Data.Item("P_NR_OUT") ,"string","Player Out Number"
+        SetVizData "0102" ,UCase(Data.Item("P_LNAME_OUT") ),"string","Player Out Name"
+        SetVizData "0200",Data.Item("P_NR_IN"),"string","Player In Number"
+        SetVizData "0202" ,UCase(Data.Item("P_LNAME_IN")) ,"string","Player In Name"
 
         SetTLogo Data.Item("LOGO")
 
         if Data.Item("DOPPEL") = true then
             SetTLogo2_WF Data.Item("LOGO2")
-            SetVizData "0300",Data.Item("P_NR_OUT2")
-            SetVizData "0302" ,UCase(Data.Item("P_LNAME_OUT2") )
-            SetVizData "0400",Data.Item("P_NR_IN2")
-            SetVizData "0402" ,UCase(Data.Item("P_LNAME_IN2")   )
+            SetVizData "0300",Data.Item("P_NR_OUT2") ,"string","Player Out Number"
+            SetVizData "0302" ,UCase(Data.Item("P_LNAME_OUT2") ),"string","Player Out Name"
+            SetVizData "0400",Data.Item("P_NR_IN2") ,"string","Player In Number"
+            SetVizData "0402" ,UCase(Data.Item("P_LNAME_IN2")   ) ,"string","Player In Name"
         end if
 
 
@@ -1449,10 +1489,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_Wechsel_WF(ByRef Data)
 
         'SetTName Data.Item("TEAMNAME")
-        SetVizDataFL "5005",Data.Item("P_NR_OUT")
-        SetVizDataUpperFL "5011" ,Data.Item("P_LNAME_OUT")
-        SetVizDataFL "5007",Data.Item("P_NR_IN")
-        SetVizDataUpperFL "5012" ,Data.Item("P_LNAME_IN")
+        SetVizDataFL "5005",Data.Item("P_NR_OUT") ,"string"
+        SetVizDataUpperFL "5011" ,Data.Item("P_LNAME_OUT") ,"string"
+        SetVizDataFL "5007",Data.Item("P_NR_IN") ,"string"
+        SetVizDataUpperFL "5012" ,Data.Item("P_LNAME_IN") ,"string"
 
         sScene="DSS"
         GetPreviewWF "SPIELERWECHSEL", "2.52", sScene
@@ -1609,20 +1649,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             dim ids : ids=1101
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
-               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i)
-               SetVizData ids+1,Data.Item("NAME_A" & i)
+               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+               SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
 
-               SetVizData ids+3, Data.Item("RESULT" & i)
+               SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
 
-               SetVizData ids+5,Data.Item("NAME_B" & i)
-               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i)
+               SetVizData ids+5,Data.Item("NAME_B" & i) ,"string","Tem Name 2 "&i
+               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
                SetVizDataBufferOff
                ids=ids+100
             next
             if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =5 then
-                SetVizData "0003",Data.Item("ITEMCOUNT")
+                SetVizData "0003",Data.Item("ITEMCOUNT"),"int","Count Erg"
             else
-                SetVizData "0004",Data.Item("ITEMCOUNT")
+                SetVizData "0004",Data.Item("ITEMCOUNT") ,"int","Count Erg"
             end if
 
         end if
@@ -1635,23 +1675,23 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             if Data.Item("ANIM_TYPE") =5  then ids=ids+400
             for i = 1 to 12   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData ids,Data.Item("PLACE" & i)
-                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
-                SetVizData ids+2,Data.Item("NAME" & i)
-                SetVizData ids+3,Data.Item("GAMES" & i)
-                SetVizData ids+4,Data.Item("GOALS" & i)
-                SetVizData ids+5,Data.Item("DIFF" & i)
-                SetVizData ids+6,Data.Item("PTS" & i)
+                SetVizData ids,Data.Item("PLACE" & i) ,"string","Place "&i
+                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i) ,"image","Logo "&i
+                SetVizData ids+2,Data.Item("NAME" & i) ,"string","Team Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i) ,"string","Games "&i
+                SetVizData ids+4,Data.Item("GOALS" & i) ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)  ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTS" & i)   ,"string","Points "&i
                 select case Data.Item("TREND" & i)
-                    case "+"    SetVizData ids+9,1
-                    case ""     SetVizData ids+9,0
-                    case "-"    SetVizData ids+9,2
+                    case "+"    SetVizData ids+9,1 ,"int" ,"Trend "&i
+                    case ""     SetVizData ids+9,0 ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2 ,"int","Trend "&i
                 end select
                 SetVizDataBufferOff
                 ids=ids+100
               next
 
-            SetVizData "0004",Data.Item("ITEMCOUNTTAB")
+            SetVizData "0004",Data.Item("ITEMCOUNTTAB"),"int","Count Tab"
 
         end if
         
@@ -1668,17 +1708,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             end if
             for i = s to e
                 SetVizDataBufferOn
-                SetVizData ids,count&"."
-                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
-                SetVizData ids+2,Data.Item("NAME" & i)
-                SetVizData ids+3,Data.Item("GAMES" & i)
-                SetVizData ids+4,Data.Item("GOALS" & i)
-                SetVizData ids+5,Data.Item("DIFF" & i)
-                SetVizData ids+6,Data.Item("PTSH" & i)
+                SetVizData ids,count&".","string","Place "&i
+                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i) ,"image","Logo "&i
+                SetVizData ids+2,Data.Item("NAME" & i) ,"string","Team Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i) ,"string","Games "&i
+                SetVizData ids+4,Data.Item("GOALS" & i) ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)  ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTSH" & i)  ,"string","Points "&i
                 select case Data.Item("TREND" & i)
-                    case "+"    SetVizData ids+9,1
-                    case ""     SetVizData ids+9,0
-                    case "-"    SetVizData ids+9,2
+                    case "+"    SetVizData ids+9,1  ,"int","Trend "&i
+                    case ""     SetVizData ids+9,0  ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2  ,"int","Trend "&i
                 end select
                 SetVizDataBufferOff
                 ids=ids+100
@@ -1722,21 +1762,21 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
         SetBGOnOffWF
          SetCommercialOnOffManual true,"VB Erg Tab"
-        SetVizDataUpper "0100", Data.item("OPT_TITLE")
-        SetVizDataUpper "0110",Data.item("TITLE")
+        SetVizDataUpper "0100", Data.item("OPT_TITLE"),"string","Opt Title"
+        SetVizDataUpper "0110",Data.item("TITLE"),"string","Title"
 
 
         if Data.Item("ANIM_TYPE") <> 4 then
             dim ids : ids=2000
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
-               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i)
-               SetVizDataUpper ids+10,Data.Item("SNAME_A" & i)
-               SetVizData ids+13,0
-               SetVizData ids+15, Data.Item("RESULT" & i)
+               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+               SetVizDataUpper ids+10,Data.Item("SNAME_A" & i) ,"string","Team Name 1 "&i
+               SetVizData ids+13,0  ,"int",""
+               SetVizData ids+15, Data.Item("RESULT" & i) ,"string","Result "&i
 
-               SetVizDataUpper ids+20,Data.Item("SNAME_B" & i)
-               SetVizData ids+25,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i)
+               SetVizDataUpper ids+20,Data.Item("SNAME_B" & i) ,"string","Team Name 2 "&i
+               SetVizData ids+25,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
                SetVizDataBufferOff
                ids=ids+1000
             next
@@ -1755,17 +1795,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             if Data.Item("ANIM_TYPE") =5  then ids=ids+400
             for i = 1 to 12   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
-                SetVizData ids+1,Data.Item("PLACE" & i)
-                SetVizDataUpper ids+2,Data.Item("NAME" & i)
-                SetVizData ids+3,Data.Item("GAMES" & i)
-                SetVizData ids+4,Data.Item("GOALS" & i)
-                SetVizData ids+5,Data.Item("DIFF" & i)
-                SetVizData ids+6,Data.Item("PTS" & i)
+                SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)  ,"image","Logo "&i
+                SetVizData ids+1,Data.Item("PLACE" & i) ,"string","Place "&i
+                SetVizDataUpper ids+2,Data.Item("NAME" & i) ,"string","Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i)  ,"string","Games "&i
+                SetVizData ids+4,Data.Item("GOALS" & i)  ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)   ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTS" & i)    ,"string","Points "&i
                 select case Data.Item("TREND" & i)
-                    case "+"    SetVizData ids+9,1
-                    case ""     SetVizData ids+9,0
-                    case "-"    SetVizData ids+9,2
+                    case "+"    SetVizData ids+9,1    ,"int","Trend "&i
+                    case ""     SetVizData ids+9,0    ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2    ,"int","Trend "&i
                 end select
                 SetVizDataBufferOff
                 ids=ids+100
@@ -1802,10 +1842,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetBGOnOff
         SetShow
-        SetVizData "0085",0
+        SetVizData "0085",0,"int",""
 
-        SetTitle Data.item("OPT_TITLE")
-        SetTitleSubLine Data.item("OPT_ZUSATZ")
+        SetTitle Data.item("OPT_TITLE"),"Opt Title"
+        SetTitleSubLine Data.item("OPT_ZUSATZ"),"Opt Zusatz"
         SetDropLine ""
         count = Data.Item("ITEMCOUNTTAB")
         hcount=count
@@ -1818,18 +1858,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             for i = 1 to hcount   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
                 'cc.SF.DebugText Data.Item("PLACE" & i)& " - " & Data.Item("NAME" & i)
-                SetVizData ids,Data.Item("PLACE" & i)
-                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
-                SetVizData ids+2,Data.Item("NAME" & i)
-                SetVizData ids+3,Data.Item("GAMES" & i)
-                SetVizData ids+4,Data.Item("GOALS" & i)
-                SetVizData ids+5,Data.Item("DIFF" & i)
-                SetVizData ids+6,Data.Item("PTS" & i)
-                SetVizData ids+8 ,0
+                SetVizData ids,Data.Item("PLACE" & i) ,"string","Place "&i
+                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i),"image","Logo "&i
+                SetVizData ids+2,Data.Item("NAME" & i) ,"string","Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i),"string","GameS "&i
+                SetVizData ids+4,Data.Item("GOALS" & i) ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)  ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTS" & i)   ,"string","Points "&i
+                SetVizData ids+8 ,0 ,"int",""
                 select case Data.Item("TREND" & i)
-                    case "+"    SetVizData ids+9,1
-                    case ""     SetVizData ids+9,0
-                    case "-"    SetVizData ids+9,2
+                    case "+"    SetVizData ids+9,1   ,"int","Trend "&i
+                    case ""     SetVizData ids+9,0   ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2   ,"int","Trend "&i
                 end select
                 SetVizDataBufferOff
                 ids=ids+100
@@ -1838,23 +1878,23 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         ids =2100
             for i = hcount+1 to hcount*2   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData ids,Data.Item("PLACE" & i)
-                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)
-                SetVizData ids+2,Data.Item("NAME" & i)
-                SetVizData ids+3,Data.Item("GAMES" & i)
-                SetVizData ids+4,Data.Item("GOALS" & i)
-                SetVizData ids+5,Data.Item("DIFF" & i)
-                SetVizData ids+6,Data.Item("PTS" & i)
-                SetVizData ids+8 ,0
+                SetVizData ids,Data.Item("PLACE" & i),"string","Place "&i
+                SetVizData ids+1,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)  ,"image","Logo "&i
+                SetVizData ids+2,Data.Item("NAME" & i)  ,"string","Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i) ,"string","Gamse "&i
+                SetVizData ids+4,Data.Item("GOALS" & i)  ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)  ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTS" & i)   ,"string","Points "&i
+                SetVizData ids+8 ,0 ,"int",""
                 select case Data.Item("TREND" & i)
-                    case "+"    SetVizData ids+9,1
-                    case ""     SetVizData ids+9,0
-                    case "-"    SetVizData ids+9,2
+                    case "+"    SetVizData ids+9,1  ,"int","Trend "&i
+                    case ""     SetVizData ids+9,0  ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2  ,"int","Trend "&i
                 end select
                 SetVizDataBufferOff
                 ids=ids+100
               next
-         SetVizData "0004",hcount
+         SetVizData "0004",hcount ,"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5 L11 3.5 L12 3.5", sScene
 
@@ -1876,12 +1916,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetBGOnOff
         SetShow
-        SetVizData "0085",0
+        SetVizData "0085",0  ,"int",""
 
         SetTitle Data.item("OPT_TITLE")
         SetTitleSubLine Data.item("OPT_ZUSATZ")
         SetDropLine ""
-        SetVizData "0500",""
+        SetVizData "0500","" ,"string",""
         count = Data.Item("ITEMCOUNT")
         hcount=count
         if count>10 then
@@ -1892,13 +1932,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             ids =1101
             for i = 1 to hcount   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i)
-               SetVizData ids+1,Data.Item("NAME_A" & i)
+               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i),"image","Logo 1 "&i
+               SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
 
-               SetVizData ids+3, Data.Item("RESULT" & i)
+               SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
 
-               SetVizData ids+5,Data.Item("NAME_B" & i)
-               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i)
+               SetVizData ids+5,Data.Item("NAME_B" & i),"string","Team Name 2 "&i
+               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
                SetVizDataBufferOff
                ids=ids+100
               next
@@ -1906,17 +1946,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         ids =2101
             for i = hcount+1 to hcount*2   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i)
-               SetVizData ids+1,Data.Item("NAME_A" & i)
+               SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+               SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
 
-               SetVizData ids+3, Data.Item("RESULT" & i)
+               SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
 
-               SetVizData ids+5,Data.Item("NAME_B" & i)
-               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i)
+               SetVizData ids+5,Data.Item("NAME_B" & i) ,"string","Team Name 2 "&i
+               SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i),"image","Logo 2 "&i
                SetVizDataBufferOff
                ids=ids+100
               next
-         SetVizData "0004",hcount
+         SetVizData "0004",hcount ,"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5", sScene
 
@@ -1941,14 +1981,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
         SetShow
         SetBGOnOff
-        SetTeamLogo "0060",LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0070",LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0060",LCase(Data.Item("LOGO1")),"Logo 1"
+        SetTeamLogo "0070",LCase(Data.Item("LOGO2")),"Logo 2"
 
         if Trim(Data.Item("RESULT")) <> "" then
-            SetVizData "0095",1
-            SetVizData "0100",Data.Item("RESULT")
+            SetVizData "0095",1 ,"int","Result On/Off"
+            SetVizData "0100",Data.Item("RESULT")   ,"string","Result"
         else
-            SetVizData "0095",0
+            SetVizData "0095",0 ,"int","Result On/Off"
         end if
 
         GetPreview "Default", "2.5 ", sScene
@@ -1964,15 +2004,15 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadSceneWF elMainLayer, sScene
         SetBGOnOffWF
         SetCommercialOnOffManual false, "VB Opening"
-        SetTeamLogo "0100",LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0200",LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0100",LCase(Data.Item("LOGO1")),"Logo 1"
+        SetTeamLogo "0200",LCase(Data.Item("LOGO2")),"Logo 2"
 
         if Trim(Data.Item("RESULT")) <> "" then
-            SetVizData "0002",1
-            SetVizData "0300",Data.Item("RESULT")
+            SetVizData "0002",1 ,"int","Result On/Off"
+            SetVizData "0300",Data.Item("RESULT") ,"string","Result"
         else
-            SetVizData "0002",0
-            SetVizData "0300",""
+            SetVizData "0002",0  ,"int","Result On/Off"
+            SetVizData "0300",""  ,"string","Result"
         end if
 
         GetPreviewWF "Default", "1.78", sScene
@@ -2067,21 +2107,21 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTLogo LCase(Data.Item("LOGO1"))
         SetTLogo2 LCase(Data.Item("LOGO2"))
         
-        SetVizData "0500",GetString("ABSCHNITT_" & Data.Item("ROUND"), i__TVLanguage)
+        SetVizData "0500",GetString("ABSCHNITT_" & Data.Item("ROUND"), i__TVLanguage) ,"string","Round"
         SetScore Data.Item("SCORE")
         dim c
         c= Data.Item("ITEMCOUNT")
         if c>2 then c=2
-        SetVizData "0005",c
+        SetVizData "0005",c ,"int","Count"
         
         dim ids
         ids=1110
 
         for i = 1 to (1+Data.Item("ITEMCOUNT"))
-            SetVizData (ids) , Data.Item("NAME_A"& i)
-            SetVizData (ids+10) , Data.Item("NAME_B"& i)
-            SetVizData (ids+5) , Data.Item("MIN_A"& i)
-            SetVizData (ids+15) , Data.Item("MIN_B"& i)
+            SetVizData (ids) , Data.Item("NAME_A"& i),"string","Name A "&i
+            SetVizData (ids+10) , Data.Item("NAME_B"& i),"string","Name B "&i
+            SetVizData (ids+5) , Data.Item("MIN_A"& i)  ,"string","Min A "&i
+            SetVizData (ids+15) , Data.Item("MIN_B"& i) ,"string","Min B "&i
             ids=ids+100
         next
 
@@ -2104,8 +2144,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         LoadSceneWF elMainLayer, sScene
         SetCommercialOnOffManual true, "BB Score"
-        SetVizData "0102",UCase(Data.Item("SNAME1")   )
-        SetVizData "0104",UCase(Data.Item("SNAME2") )
+        SetVizData "0102",UCase(Data.Item("SNAME1")   ) ,"string","Team Name 1"
+        SetVizData "0104",UCase(Data.Item("SNAME2") ) ,"string","Team Name 2"
 
         'SetTName  Data.Item("NAME1")
         'SetTName2 Data.Item("NAME2")
@@ -2114,8 +2154,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTLogo LCase(Data.Item("LOGO1"))
         SetTLogo2_WF LCase(Data.Item("LOGO2"))
 
-        SetVizData "0105",UCase(GetString("ABSCHNITT_" & Data.Item("ROUND"), i__TVLanguage) )
-        SetVizData "0103", Data.Item("SCORE")
+        SetVizData "0105",UCase(GetString("ABSCHNITT_" & Data.Item("ROUND"), i__TVLanguage) )  ,"string","Round"
+        SetVizData "0103", Data.Item("SCORE") ,"string","Score"
 
 
         dim ids
@@ -2123,33 +2163,33 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         for i = 1 to (Data.Item("ITEMCOUNT"))
             if Data.Item("NAME_A"& i)<>"" then
-                SetVizData "0"&(ids) ,UCase( Data.Item("NAME_A"& i) &" ("&Data.Item("MIN_A"& i)&")" )
+                SetVizData "0"&(ids) ,UCase( Data.Item("NAME_A"& i) &" ("&Data.Item("MIN_A"& i)&")" ) ,"string","Name A "&i
             else
-                SetVizData "0"&(ids),""
+                SetVizData "0"&(ids),"" ,"string","Name A "&i
             end if
             if Data.Item("NAME_B"& i)<>"" then
-                SetVizData "0"&(ids+100) ,UCase( Data.Item("NAME_B"& i) &" ("&Data.Item("MIN_B"& i)&")" )
+                SetVizData "0"&(ids+100) ,UCase( Data.Item("NAME_B"& i) &" ("&Data.Item("MIN_B"& i)&")" )  ,"string","Name B "&i
             else
-                SetVizData "0"&(ids+100),""
+                SetVizData "0"&(ids+100),"" ,"string","Name B "&i
             end if
             ids=ids+5
         next
         for i = (1+Data.Item("ITEMCOUNT")) to 10
-            SetVizData "0"&(ids) , ""
-            SetVizData "0"&(ids+100) , ""
+            SetVizData "0"&(ids) , "" ,"string","Name A "&i
+            SetVizData "0"&(ids+100) , "" ,"string","Name B "&i
             ids=ids+5
         next
         
         if c<3 then
-            SetVizData "0002",0
+            SetVizData "0002",0   ,"int","Count Lines"
         elseif c<5 then
-            SetVizData "0002",1
+            SetVizData "0002",1   ,"int","Count Lines"
         elseif c<7 then
-            SetVizData "0002",2
+            SetVizData "0002",2   ,"int","Count Lines"
         elseif c<9 then
-            SetVizData "0002",3
+            SetVizData "0002",3   ,"int","Count Lines"
         else
-            SetVizData "0002",4
+            SetVizData "0002",4   ,"int","Count Lines"
         end if
         GetPreviewWF "Default 1.86", "TORE 1.0", sScene
         Redim ActionList(2, 1)
@@ -2186,9 +2226,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPLastName ""
 
         'SetText "txt_Zeile_2", UCase(info)
-        SetTeamLogo "0090",LCase(logo1)
-        SetTeamLogo "0190",LCase(logo2)
-        SetVizData "0500",min
+        SetTeamLogo "0090",LCase(logo1),"Logo 1"
+        SetTeamLogo "0190",LCase(logo2),"logo 2"
+        SetVizData "0500",min ,"string","Freetext"
 
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -2209,17 +2249,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         'SetIBSide
         if rechts = true then
-            SetVizData "0002",1
+            SetVizData "0002",1 ,"int","Side"
         else
-            SetVizData "0002",0
+            SetVizData "0002",0  ,"int","Side"
         end if
         
         if instr(info,":")>0 then
-            SetVizData "0004",1
-            SetVizData 1103,info
+            SetVizData "0004",1  ,"int",""
+            SetVizData 1103,info  ,"string","Info"
             info=""
         else
-            SetVizData "0004",0
+            SetVizData "0004",0 ,"int",""
             if info <> "" then info= info& " - "
         end if
 
@@ -2232,13 +2272,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             n=p
             fn=""
         end if
-        SetVizData 1101,info&n
+        SetVizData 1101,info&n ,"string","Info"
         dim min2
         min2=min
         if min <> "" then
             min2 = "(" &min & ")"
         end if
-        SetVizData 1102, min2
+        SetVizData 1102, min2 ,"string","Min"
 
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -2255,12 +2295,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadSceneWF elMainLayer, sScene
          SetCommercialOnOff "CB Highlight"
         if rechts = true then
-            SetVizData "0002",1
+            SetVizData "0002",1 ,"string","Side"
         else
-            SetVizData "0002",0
+            SetVizData "0002",0 ,"string","Side"
         end if
 
-        SetVizData "0200",info
+        SetVizData "0200",info  ,"string","Info"
         
         p=Name
         pos=CC.Strings.StrPos(" ",p)
@@ -2271,9 +2311,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             n=p
             fn=""
         end if
-        SetVizDataUpper "0100",Name
+        SetVizDataUpper "0100",Name ,"string","Name"
 
-        SetVizDataUpper "0300", min
+        SetVizDataUpper "0300", min ,"string","Min"
 
         GetPreviewWF "Default", "1.0", sScene
         Redim ActionList(2, 1)
@@ -2289,10 +2329,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
         SetShow
         SetIBSide
-        SetVizData "0100",title
-        SetVizData "0200",subline
-        SetVizData "0300",subtitle2
-        SetVizData "0400",subtitle3
+        SetVizData "0100",title   ,"string","Title"
+        SetVizData "0200",subline  ,"string","Subline"
+        SetVizData "0300",subtitle2 ,"string","Subtitle 1"
+        SetVizData "0400",subtitle3 ,"string","Subtitle 2"
         GetPreview "Default", "3.5", sScene
         Redim ActionList(2, 1)
         ActionList(1, 0) = "Default"
@@ -2335,7 +2375,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         obj__TV.SetCrawl "txt_Crawl", crReset, ""
         obj__TV.SendCommand strCmd & "*GEOM*loopmode SET 1"
         obj__TV.SendCommand strCmd & "*GEOM*time SET " & speed
-        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &logo
+        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &logo ,"image","Logo"
 
         GetPreview "Default", "1.8", sScene
         Redim ActionList(2, 1)
@@ -2380,14 +2420,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetSubline subline '500
 
         if typ >2 then
-            SetVizData "0195",typ-2
-            SetVizData "0205" ,Data.Item("msg")
+            SetVizData "0195",typ-2 ,"int","Typ"
+            SetVizData "0205" ,Data.Item("msg")  ,"string","Freetext"
             if maxcount <4 then
-                SetVizData "0210",2
+                SetVizData "0210",2 ,"int","Lines"
             elseif maxcount>4 then
-                SetVizData "0210",0
+                SetVizData "0210",0 ,"int","Lines"
             else
-                SetVizData "0210",1
+                SetVizData "0210",1 ,"int","Lines"
             end if
             '210
         elseif typ=2 then
@@ -2395,18 +2435,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetTitelDefaultHeader
             ids=1102
             for i=0 to maxcount-1
-                SetVizData ids, msg.Strings(i)
+                SetVizData ids, msg.Strings(i) ,"string","Line "&i
                 ids=ids+100
             next
-            SetVizData "0004",maxcount
+            SetVizData "0004",maxcount,"int","Count"
         else
             SetBGOnOff
             SetTitleSubLine subline
             SetTitelDefaultHeader
-            SetVizData "1100" ,Data.Item("msg")
-            SetVizData "1101",""
-            SetVizData "1102",""
-            SetVizData "1103",""
+            SetVizData "1100" ,Data.Item("msg") ,"string","Line"
+            SetVizData "1101",""   ,"string",""
+            SetVizData "1102",""   ,"string",""
+            SetVizData "1103",""   ,"string",""
         end if
 
         GetPreview "Default", t, sScene
@@ -2430,15 +2470,15 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadSceneWF elMainLayer, sScene
         SetCommercialOnOff "VB Freetext"
 
-        SetVizDataUpper "0100", Data.Item("title")    '100
-        SetVizDataUpper "0110", Data.Item("subline") '500
+        SetVizDataUpper "0100", Data.Item("title")  ,"string","Title"  '100
+        SetVizDataUpper "0110", Data.Item("subline"),"string","Subline" '500
 
         SetBGOnOffWF
         dim maxcount
         maxcount=Data.Item("maxcount")
         ids=1111
             for i=0 to maxcount-1
-                SetVizDataUpper ids, msg.Strings(i)
+                SetVizDataUpper ids, msg.Strings(i) ,"string","Line "&i
                 ids=ids+1
             next
         'SetVizData "1111" ,Data.Item("msg")
@@ -2449,8 +2489,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPHSOff 'erstmal
         SetTLogo Data.Item("LOGO")
         
-        SetVizData "1115",Data.Item("SUB1")
-        SetVizData "1116",Data.Item("SUB2")
+        SetVizData "1115",Data.Item("SUB1") ,"string","Subline 1"
+        SetVizData "1116",Data.Item("SUB2") ,"string","Subline 2"
         
 
         GetPreviewWF "Default", t, sScene
@@ -2503,8 +2543,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetPHSOff
         end if
 
-        SetVizData "0200",Data.Item("SUBLINE")
-        SetVizData "0475", Data.Item("CARD_CODE")
+        SetVizData "0200",Data.Item("SUBLINE") ,"string","Subline"
+        SetVizData "0475", Data.Item("CARD_CODE") ,"int","Cardcode"
 
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -2531,8 +2571,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetPHSOff
         end if
 
-        SetVizData "0200",UCase(Data.Item("SUBLINE") )
-        SetVizData "0004", 1
+        SetVizData "0200",UCase(Data.Item("SUBLINE") )  ,"string","Subline"
+        SetVizData "0004", 1 ,"int",""
         if Data.Item("CARD_CODE")=1 then
             ncc=0
         elseif Data.Item("CARD_CODE")=3 then
@@ -2540,8 +2580,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         else
             ncc=2
         end if
-        SetVizData "0094",""
-        SetVizData "0005", ncc
+        SetVizData "0094",""  ,"string",""
+        SetVizData "0005", ncc ,"int","Cardcode"
 
         GetPreviewWF "Default", "2.78", sScene
         Redim ActionList(2, 1)
@@ -2578,12 +2618,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPLastName Data.Item("NAME")
         SetPFirstName Data.Item("FNAME")
         SetPNummer Data.Item("")
-        SetVizData "0048",0
-        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"whistle"
+        SetVizData "0048",0  ,"int",""
+        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"whistle" ,"image","Logo"
         SetPHSOff
 
-        SetVizData "0210",Data.Item("REF2")
-        SetVizData "0310",Data.Item("REF3")
+        SetVizData "0210",Data.Item("REF2")  ,"string","Ref 2"
+        SetVizData "0310",Data.Item("REF3") ,"string","Ref 3"
 
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -2599,11 +2639,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetPLastName UCase(Data.Item("NAME") )
         SetPFirstName UCase(Data.Item("FNAME"))
         SetPNummer Data.Item("")
-        SetVizData "0048",0
-        SetVizData "0200",UCase("Schiedsrichter") '->erstmal
-        SetVizData "0210",UCase(Data.Item("REF2"))
-        SetVizData "0220",UCase(Data.Item("REF3"))
-        SetVizData "0230",UCase(Data.Item("REF4") )
+        SetVizData "0048",0 ,"int",""
+        SetVizData "0200",UCase("Schiedsrichter") ,"string",""'->erstmal
+        SetVizData "0210",UCase(Data.Item("REF2")),"string","Ref 2"
+        SetVizData "0220",UCase(Data.Item("REF3")),"string","Ref 3"
+        SetVizData "0230",UCase(Data.Item("REF4") ),"string","Ref 4"
         GetPreviewWF "Default", "1.98", sScene
         Redim ActionList(2, 1)
         ActionList(1, 0) = "Default"
@@ -2630,40 +2670,40 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitleSubLine ""
         SetSubLine Data.Item("SUBTITLE")
 
-        SetTeamLogo "0060", LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0070", LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0060", LCase(Data.Item("LOGO1")),"Logo 1"
+        SetTeamLogo "0070", LCase(Data.Item("LOGO2")),"Logo 2"
         
-        SetVizData "0063","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO"))
-        SetVizData "0073","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO2"))
+        SetVizData "0063","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO")) ,"image","Player Photo 1"
+        SetVizData "0073","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO2")),"image","Player Photo 2"
 
         select case  Data.Item("HEADER_TYPE")
             case 0
-                SetVizData "0010",0
-                SetVizData "0050",0
+                SetVizData "0010",0,"int",""
+                SetVizData "0050",0 ,"int",""
             case 1
-                SetVizData "0010",0
-                SetVizData "0050",0
+                SetVizData "0010",0 ,"int",""
+                SetVizData "0050",0 ,"int",""
             case 2
-                SetVizData "0010",1
-                SetVizData "0050",0
+                SetVizData "0010",1 ,"int",""
+                SetVizData "0050",0 ,"int",""
             case 3
-                SetVizData "0010",0
-                SetVizData "0050",1
+                SetVizData "0010",0 ,"int",""
+                SetVizData "0050",1 ,"int",""
             case 4
-                SetVizData "0010",1
-                SetVizData "0050",1
+                SetVizData "0010",1 ,"int",""
+                SetVizData "0050",1 ,"int",""
             case 5
-                SetVizData "0010",1
-                SetVizData "0050",0
+                SetVizData "0010",1 ,"int",""
+                SetVizData "0050",0 ,"int",""
         end select
 
         dim ids :ids=1111
         for i = 1 to 5
-            SetVizData ids,Data.Item("TEXT1" & i)
-            SetVizData ids+1,Data.Item("TEXT2" & i)
+            SetVizData ids,Data.Item("TEXT1" & i) ,"string","Line 1 "&i
+            SetVizData ids+1,Data.Item("TEXT2" & i) ,"string","Line 2 "&i
             ids=ids+100
         next
-        if not Data.Item("HEADER_TYPE") =5 then SetVizData "0004",Data.Item("ITEMCOUNT")
+        if not Data.Item("HEADER_TYPE") =5 then SetVizData "0004",Data.Item("ITEMCOUNT"),"int","Count"
 
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5", sScene
@@ -2684,10 +2724,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetBGOnOffWF
          SetCommercialOnOff "VB Megafacts"
-        SetVizDataUpper "0100", Data.Item("TITLE")
-        SetVizDataUpper "0110",Data.Item("SUBTITLE")
+        SetVizDataUpper "0100", Data.Item("TITLE"),"string","Title"
+        SetVizDataUpper "0110",Data.Item("SUBTITLE") ,"string","Sub Title"
 
-        SetTeamLogo "0090", LCase(Data.Item("LOGO1"))
+        SetTeamLogo "0090", LCase(Data.Item("LOGO1")),"Logo"
 
         if Data.Item("HEADER_TYPE")<>3 then
             SetPHSOff
@@ -2698,11 +2738,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         dim ids :ids=1111
         for i = 1 to 6
-            SetVizDataUpper ids,Data.Item("TEXT1" & i)
-            SetVizDataUpper ids+1,Data.Item("TEXT2" & i)
+            SetVizDataUpper ids,Data.Item("TEXT1" & i) ,"string","Line 1 "&i
+            SetVizDataUpper ids+1,Data.Item("TEXT2" & i) ,"string","Line 2 "&i
             ids=ids+100
         next
-        SetVizData "0004",Data.Item("ITEMCOUNT")
+        SetVizData "0004",Data.Item("ITEMCOUNT") ,"int","Count"
 
 
         GetPreviewWF "Default", "3.1", sScene
@@ -2725,13 +2765,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         SetIBSide
         if typ = 5 then
-            SetVizData "0085",0
+            SetVizData "0085",0 ,"int","Logo On/Off"
         elseif typ=0 then
-            SetVizData "0085",1
-            SetTeamLogo "0090",LCase(Data.Item("LOGO1"))
+            SetVizData "0085",1 ,"int","Logo On/Off"
+            SetTeamLogo "0090",LCase(Data.Item("LOGO1")),"Logo"
         elseif typ=1 then
-            SetVizData "0085",1
-            SetTeamLogo "0090",LCase(Data.Item("LOGO2"))
+            SetVizData "0085",1 ,"int","Logo On/Off"
+            SetTeamLogo "0090",LCase(Data.Item("LOGO2")),"Logo"
         elseif typ=3 then
             SetTitelDefaultHeader
         end if
@@ -2741,8 +2781,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         if typ= 3  then
             'if typ=4 then
-                SetTeamLogo "0610",LCase(Data.Item("LOGO1"))
-                SetPlayerHS "0600",LCase(Data.Item("LOGO1")),LCase(Data.Item("FOTO"))
+                SetTeamLogo "0610",LCase(Data.Item("LOGO1")),"Logo"
+                SetPlayerHS "0600",LCase(Data.Item("LOGO1")),LCase(Data.Item("FOTO")),"Photo"
             'else
             '    SetTeamLogo "0610",LCase(Data.Item("LOGO2"))
             '    SetPlayerHS "0600",LCase(Data.Item("LOGO2")),LCase(Data.Item("FOTO"))
@@ -2753,14 +2793,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             dim ids :ids=1102
             for i = 1 to 5
-               SetVizData ids,Data.Item("TEXT1" & i)
-               SetVizData ids+1,Data.Item("TEXT2" & i)
+               SetVizData ids,Data.Item("TEXT1" & i) ,"string","Line 1 "&i
+               SetVizData ids+1,Data.Item("TEXT2" & i) ,"string","Line 2 "&i
                 ids=ids+100
             next
             if typ= 3 or typ=4 then
                 if Data.Item("ITEMCOUNT")>4 then Data.Item("ITEMCOUNT")=4
             end if
-            SetVizData "0004",Data.Item("ITEMCOUNT")
+            SetVizData "0004",Data.Item("ITEMCOUNT") ,"int","Count"
 
 
 
@@ -2780,19 +2820,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetIBSide
         SetPLastName data.item("NAME")
         SetPFirstName data.item("FNAME")
-        SetPlayerHS "0600", data.item("LOGO"),data.item("NR")
+        SetPlayerHS "0600", data.item("LOGO"),data.item("NR"),"Player HS"
         'SetPHS data.item("LOGO"),data.item("NR")
         SetSubLine Data.Item("TITLE")
         SetTitleLogo data.item("LOGO"),false
         dim ids:ids=1102
         for i = 1 to Data.Item("ITEMCOUNT")
-                SetVizData ids, data.Item("TEXT" & i)
+                SetVizData ids, data.Item("TEXT" & i) ,"string","Line "&i
              ids=ids+100
         next
         if Data.Item("ITEMCOUNT")>3 then
-            SetVizData "0004",Data.Item("ITEMCOUNT")
+            SetVizData "0004",Data.Item("ITEMCOUNT"),"int","Count"
         else
-            SetVizData "0004",3
+            SetVizData "0004",3 ,"int","Count"
         end if
 
 
@@ -2883,22 +2923,22 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             TeamId = 2
             LineupID = Lineup_B
         end if
-        SetVizData "0100",1
-        SetTeamLogo "0101",LCase(Data.Item("T_LOGO_"& TeamId))
-        SetVizData "0111",Data.Item("T_LNAME_"& TeamId)
-        SetVizData "0112",""
-        SetVizData "0120",""
-        SetVizData "0120",GetString("Trainer", i__TVLanguage) & ": " & Data.Item("COACH" & TeamId)
+        SetVizData "0100",1 ,"int",""
+        SetTeamLogo "0101",LCase(Data.Item("T_LOGO_"& TeamId)),"Team Logo 1"
+        SetVizData "0111",Data.Item("T_LNAME_"& TeamId),"string","Team Name 1"
+        SetVizData "0112",""  ,"string",""
+        SetVizData "0120","" ,"string",""
+        SetVizData "0120",GetString("Trainer", i__TVLanguage) & ": " & Data.Item("COACH" & TeamId)  ,"string","Coach 1"
         
-        SetVizData "0200",1
-        SetTeamLogo "0201",LCase(Data.Item("T_LOGO_2"))
-        SetVizData "0211",Data.Item("T_LNAME_2")
-        SetVizData "0212",""
-        SetVizData "0220",""
-        SetVizData "0220",GetString("Trainer", i__TVLanguage) & ": " & Data.Item("COACHB")
+        SetVizData "0200",1 ,"int",""
+        SetTeamLogo "0201",LCase(Data.Item("T_LOGO_2")),"Team Logo 2"
+        SetVizData "0211",Data.Item("T_LNAME_2") ,"string","Team Name 2"
+        SetVizData "0212",""  ,"string",""
+        SetVizData "0220","" ,"string",""
+        SetVizData "0220",GetString("Trainer", i__TVLanguage) & ": " & Data.Item("COACHB") ,"string","Coach 2"
 
-        SetVizData "6011",Data.Item("T_SNAME_1")&" - "&Data.Item("T_SNAME_2")
-        SetVizData "6012","" 'Data.Item("T_SNAME_2")
+        SetVizData "6011",Data.Item("T_SNAME_1")&" - "&Data.Item("T_SNAME_2") ,"string","Team 2 Short"
+        SetVizData "6012","" ,"string","" 'Data.Item("T_SNAME_2")
 
 
         dim ids:ids=1100
@@ -2922,10 +2962,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'ScenePosX  = Replace(Formatnumber((x_Pos - 480) / (LineupWidth / SceneWidth), 1), ",", ".")
             'ScenePosY  = Replace(Formatnumber((y_Pos - 288) / (LineupHeight / SceneHeight), 1), ",", ".")
 
-            SetVizData ids,P_nr
-            SetVizData ids+2,P_Name
-            SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+            SetVizData ids,P_nr ,"string","Player Number "&i
+            SetVizData ids+2,P_Name ,"string","Player Name "&i
+            SetVizData (ids+10)&".x1",ScenePosX  ,"double","PosX "&i
+            SetVizData (ids+10)&".y1",ScenePosY  ,"double","PosY "&i
             ids=ids+100
             SetVizDataBufferOff
             if isPlayerHL(P_Nr,Team) = true then
@@ -2934,16 +2974,16 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         Next
         ids=2200
         for i=1 to 7
-            SetVizData ids,Data.Item("RBIB"&i)
-            SetVizData ids+2,Data.Item("RNAME"&i)
+            SetVizData ids,Data.Item("RBIB"&i) ,"string","Reserve Number "&i
+            SetVizData ids+2,Data.Item("RNAME"&i) ,"string","Reserve Name "&i
             ids=ids+100
         next
-        SetVizData 1005,Data.Item("ITEMCOUNT")
-        SetPlayerHS 2901,LCase(Data.Item("T_LOGO_"& TeamId)),"00"
-        SetVizData 2902,""'Data.Item("COACH" & TeamId)
+        SetVizData 1005,Data.Item("ITEMCOUNT") ,"int","Count"
+        SetPlayerHS 2901,LCase(Data.Item("T_LOGO_"& TeamId)),"00","Photo Coach"
+        SetVizData 2902,"","string",""'Data.Item("COACH" & TeamId)
         'SetVizData 6011,""
         'SetVizData 6012,""
-        SetVizData 1000, data.item("LIVEIN")
+        SetVizData 1000, data.item("LIVEIN") ,"int","Live On/Off"
         GetPreview "Default 3.5", "L1 3.0 L2 3.0 L3 3.0 L4 3.0 L5 3.0 L6 3.0 L7 3.0 L8 3.0 L9 3.0 L10 3.0 L11 3.0 SPIELERPOS_HEIM 0.0" ,sScene
 
         Redim ActionList(2, 1)
@@ -2974,10 +3014,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             LineupID = Lineup_B
         end if
 
-        SetTeamLogo "0090",LCase(Data.Item("T_LOGO_"& TeamId))
-        SetVizDataUpper "0100",Data.Item("T_LNAME_"& TeamId)
-        SetVizData "0110",""
-        SetVizData "0092","0"
+        SetTeamLogo "0090",LCase(Data.Item("T_LOGO_"& TeamId)) ,"Logo"
+        SetVizDataUpper "0100",Data.Item("T_LNAME_"& TeamId) ,"string","Team Name"
+        SetVizData "0110","","string",""
+        SetVizData "0092","0" ,"string",""
         'SetVizData "0120",GetString("Trainer", i__TVLanguage) & ": " & Data.Item("COACH" & TeamId)
 
         dim ids:ids=1100
@@ -3001,11 +3041,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'ScenePosX  = Replace(Formatnumber((x_Pos - 480) / (LineupWidth / SceneWidth), 1), ",", ".")
             'ScenePosY  = Replace(Formatnumber((y_Pos - 288) / (LineupHeight / SceneHeight), 1), ",", ".")
 
-            SetVizData ids,P_nr
-            SetVizData ids+5,0
-            SetVizDataUpper ids+10,P_Name
-            SetVizData (ids+15),ScenePosX
-            SetVizData (ids+20),ScenePosY
+            SetVizData ids,P_nr ,"string","Player Number "&i
+            SetVizData ids+5,0  ,"int",""
+            SetVizDataUpper ids+10,P_Name ,"string","Player Name "&i
+            SetVizData (ids+15),ScenePosX  ,"double","PosX "&i
+            SetVizData (ids+20),ScenePosY  ,"double","PosY "&i
             
             ids=ids+100
             SetVizDataBufferOff
@@ -3016,14 +3056,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         ids=3010
         for i=1 to 7
             'SetVizData ids,Data.Item("RBIB"&i)
-            SetVizDataUpper ids,Data.Item("RBIB"&i)& " "&Data.Item("RNAME"&i)
+            SetVizDataUpper ids,Data.Item("RBIB"&i)& " "&Data.Item("RNAME"&i),"string","Reserve "&i
             ids=ids+10
         next
 
-        SetVizData "0002",0 '
+        SetVizData "0002",0 ,"int",""
         if data.item("LIVEIN")=0 then
-            SetVizData "0001",1
-            SetVizData "0008",0
+            SetVizData "0001",1  ,"int","Live In On/OFF"
+            SetVizData "0008",0  ,"int","Live In On/OFF"
         end if
         GetPreviewWF "Default 2.78", "SPIELER 0.7" ,sScene
 
@@ -3087,8 +3127,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim ids
         'if Team = "A" then
             ids=1000+(Data.Item("Curr")*100)
-             SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+             SetVizData (ids+10)&".x1",ScenePosX ,"double",""
+            SetVizData (ids+10)&".y1",ScenePosY  ,"double",""
 
             obj__TV.SendCommand "SCENE*" & s__VizPath & "/VB_takt_Aufstellung_Fussball*TREE*$SPIELER_HEIM$SPIELER_" & Data.Item("Curr") & "$POS*TRANSFORMATION*POSITION SET " & ScenePosX & " " & ScenePosY & " 0.0"
 
@@ -3127,8 +3167,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             ids=1000+(Data.Item("Curr")*100)
 
-            SetVizData (ids+15),ScenePosX
-            SetVizData (ids+20),ScenePosY
+            SetVizData (ids+15),ScenePosX ,"double",""
+            SetVizData (ids+20),ScenePosY ,"double",""
             'obj__TV.SendCommand "SCENE*" & s__VizPathWF & "/VB_takt_Aufstellung_Livein*TREE*$SPIELER_HEIM$SPIELER_" & Data.Item("Curr") & "$POS*TRANSFORMATION*POSITION SET " & ScenePosX & " " & ScenePosY & " 0.0"
 
     End Sub
@@ -3154,20 +3194,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitleLogo Data.Item("LOGO"),false
         dim ids:ids=1100
         for i = 1 to Data.Item("ITEMCOUNT")
-            SetVizData ids,Data.Item("NR" & i)
-            SetTeamLogo ids+1,LCase(Data.Item("LOGO" & i))
-            SetVizData ids+2, Data.Item("NAME" & i)
+            SetVizData ids,Data.Item("NR" & i),"string","Nr "&i
+            SetTeamLogo ids+1,LCase(Data.Item("LOGO" & i)),"Logo "&i
+            SetVizData ids+2, Data.Item("NAME" & i) ,"string","Name "&i
             if Data.Item("HOME" & i) then
-                SetVizData ids+3,"(H)"
+                SetVizData ids+3,"(H)" ,"string","Where  "&i
             else
-                SetVizData ids+3,"(A)"
+                SetVizData ids+3,"(A)" ,"string","Where  "&i
             end if
 
             ids=ids+100
         next
 
 
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreview "Default 3.0", "L1 3.0 L2 3.0 L3 3.0 L4 3.0 L5 3.0 L5 3.0 L6 3.0", sScene
         Redim ActionList(2, 1)
@@ -3284,13 +3324,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         
         dim ids : ids=1102
         for i = 1 to Data.Item("ITEMCOUNT")
-            SetVizData ids , Data.Item("NAME_A" & i)
-            SetVizData ids+4 , Data.Item("NAME_B" & i)
-            SetVizData ids+2 , Data.Item("RESULT" & i)
+            SetVizData ids , Data.Item("NAME_A" & i) ,"string","Name A "&i
+            SetVizData ids+4 , Data.Item("NAME_B" & i) ,"string","Name B "&i
+            SetVizData ids+2 , Data.Item("RESULT" & i) ,"string","Result "&i
             ids=ids+100
         next
 
-        SetVizData "0004",Data.Item("ITEMCOUNT")
+        SetVizData "0004",Data.Item("ITEMCOUNT"),"int","Count"
 
         GetPreview "Default 3.0", "L1 3.0 L2 3.0 L3 3.0 L4 3.0 L5 3.0" ,sScene
         Redim ActionList(2, 1)
@@ -3318,16 +3358,16 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             hcount=Ceil(count/2.0)
 
         end if
-        SetVizData "0502",GetString(Data.Item("HEADER1"), i__TVLanguage)
-        SetVizData "0504",GetString(Data.Item("HEADER2"), i__TVLanguage)
+        SetVizData "0502",GetString(Data.Item("HEADER1"), i__TVLanguage)  ,"string","Header 1"
+        SetVizData "0504",GetString(Data.Item("HEADER2"), i__TVLanguage)  ,"string","Header 2"
         SetTitelDefaultHeader
         dim ids:ids= 1100
         k = 0
         for i = 1 to hcount
-            SetVizData ids, Data.Item("PLACE" & i)
-            SetVizData ids+2, Data.Item("NAME" & i)
-            SetVizData ids+4, Data.Item("GOALS" & i)
-            SetVizData ids+6, Data.Item("POINTS" & i)
+            SetVizData ids, Data.Item("PLACE" & i) ,"string","Place "&i
+            SetVizData ids+2, Data.Item("NAME" & i) ,"string","Name "&i
+            SetVizData ids+4, Data.Item("GOALS" & i),"string","Goals "&i
+            SetVizData ids+6, Data.Item("POINTS" & i) ,"int","Points "&i
 
             ids=ids+100
         next
@@ -3335,19 +3375,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             ids=2100
             for i=(hcount+1) to (hcount*2)
                 if i>count  then
-                    SetVizData ids+2, ""
+                    SetVizData ids+2, "" ,"string",""
                 else
-                    SetVizData ids, Data.Item("PLACE" & i)
-                    SetVizData ids+2, Data.Item("NAME" & i)
-                    SetVizData ids+4, Data.Item("GOALS" & i)
-                    SetVizData ids+6, Data.Item("POINTS" & i)
+                    SetVizData ids, Data.Item("PLACE" & i) ,"string","Place "&i
+                    SetVizData ids+2, Data.Item("NAME" & i) ,"string","Name "&i
+                    SetVizData ids+4, Data.Item("GOALS" & i) ,"string","Goals "&i
+                    SetVizData ids+6, Data.Item("POINTS" & i) ,"int","Points "&i
                 end if
                 ids=ids+100
             next
         end if
         
 
-        SetVizData "0004",hcount
+        SetVizData "0004",hcount ,"int","Count"
 
         GetPreview "Default 3.0", "L1 3.0 L2 3.0 L3 3.0 L4 3.0 L5 3.0 L6 3.0 L7 3.0", sScene
         Redim ActionList(2, 1)
@@ -3516,26 +3556,26 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
         
 
-        SetVizData "0120", Data.Item("INFO")
+        SetVizData "0120", Data.Item("INFO") ,"string","Info"
         dim count:count=0
         dim ids
         ids=1110
         for i = 1 to 6
             if Data.Item("TEXT" & i) <> "" then
-                SetVizData ids,Data.Item("TEXT" & i)
-                SetVizData ids+5,Data.Item("VALUE" & i)
-                SetVizData ids+1,Data.Item("VALUE" & i)
+                SetVizData ids,Data.Item("TEXT" & i)  ,"string","Para "&i
+                SetVizData ids+5,Data.Item("VALUE" & i) ,"string","Value A "&i
+                SetVizData ids+1,Data.Item("VALUE" & i) ,"string","Value B "&i
                 ids=ids+100
                 count=count+1
             end if
         next
         
         if Data.Item("NEBENEINANDER") then
-              SetVizData "0005", count
+              SetVizData "0005", count ,"int","Count"
         else
-            SetVizData "0004", count
-            SetVizData "0005", 1
-            SetVizData "0501", ""
+            SetVizData "0004", count ,"int","Count"
+            SetVizData "0005", 1     ,"int",""
+            SetVizData "0501", ""    ,"string",""
         end if
 
         GetPreview "Default", "2.0", sScene
@@ -3565,25 +3605,25 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
 
 
-        SetVizData "0120", Data.Item("INFO")
+        SetVizData "0120", Data.Item("INFO"),"string","Info"
         dim count:count=0
         dim ids
         ids=210
         for i = 1 to 6
             if Data.Item("TEXT" & i) <> "" then
-                SetVizData "0"&ids,UCase(Data.Item("TEXT" & i)  )
-                SetVizData "0"&(ids+10),Data.Item("VALUE" & i)
+                SetVizData "0"&ids,UCase(Data.Item("TEXT" & i)  ) ,"string","Para "&i
+                SetVizData "0"&(ids+10),Data.Item("VALUE" & i)   ,"string","Value "&i
                 ids=ids+100
                 count=count+1
             end if
         next
 
         if Data.Item("NEBENEINANDER") then
-              SetVizData "0200", count
+              SetVizData "0200", count ,"int","Count"
         else
-            SetVizData "0004", count
-            SetVizData "0005", 1
-            SetVizData "0501", ""
+            SetVizData "0004", count  ,"int","Count"
+            SetVizData "0005", 1      ,"int",""
+            SetVizData "0501", ""     ,"string",""
         end if
 
         GetPreviewWF "Default", "2.78", sScene
@@ -3668,13 +3708,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitleSubLine ""
         SetDropLine ""
         SetSubLine ""
-        SetVizData "0085", 0
+        SetVizData "0085", 0  ,"int",""
         if Data.Item("AS_INFOBOX") = true then SetSubLine ""
         for i = 1 to 5
-            SetVizData ids,Data.Item("NAME_A" & i) & " - " & Data.Item("NAME_B" & i)
-            SetVizData ids+1 ,Data.Item("TIME" & i)
-            SetTeamLogo ids+2,LCase(Data.Item("LOGO_A" & i))
-            SetTeamLogo ids+3,LCase(Data.Item("LOGO_B" & i))
+            SetVizData ids,Data.Item("NAME_A" & i) & " - " & Data.Item("NAME_B" & i) ,"string","Match"
+            SetVizData ids+1 ,Data.Item("TIME" & i) ,"string","Time"
+            SetTeamLogo ids+2,LCase(Data.Item("LOGO_A" & i)),"Logo A"
+            SetTeamLogo ids+3,LCase(Data.Item("LOGO_B" & i)),"Logo B"
 
             'if i<6 then
             '    obj = "QUOTE_" & i
@@ -3686,7 +3726,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             ids=ids+100
         next
 
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
 
         GetPreview "Default 3.0", "L1 3.0 L2 3.0 L3 3.0 L4 3.0 L5 3.0", sScene
@@ -3729,27 +3769,27 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
         SetShow
         SetTitelDefaultHeader
-        SetVizData "0008", 0
+        SetVizData "0008", 0 ,"int",""
         SetTitle Data.Item("TITLE")
         SetTitleSubLine ""
         SetDropLine ""
-        SetVizData "0500",Data.Item("SUBTITLE")
+        SetVizData "0500",Data.Item("SUBTITLE") ,"string","Subtitle"
 
         if Data.Item("AS_INFOBOX") = true then
             SetIBSide
-            SetVizData "0501",Data.Item("HEADER_A")
+            SetVizData "0501",Data.Item("HEADER_A") ,"string","Header A"
         else
             SetBGOnOff
-            SetVizData "0501",""
-            SetVizData "0008",1
+            SetVizData "0501","" ,"string",""
+            SetVizData "0008",1  ,"int",""
             if Data.Item("TWO_PARAMS") = true then
-                SetVizData "0005",2
-                SetVizData "0502",Data.Item("HEADER_A")
-                SetVizData "0503",Data.Item("HEADER_B")
+                SetVizData "0005",2 ,"int",""
+                SetVizData "0502",Data.Item("HEADER_A")  ,"string","Header A"
+                SetVizData "0503",Data.Item("HEADER_B") ,"string","Header B"
             else
-                SetVizData "0005",3
-                SetVizData "0502",""
-                SetVizData "0503",Data.Item("HEADER_A")
+                SetVizData "0005",3  ,"int",""
+                SetVizData "0502","" ,"string",""
+                SetVizData "0503",Data.Item("HEADER_A") ,"string","Header A"
             end if
         end if
 
@@ -3757,26 +3797,26 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim ids : ids = 1100
         for i = 1 to 8  ' IB hat nur 6!
             if Data.Item("AS_INFOBOX") = true then
-                SetVizData ids ,Data.Item("NR" & i)
-                SetVizData ids+2, Data.Item("NAME" & i)
-                SetVizData ids+3 ,Data.Item("PARAM_A" & i)
-                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i))
+                SetVizData ids ,Data.Item("NR" & i) ,"string","Number "&i
+                SetVizData ids+2, Data.Item("NAME" & i) ,"string","Name "&i
+                SetVizData ids+3 ,Data.Item("PARAM_A" & i),"string","Para A "&i
+                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i)),"Logo "&i
             else
-                SetVizData ids ,Data.Item("NR" & i)
-                SetVizData ids+2, Data.Item("NAME" & i)
-                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i))
-                SetVizData ids+3 ,""
+                SetVizData ids ,Data.Item("NR" & i),"string","Number "&i
+                SetVizData ids+2, Data.Item("NAME" & i) ,"string","Name "&i
+                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i)),"Logo "&i
+                SetVizData ids+3 ,"" ,"string",""
                 if Data.Item("TWO_PARAMS") = true then
-                    SetVizData ids+4,Data.Item("PARAM_A" & i)
-                    SetVizData ids+5,Data.Item("PARAM_B" & i)
+                    SetVizData ids+4,Data.Item("PARAM_A" & i) ,"string","Para A "&i
+                    SetVizData ids+5,Data.Item("PARAM_B" & i) ,"string","Para B "&i
                 else
-                    SetVizData ids+4,""
-                    SetVizData ids+5,Data.Item("PARAM_A" & i)
+                    SetVizData ids+4,"" ,"string",""
+                    SetVizData ids+5,Data.Item("PARAM_A" & i) ,"string","Para A "&i
                 end if
             end if
             ids =ids + 100
         next
-            SetVizData "0004" ,Data.Item("ITEMCOUNT")
+            SetVizData "0004" ,Data.Item("ITEMCOUNT") ,"int","Count"
         GetPreview "Default 2.0", "L1 2.0 L2 2.0 L3 2.0 L4 2.0 L5 2.0 L6 2.0 L7 2.0 L8 2.0", sScene
         Redim ActionList(2, 1)
         ActionList(1, 0) = "Default"
@@ -3795,25 +3835,25 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         LoadSceneWF elMainLayer, sScene
         SetCommercialOnOff "VB PlayerStat"
-        SetVizDataUpper "0100" ,Data.Item("TITLE")
-        SetVizDataUpper "0110",Data.Item("SUBTITLE")
+        SetVizDataUpper "0100" ,Data.Item("TITLE")  ,"string","Title"
+        SetVizDataUpper "0110",Data.Item("SUBTITLE") ,"string","§ubtitle"
 
         if Data.Item("AS_INFOBOX") = true then
             SetIBSide
-            SetVizDataUpper "0120",Data.Item("HEADER_A")
-            SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball"
+            SetVizDataUpper "0120",Data.Item("HEADER_A") ,"string","Header A"
+            SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball","image","Image"
         else
             SetBGOnOff
-            SetVizData "0501",""
-            SetVizData "0008",1
+            SetVizData "0501",""  ,"string",""
+            SetVizData "0008",1 ,"int",""
             if Data.Item("TWO_PARAMS") = true then
-                SetVizData "0005",2
-                SetVizDataUpper "0502",Data.Item("HEADER_A")
-                SetVizDataUpper "0503",Data.Item("HEADER_B")
+                SetVizData "0005",2 ,"int",""
+                SetVizDataUpper "0502",Data.Item("HEADER_A")  ,"string","Header A"
+                SetVizDataUpper "0503",Data.Item("HEADER_B") ,"string","Header B"
             else
-                SetVizData "0005",3
-                SetVizData "0502",""
-                SetVizDataUpper "0503",Data.Item("HEADER_A")
+                SetVizData "0005",3 ,"int",""
+                SetVizData "0502","" ,"string",""
+                SetVizDataUpper "0503",Data.Item("HEADER_A") ,"string","Header A"
             end if
         end if
 
@@ -3822,28 +3862,28 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         for i = 1 to 8  ' IB hat nur 6!
             if Data.Item("AS_INFOBOX") = true then
                 'SetVizData ids ,Data.Item("NR" & i)
-                SetVizDataUpper ids, Data.Item("NAME" & i)
-                SetVizData ids+1 ,Data.Item("PARAM_A" & i)
+                SetVizDataUpper ids, Data.Item("NAME" & i),"string","Name "&i
+                SetVizData ids+1 ,Data.Item("PARAM_A" & i),"string","Para A "&i
                 'SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i))
             else
-                SetVizData ids ,Data.Item("NR" & i)
-                SetVizDataUpper ids+2, Data.Item("NAME" & i)
-                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i))
-                SetVizData ids+3 ,""
+                SetVizData ids ,Data.Item("NR" & i),"string","Number "&i
+                SetVizDataUpper ids+2, Data.Item("NAME" & i) ,"string","Name "&i
+                SetTeamLogo ids+1,LCase(Data.Item("LOGO"&i)),"Logo "&i
+                SetVizData ids+3 ,"","string",""
                 if Data.Item("TWO_PARAMS") = true then
-                    SetVizData ids+4,Data.Item("PARAM_A" & i)
-                    SetVizData ids+5,Data.Item("PARAM_B" & i)
+                    SetVizData ids+4,Data.Item("PARAM_A" & i) ,"string","Para A "&i
+                    SetVizData ids+5,Data.Item("PARAM_B" & i),"string","Para B "&i
                 else
-                    SetVizData ids+4,""
-                    SetVizData ids+5,Data.Item("PARAM_A" & i)
+                    SetVizData ids+4,"" ,"string",""
+                    SetVizData ids+5,Data.Item("PARAM_A" & i),"string","Para A "&i
                 end if
             end if
             ids =ids + 100
         next
          if Data.Item("ITEMCOUNT")>5 then
-             SetVizData "0004" ,5
+             SetVizData "0004" ,5 ,"int","Count"
         else
-            SetVizData "0004" ,Data.Item("ITEMCOUNT")
+            SetVizData "0004" ,Data.Item("ITEMCOUNT") ,"int","Count"
         end if
 
         GetPreviewWF "Default", "3.1", sScene
@@ -3865,35 +3905,35 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         SetBGOnOff
         SetTitleLogo "",false
-        SetTeamLogo "0060" ,LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0070" ,LCase(Data.Item("LOGO2"))
-        SetVizData "0050",0
-        SetVizData "0100",Data.Item("NAME1")
-        SetVizData "0200",Data.Item("NAME2")
-        SetVizData "0110",""
-        SetVizData "0210",""
+        SetTeamLogo "0060" ,LCase(Data.Item("LOGO1")),"Logo A"
+        SetTeamLogo "0070" ,LCase(Data.Item("LOGO2")),"Logo B"
+        SetVizData "0050",0 ,"int",""
+        SetVizData "0100",Data.Item("NAME1") ,"string","Name A"
+        SetVizData "0200",Data.Item("NAME2") ,"string","Name B"
+        SetVizData "0110","" ,"string",""
+        SetVizData "0210","" ,"string",""
 
-        SetVizData "0500", GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizData "0500", GetString("TEAM_STATISTIK", i__TVLanguage) ,"string","Title"
         if Data.Item("HL") <> "" then
-            SetVizData "0500", Data.Item("HL")
+            SetVizData "0500", Data.Item("HL") ,"string","Headline"
         end if
 
         if Data.Item("WITH_SCORE") = true then
-            SetVizData "0149",1
-            SetVizData "0150",Data.Item("SCORE")
+            SetVizData "0149",1,"int","Score On/Off"
+            SetVizData "0150",Data.Item("SCORE") ,"string","Score"
         else
-            SetVizData "0149",0
-            SetVizData "0150","vs"
+            SetVizData "0149",0 ,"int","Score On/Off"
+            SetVizData "0150","vs" ,"string","Score"
         end if
 
         dim ids:ids= 1100
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizData ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i) ,"string","Value A "&i
+            SetVizData ids+1,Data.Item("TEXT" & i)  ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i)  ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT"),"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5", sScene
         Redim ActionList(2, 1)
@@ -3909,29 +3949,29 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetBGOnOffWF
         SetCommercialOnOffManual false, "VB Team Stats"
-        SetVizDataUpper "0100", GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizDataUpper "0100", GetString("TEAM_STATISTIK", i__TVLanguage),"string","Title"
         if Data.Item("HL") <> "" then
-            SetVizData "0100", Data.Item("HL")
+            SetVizData "0100", Data.Item("HL") ,"string","Headline"
         end if
-        SetVizData "0110",""
-        SetVizDataUpper "0094",Data.Item("SNAME1")
-        SetVizdata "0095",""
-        SetTeamLogo "0090",  LCase(Data.Item("LOGO1"))
-        SetVizDataUpper "0098",Data.Item("SNAME2")
-        SetVizdata "0099",""
-        SetTeamLogo  "0096",LCase(Data.Item("LOGO2"))
+        SetVizData "0110",""  ,"string",""
+        SetVizDataUpper "0094",Data.Item("SNAME1")   ,"string","Name A"
+        SetVizdata "0095",""  ,"string",""
+        SetTeamLogo "0090",  LCase(Data.Item("LOGO1")),"Logo A"
+        SetVizDataUpper "0098",Data.Item("SNAME2") ,"string","Name B"
+        SetVizdata "0099","","string",""
+        SetTeamLogo  "0096",LCase(Data.Item("LOGO2")),"Logo B"
 
-        SetVizData "0005",1
+        SetVizData "0005",1   ,"int",""
 
 
         dim ids:ids= 1110
         for i = 1 to 10
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizDataUpper ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i),"string","Value A "&i
+            SetVizDataUpper ids+1,Data.Item("TEXT" & i),"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i),"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreviewWF "Default", "3.1", sScene
         Redim ActionList(2, 1)
@@ -3956,25 +3996,25 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         'SetTeamLogo "0095" ,LCase(Data.Item("LOGO2"))
 
 
-        SetVizData "0110",""
+        SetVizData "0110","" ,"string",""
 
-        SetVizData "0115",Data.Item("NAME1")
-        SetVizData "0120",Data.Item("NAME2")
+        SetVizData "0115",Data.Item("NAME1"),"string","Name A"
+        SetVizData "0120",Data.Item("NAME2"),"string","Name B"
 
-        SetVizData "0100", GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizData "0100", GetString("TEAM_STATISTIK", i__TVLanguage) ,"string","Title"
         if Data.Item("HL") <> "" then
-            SetVizData "0100", Data.Item("HL")
+            SetVizData "0100", Data.Item("HL") ,"string","Headline"
         end if
 
 
         dim ids:ids= 1100
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizData ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i) ,"string","Value A "&i
+            SetVizData ids+1,Data.Item("TEXT" & i) ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i)  ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT"),"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5", sScene
         Redim ActionList(2, 1)
@@ -3990,29 +4030,29 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetIBSide
          SetCommercialOnOff "IB TeamStats"
 
-        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0096" ,LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1")),"Logo A"
+        SetTeamLogo "0096" ,LCase(Data.Item("LOGO2")),"Logo B"
 
 
-        SetVizData "0110",""
+        SetVizData "0110",""  ,"string",""
 
-        SetVizDataUpper "0115",Data.Item("NAME1")
-        SetVizDataUpper "0120",Data.Item("NAME2")
+        SetVizDataUpper "0115",Data.Item("NAME1")  ,"string","Name A"
+        SetVizDataUpper "0120",Data.Item("NAME2") ,"string","Name B"
 
-        SetVizDataUpper "0100", GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizDataUpper "0100", GetString("TEAM_STATISTIK", i__TVLanguage) ,"string","Title"
         if Data.Item("HL") <> "" then
-            SetVizDataUpper "0100", Data.Item("HL")
+            SetVizDataUpper "0100", Data.Item("HL") ,"string","Headline"
         end if
 
 
         dim ids:ids= 1110
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizDataUpper ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i),"string","Value A "&i
+            SetVizDataUpper ids+1,Data.Item("TEXT" & i) ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i) ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT")  ,"int","Count"
 
         GetPreviewWF "Default", "3.1", sScene
         Redim ActionList(2, 1)
@@ -4036,36 +4076,36 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         SetBGOnOff
         SetTitleLogo "",false
-        SetTeamLogo "0060" ,LCase(Data.Item("LOGO1") )
-        SetTeamLogo "0070" ,LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0060" ,LCase(Data.Item("LOGO1") ),"Logo A"
+        SetTeamLogo "0070" ,LCase(Data.Item("LOGO2")),"Logo B"
 
-        SetVizData "0100",Data.Item("NAME1")
-        SetVizData "0200",Data.Item("NAME2")
-        SetVizData "0110",""
-        SetVizData "0210",""
-        SetVizData "0500", Data.Item("TITLE")
+        SetVizData "0100",Data.Item("NAME1"),"string","Name A"
+        SetVizData "0200",Data.Item("NAME2"),"string","Name B"
+        SetVizData "0110","" ,"string",""
+        SetVizData "0210","" ,"string",""
+        SetVizData "0500", Data.Item("TITLE"),"string","Title"
         
-        SetVizData "0149",-1
-        SetVizData "0150",""
+        SetVizData "0149",-1 ,"int",""
+        SetVizData "0150",""  ,"string",""
         
 
         if not Data.item("ONLYPHOTO") then
-            SetVizData "0050",1
-            SetVizData "0063","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO1"))
-            SetVizData "0073","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO2"))
+            SetVizData "0050",1 ,"int","Photo On/Off"
+            SetVizData "0063","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO1")) ,"image","Photo A"
+            SetVizData "0073","IMAGE*"&s__PlayerFotoPath & "/" &LCase(Data.Item("FOTO2"))  ,"image","Photo B"
         else
-            SetVizData "0050",0
+            SetVizData "0050",0 ,"int","Photo On/Off"
         end if
 
 
         dim ids:ids= 1100
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizData ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i) ,"string","Value A "&i
+            SetVizData ids+1,Data.Item("TEXT" & i) ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i)  ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5", sScene
         Redim ActionList(2, 1)
@@ -4084,32 +4124,32 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetBGOnOffWF
         
          SetCommercialOnOff "VB Vergleich"
-        SetVizDataUpper "0100",Data.Item("TITLE")
-        SetVizData "0110",""
-        SetVizDataUpper "0094",Data.Item("FNAME1")
-        SetVizDataUpper "0095",Data.Item("LNAME1")
-        SetTeamLogo "0090",  LCase(Data.Item("LOGO1"))
-        SetVizDataUpper "0098",Data.Item("FNAME2")
-        SetVizDataUpper "0099",Data.Item("LNAME2")
-        SetTeamLogo  "0096",LCase(Data.Item("LOGO2"))
+        SetVizDataUpper "0100",Data.Item("TITLE") ,"string","Title"
+        SetVizData "0110","" ,"string",""
+        SetVizDataUpper "0094",Data.Item("FNAME1") ,"string","Player First Name A"
+        SetVizDataUpper "0095",Data.Item("LNAME1") ,"string","Player Last Name A"
+        SetTeamLogo "0090",  LCase(Data.Item("LOGO1")),"Logo A"
+        SetVizDataUpper "0098",Data.Item("FNAME2"),"string","Player First Name B"
+        SetVizDataUpper "0099",Data.Item("LNAME2") ,"string","Player Last Name B"
+        SetTeamLogo  "0096",LCase(Data.Item("LOGO2")),"Logo B"
 
         if Data.Item("FOTO") =true then
-            SetVizData "0005",0
-            SetPlayerHS "0093",  LCase(Data.Item("LOGO1")), LCase(Data.Item("NR1"))
-            SetPlayerHS "0097",  LCase(Data.Item("LOGO2")), LCase(Data.Item("NR2"))
+            SetVizData "0005",0  ,"int","Photo On/Off"
+            SetPlayerHS "0093",  LCase(Data.Item("LOGO1")), LCase(Data.Item("NR1")),"Photo A"
+            SetPlayerHS "0097",  LCase(Data.Item("LOGO2")), LCase(Data.Item("NR2")),"Photo B"
         else
-            SetVizData "0005",1
+            SetVizData "0005",1 ,"int","Photo On/Off"
         end if
 
 
         dim ids:ids= 1110
         for i = 1 to 10
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizDataUpper ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i)  ,"string","Value A "&i
+            SetVizDataUpper ids+1,Data.Item("TEXT" & i)   ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i) ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreviewWF "Default", "3.1", sScene
         Redim ActionList(2, 1)
@@ -4139,24 +4179,24 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetBGOnOffWF
         dim ids:ids= 1111
         if Data.Item("SIDE") = 0 then
-            SetVizDataUpper "0100",Data.Item("NAME1")
-            SetPlayerHS "0090",Data.Item("LOGO1"),Data.Item("NR1")
+            SetVizDataUpper "0100",Data.Item("NAME1") ,"string","Name A"
+            SetPlayerHS "0090",Data.Item("LOGO1"),Data.Item("NR1"),"Photo A"
             for i = 1 to 10
-                SetVizData ids+1,Data.Item("PARAM_A" & i)
-                SetVizDataUpper ids,Data.Item("TEXT" & i)
+                SetVizData ids+1,Data.Item("PARAM_A" & i) ,"string","Value A "&i
+                SetVizDataUpper ids,Data.Item("TEXT" & i),"string","Para A "&i
                 ids=ids+100
             next
         else
-            SetVizDataUpper "0100",Data.Item("NAME2")
-            SetPlayerHS "0090",Data.Item("LOGO2"),Data.Item("NR2")
+            SetVizDataUpper "0100",Data.Item("NAME2") ,"string","Name B"
+            SetPlayerHS "0090",Data.Item("LOGO2"),Data.Item("NR2"),"Photo B"
             for i = 1 to 10
-                SetVizData ids+1,Data.Item("PARAM_B" & i)
-                SetVizDataUpper ids,Data.Item("TEXT" & i)
+                SetVizData ids+1,Data.Item("PARAM_B" & i)  ,"string","Value B "&i
+                SetVizDataUpper ids,Data.Item("TEXT" & i) ,"string","Para B "&i
                 ids=ids+100
             next
         end if
 
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreviewWF "Default 2.24", "STAT 2.06", sScene
         Redim ActionList(2, 1)
@@ -4179,29 +4219,29 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetIBSide
 
 
-        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0095" ,LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1")),"Logo A"
+        SetTeamLogo "0095" ,LCase(Data.Item("LOGO2")),"Logo B"
 
 
-        SetVizData "0110",""
+        SetVizData "0110",""  ,"string",""
 
-        SetVizData "0115",Data.Item("NAME1")
-        SetVizData "0120",Data.Item("NAME2")
+        SetVizData "0115",Data.Item("NAME1") ,"string","Name A"
+        SetVizData "0120",Data.Item("NAME2") ,"string","Name B"
 
-        SetVizData "0100", Data.Item("TITLE") 'GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizData "0100", Data.Item("TITLE"),"string","Title" 'GetString("TEAM_STATISTIK", i__TVLanguage)
         if Data.Item("HL") <> "" then
-            SetVizData "0100", Data.Item("TITLE")
+            'SetVizData "0100", Data.Item("TITLE") ,"string","Title"
         end if
 
 
         dim ids:ids= 1100
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizData ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i),"string","Value A "&i
+            SetVizData ids+1,Data.Item("TEXT" & i) ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i) ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT") ,"int","Count"
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5", sScene
         Redim ActionList(2, 1)
@@ -4217,29 +4257,29 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetIBSide
          SetCommercialOnOff "IB PlayerStatsCompare"
 
-        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1"))
-        SetTeamLogo "0095" ,LCase(Data.Item("LOGO2"))
+        SetTeamLogo "0090" ,LCase(Data.Item("LOGO1")),"Logo A"
+        SetTeamLogo "0095" ,LCase(Data.Item("LOGO2")),"Logo B"
 
 
-        SetVizData "0110",""
+        SetVizData "0110",""  ,"string",""
 
-        SetVizDataUpper "0115",Data.Item("NAME1")
-        SetVizDataUpper "0120",Data.Item("NAME2")
+        SetVizDataUpper "0115",Data.Item("NAME1"),"string","Name A"
+        SetVizDataUpper "0120",Data.Item("NAME2"),"string","Name B"
 
-        SetVizDataUpper "0100", Data.Item("TITLE") 'GetString("TEAM_STATISTIK", i__TVLanguage)
+        SetVizDataUpper "0100", Data.Item("TITLE"),"string","Title" 'GetString("TEAM_STATISTIK", i__TVLanguage)
         if Data.Item("HL") <> "" then
-            SetVizDataUpper "0100", Data.Item("TITLE")
+            'SetVizDataUpper "0100", Data.Item("TITLE"),"string"
         end if
 
 
         dim ids:ids= 11010
         for i = 1 to 8
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizDataUpper ids+1,Data.Item("TEXT" & i)
-            SetVizData ids+2,Data.Item("PARAM_B" & i)
+            SetVizData ids,Data.Item("PARAM_A" & i),"string","Value A "&i
+            SetVizDataUpper ids+1,Data.Item("TEXT" & i) ,"string","Para "&i
+            SetVizData ids+2,Data.Item("PARAM_B" & i)  ,"string","Value B "&i
             ids=ids+100
         next
-        SetVizData "0004", Data.Item("ITEMCOUNT")
+        SetVizData "0004", Data.Item("ITEMCOUNT"),"int","Count"
 
         GetPreviewWF "Default", "3.1", sScene
         Redim ActionList(2, 1)
@@ -4285,11 +4325,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetSubLine Data.Item("HL")
         dim id:ids=1109
 
-        SetVizData "0004",Data.Item("ITEMCOUNT")
+        SetVizData "0004",Data.Item("ITEMCOUNT"),"int","Count"
         for i = 1 to Data.Item("ITEMCOUNT")
-            SetVizData ids+1,Data.Item("TEXT"& i)
-            SetVizData ids,Data.Item("PARAM_A" & i)
-            SetVizData ids+3,Data.Item("PARAM_B" & i)
+            SetVizData ids+1,Data.Item("TEXT"& i) ,"string","Para "&i
+            SetVizData ids,Data.Item("PARAM_A" & i) ,"string","Value A "&i
+            SetVizData ids+3,Data.Item("PARAM_B" & i) ,"string","Value B "&i
             ids=ids+100
         next
 
@@ -4700,7 +4740,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     End Sub
 
     Private Sub LoadScene(ByVal strLayer, ByVal sScene)
-        if tw_gfx_select.cb_prepare_ar.Checked=true and strLayer=2 then
+        ExportData.Removeall
+        ExportDataTyp.Removeall
+        ExportDataDesc.Removeall
+        if tw_gfx_select.cb_prepare_ar.Checked=true and strLayer=22 then
             obj__TV.DoEffect 2, "ALL", efReset
             CC.SF.ShowSplashForm "VIZ is loading scene " & sScene & " ... ", clYellow
 
@@ -4722,6 +4765,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             obj__TV.RendererUpdate true
 
             CC.SF.HideSplashForm
+            ExportData.Add "SVIZPATH",s__VizPathAR
+            ExportData.Add "SVIZSCENE",sScene&"_AR"
         else
             MasterClearAll i_variant                 ' Das passt mir nicht! Egal in welchen Layer ich was lade er blendet alle aus?
            ' cc.SF.DebugText "Loading Scene '" & sScene & "' ..."
@@ -4744,6 +4789,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                sLayer = "BACK_LAYER"
             End If
             dim sResult
+            s_ARScene=sScene
             sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & " SET_OBJECT SCENE*" & s__VizPath & "/" & sScene)
             sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & "*NAME GET")
 
@@ -4751,12 +4797,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             obj__TV.RendererUpdate true
             CC.SF.HideSplashForm
+            ExportData.Add "SVIZPATH",s__VizPath
+            ExportData.Add "SVIZSCENE",sScene
+            ExportDataTyp.Add "SVIZSCENE","system"
+            ExportDataTyp.Add "SVIZPATH","system"
         end if
 '        cc.SF.Wait 250
  '      cc.SF.DebugText "Scene '" & sResult & "' loaded in " & cc.SF.TimerGet & "ms ..."
     End Sub
     
     Private Sub LoadSceneWF(ByVal strLayer, ByVal sScene)
+            ExportData.RemoveAll
+            ExportDataTyp.Removeall
+            ExportDataDesc.Removeall
             MasterClearAll i_variant                 ' Das passt mir nicht! Egal in welchen Layer ich was lade er blendet alle aus?
            ' cc.SF.DebugText "Loading Scene '" & sScene & "' ..."
             CC.SF.ShowSplashForm "VIZ is loading scene " & sScene & " ... ", clYellow
@@ -4778,6 +4831,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                sLayer = "BACK_LAYER"
             End If
             dim sResult
+            s_ARScene=sScene
             sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & " SET_OBJECT SCENE*" & s__VizPathWF & "/" & sScene)
             sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & "*NAME GET")
 
@@ -4785,6 +4839,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             obj__TV.RendererUpdate true
             CC.SF.HideSplashForm
+            
+            ExportData.Add "SVIZPATH",s__VizPathWF
+            ExportData.Add "SVIZSCENE",sScene
+            ExportDataTyp.Add "SVIZSCENE","system"
+            ExportDataTyp.Add "SVIZPATH","system"
     End Sub
 
 
@@ -5078,50 +5137,50 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitelDefaultHeaderLF
 
         if Data.item("BBTYP") = 0 then
-            SetVizData "970000",3
-            SetVizData "990100",Data.Item("BBHL")
-            SetVizData "990102",""
-            SetVizData "990200",Data.Item("BBSL")
+            SetVizData "970000",3 ,"int",""
+            SetVizData "990100",Data.Item("BBHL"),"string","BB Headline"
+            SetVizData "990102",""  ,"string",""
+            SetVizData "990200",Data.Item("BBSL"),"string","BB Subline"
         elseif Data.item("BBTYP") = 1 then
-            SetVizData "970000",2
-            SetVizData "980149",0
-            SetVizData "980150","vs"
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2  ,"int",""
+            SetVizData "980149",0  ,"int",""
+            SetVizData "980150","vs" ,"string",""
+            SetVizData "980100",Data.Item("NAME1")  ,"string","Name A"
+            SetVizData "980200",Data.Item("NAME2") ,"string","Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1") ,"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo B"
+            SetVizData "981100",Data.Item("BBSL"),"string","BB Subline"
         elseif Data.item("BBTYP") = 2 then
-            SetVizData "970000",2
-            SetVizData "980149",1
-            SetVizData "980150",Data.Item("BBSCORE")
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2 ,"int",""
+            SetVizData "980149",1 ,"int",""
+            SetVizData "980150",Data.Item("BBSCORE") ,"string","BB Score"
+            SetVizData "980100",Data.Item("NAME1") ,"string","Name A"
+            SetVizData "980200",Data.Item("NAME2")  ,"string","Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1") ,"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2") ,"Logo B"
+            SetVizData "981100",Data.Item("BBSL")  ,"string","BB Subline"
 
         else
-            SetVizData "970000",3
-            SetVizData "990100",Data.Item("BBHL")
-            SetVizData "990102",""
-            SetVizData "990200",Data.Item("BBSL")
+            SetVizData "970000",3 ,"int",""
+            SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+            SetVizData "990102",""  ,"string",""
+            SetVizData "990200",Data.Item("BBSL"),"string","BB Subline"
         end if
 
         select case Data.item("STYP")
         case "0"
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*AUFSTELLUNG_HEIM START"& Chr(34)
             dir= "AUFSTELLUNG_HEIM"
-            SetVizData "110500",Data.Item("TEAMNAMEA")
-            SetVizData "120500",Data.Item("TEAMNAMEB")
+            SetVizData "110500",Data.Item("TEAMNAMEA") ,"string","Team Name A"
+            SetVizData "120500",Data.Item("TEAMNAMEB"),"string","Team Name B"
             SetLFTitle "Aufstellung"
             ids=111100
             for i=1 to 11
                 SetVizDataBufferOn
-                SetVizData ids,Data.Item("TEAMNRA"&i)
-                SetVizData ids+2,Data.Item("TEAMNAMEA"&i)
-                SetVizData ids+10000,Data.Item("TEAMNRB"&i)
-                SetVizData ids+10002,Data.Item("TEAMNAMEB"&i)
+                SetVizData ids,Data.Item("TEAMNRA"&i) ,"string","Team Nr A "&i
+                SetVizData ids+2,Data.Item("TEAMNAMEA"&i),"string","Team Player A "&i
+                SetVizData ids+10000,Data.Item("TEAMNRB"&i),"string","Team Nr B "&i
+                SetVizData ids+10002,Data.Item("TEAMNAMEB"&i),"string","Team Player B "&i
                 SetVizDataBufferOff
                 ids=ids+100
             next
@@ -5131,13 +5190,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'SetText "TABELLE$txt_Titel", UCase(Data.Item("TABHL"))
             SetLFTitle Data.Item("TABHL")
             ids=91100
-            SetVizData "090501",""
+            SetVizData "090501","" ,"string",""
             for i = 1 to 10                   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("TABPLACE"&i)
-                SetVizData "0"&ids+2,Data.Item("TABNAME"&i)
-                SetVizData "0"&ids+3,""
-                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)
+                SetVizData "0"&ids,Data.Item("TABPLACE"&i),"string","Tab Place "&i
+                SetVizData "0"&ids+2,Data.Item("TABNAME"&i),"string","Tab Teamname "&i
+                SetVizData "0"&ids+3,"" ,"string",""
+                SetVizData "0"&ids+6,Data.Item("TABPTS"&i),"string","Tab Points "&i
 
                 
 
@@ -5172,44 +5231,44 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 ids=ids+100
             next
 
-            SetVizData "000100", Data.Item("REHL")
-            SetVizData "070500", ""
+            SetVizData "000100", Data.Item("REHL") ,"string","Erg Headline"
+            SetVizData "070500", "" ,"string",""
             ids=71102
             for i=1 to 5
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("RENAMEA"&i)
-                SetVizData "0"&ids+2,Data.Item("RERESULT"&i)
-                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i)
+                SetVizData "0"&ids,Data.Item("RENAMEA"&i) ,"string","Erg Name A "&i
+                SetVizData "0"&ids+2,Data.Item("RERESULT"&i) ,"string","Erg Result "&i
+                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i) ,"string","Erg Name B "&i
             SetVizDataBufferOff
                 ids=ids+100
             next
-            SetVizData "070004",5
+            SetVizData "070004",5  ,"int",""
 
         case "2"
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*ERGEBNISSE START"& Chr(34)
             dir= "ERGEBNISSE"
-            SetVizData "000100", Data.Item("REHL")
-            SetVizData "070500", ""
+            SetVizData "000100", Data.Item("REHL") ,"string","Erg Headline"
+            SetVizData "070500", "" ,"string",""
             ids=71102
             for i=1 to 5
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("RENAMEA"&i)
-                SetVizData "0"&ids+2,Data.Item("RERESULT"&i)
-                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i)
+                SetVizData "0"&ids,Data.Item("RENAMEA"&i) ,"string","Erg Name A "&i
+                SetVizData "0"&ids+2,Data.Item("RERESULT"&i),"string","Erg Result "&i
+                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i) ,"string","Erg Name B "&i
                 SetVizDataBufferOff
                 ids=ids+100
             next
-            SetVizData "070004",5
+            SetVizData "070004",5 ,"int",""
             'SetLFTitle "Ergebnisse"
             'SetText "TABELLE$txt_Titel", UCase(Data.Item("TABHL"))
             ids=91100
-            SetVizData "090501",""
+            SetVizData "090501","" ,"string",""
             for i = 1 to 10                   ' FULL STANDINGS TABLE
             SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("TABPLACE"&i)
-                SetVizData "0"&ids+2,Data.Item("TABNAME"&i)
-                SetVizData "0"&ids+3,""
-                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)
+                SetVizData "0"&ids,Data.Item("TABPLACE"&i) ,"string","Tab Place "&i
+                SetVizData "0"&ids+2,Data.Item("TABNAME"&i) ,"string","Tab Teamname "&i
+                SetVizData "0"&ids+3,"" ,"string",""
+                SetVizData "0"&ids+6,Data.Item("TABPTS"&i) ,"string","Tab Points "&i
 
 
                 if false then
@@ -5248,15 +5307,15 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*FAHRPLAN START"& Chr(34)
             dir= "FAHRPLAN"
             SetLFTitle Data.Item("GHL")
-            SetVizData "150500", Data.Item("GSL")
+            SetVizData "150500", Data.Item("GSL")  ,"string","Subline"
             ids=151101
             for i=1 to 5
-                SetVizData ids,Data.Item("GKOM"&i)
+                SetVizData ids,Data.Item("GKOM"&i) ,"string","Game "&i
                 'SetImg  "SPIELE$SPIEL_"&i&"$img_LogoHeim_"&i, s__LogoPath & "\" & LCase(Data.Item("GLOGOA"&i))
                 'SetImg  "SPIELE$SPIEL_"&i&"$img_LogoGast_"&i, s__LogoPath & "\" & LCase(Data.Item("GLOGOB"&i))
                 ids=ids+1
             next
-            SetVizData "150004",Data.Item("GITEMCOUNT")
+            SetVizData "150004",Data.Item("GITEMCOUNT"),"int","Game Count"
         end select
 
         GetPreview "Default 3.0", dir&" 3.0", sScene
@@ -5279,43 +5338,43 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetBGOnOff
 
         if Data.item("STYP")="2" then
-            SetVizData "0001",0
+            SetVizData "0001",0 ,"int","Typ"
         else
-            SetVizData "0001",1
+            SetVizData "0001",1 ,"int","Typ"
         end if
 
-        SetVizDataUpper "10100",Data.Item("BBHL")
-        SetVizDataUpper "10200",Data.Item("BBSL")
+        SetVizDataUpper "10100",Data.Item("BBHL") ,"string","BB Headline"
+        SetVizDataUpper "10200",Data.Item("BBSL") ,"string","BB Subline"
         'SetTeamLogo "0090",Data.Item("LOGO1")
-        SetVizData "10000","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball"
+        SetVizData "10000","IMAGE*"&s__LogoPathDiv & "/" &"ofbl_Ball" ,"image","Image"
 
-        SetVizDataUpper "2100", Data.Item("TABHL")
+        SetVizDataUpper "2100", Data.Item("TABHL"),"string","Tab Headline"
         ids=2110
 
         for i = 1 to 12                   ' FULL STANDINGS TABLE
             SetVizDataBufferOn
-            SetVizData ids,Data.Item("TABPLACE"&i)
-            SetVizDataUpper ids+1,Data.Item("TABNAME"&i)
-            SetVizData ids+2,Data.Item("TABGAMES"&i)
-            SetVizData ids+3,Data.Item("TABGOALS"&i)
-            SetVizData ids+4,Data.Item("TABDIFF"&i)
-            SetVizData ids+5,Data.Item("TABPTS"&i)
+            SetVizData ids,Data.Item("TABPLACE"&i),"string","Tab Place "&i
+            SetVizDataUpper ids+1,Data.Item("TABNAME"&i) ,"string","Tab Team "&i
+            SetVizData ids+2,Data.Item("TABGAMES"&i),"string","Tab Games "&i
+            SetVizData ids+3,Data.Item("TABGOALS"&i),"string","Tab Goals "&i
+            SetVizData ids+4,Data.Item("TABDIFF"&i),"string","Tab Diff "&i
+            SetVizData ids+5,Data.Item("TABPTS"&i) ,"string","Tab Points "&i
 
             SetVizDataBufferOff
             ids=ids+100
         next
         
-        SetVizDataUpper "4000", Data.Item("REHL")
+        SetVizDataUpper "4000", Data.Item("REHL"),"string","Result Headline"
         ids=4005
 
         for i=1 to 6
            SetVizDataBufferOn
-            SetVizData ids,0
-            SetVizDataUpper ids+5,Data.Item("RENAMEA" & i)
-            SetTeamLogo ids+10, Data.Item("RELOGOA" & i)
-            SetVizDataUpper ids+15,Data.Item("RENAMEB" & i)
-            SetTeamLogo ids+20, Data.Item("RELOGOB" & i)
-            SetVizData ids+1,Data.Item("RERESULT" & i)
+            SetVizData ids,0 ,"int",""
+            SetVizDataUpper ids+5,Data.Item("RENAMEA" & i) ,"string","Res Name A "&i
+            SetTeamLogo ids+10, Data.Item("RELOGOA" & i),"Res Logo A "&i
+            SetVizDataUpper ids+15,Data.Item("RENAMEB" & i) ,"string","Res Name B "&i 
+            SetTeamLogo ids+20, Data.Item("RELOGOB" & i),"Res Logo B "&i
+            SetVizData ids+1,Data.Item("RERESULT" & i)  ,"string","Res Result "&i
 
             SetVizDataBufferOff
             ids=ids+1000
@@ -5348,50 +5407,50 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         if Data.item("BBTYP") = 0 then
             if Data.Item("BBSTATTYP") = 0 then
-                SetVizData "970000",3
-                SetVizData "990100",Data.Item("BBHL")
-                SetVizData "990102",""
-                SetVizData "990200",Data.Item("BBSL")
+                SetVizData "970000",3 ,"int",""
+                SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+                SetVizData "990102",""  ,"string",""
+                SetVizData "990200",Data.Item("BBSL") ,"string","BB Subline"
 
             else
-                SetVizData "970000",1
-                SetVizData "970100",Data.Item("BBHL")
-                SetVizData "970102",Data.Item("FNAME")
-                SetVizData "970120",Data.Item("BBSL")
-                SetVizData "970095",Data.Item("NR")
+                SetVizData "970000",1 ,"int",""
+                SetVizData "970100",Data.Item("BBHL") ,"string","BB Headline"
+                SetVizData "970102",Data.Item("FNAME")  ,"string","BB Player Name"
+                SetVizData "970120",Data.Item("BBSL") ,"string","BB Subline"
+                SetVizData "970095",Data.Item("NR")   ,"string","BB Player Number"
                 ids=971110
                 for i=1 to 3
-                    SetVizData ids,Data.Item("BBSTATTEXT"&i)
-                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i)
+                    SetVizData ids,Data.Item("BBSTATTEXT"&i),"string","BB Stat "&i
+                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i),"string","BB Value "&i
                     ids=ids+100
                 next
-                SetVizData 970005,3
-                SetTeamLogo 970090,LCase(Data.Item("LOGO1"))
+                SetVizData 970005,3 ,"int",""
+                SetTeamLogo 970090,LCase(Data.Item("LOGO1")),"BB Logo A"
             end if
         elseif Data.item("BBTYP") = 1 then
-            SetVizData "970000",2
-            SetVizData "980149",0
-            SetVizData "980150","vs"
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2  ,"int",""
+            SetVizData "980149",0  ,"int",""
+            SetVizData "980150","vs" ,"string",""
+            SetVizData "980100",Data.Item("NAME1") ,"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2") ,"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"BB Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"BB Logo B"
+            SetVizData "981100",Data.Item("BBSL") ,"string","BB Subline"
         elseif Data.item("BBTYP") = 2 then
-            SetVizData "970000",2
-            SetVizData "980149",1
-            SetVizData "980150",Data.Item("BBSCORE")
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2 ,"int",""
+            SetVizData "980149",1 ,"int",""
+            SetVizData "980150",Data.Item("BBSCORE") ,"string","BB Score"
+            SetVizData "980100",Data.Item("NAME1") ,"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2")  ,"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"BB Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2") ,"BB Logo B"
+            SetVizData "981100",Data.Item("BBSL")  ,"string","BB Subline"
 
         else
-            SetVizData "970000",3
-            SetVizData "990100",Data.Item("BBHL")
-            SetVizData "990102",""
-            SetVizData "990200",Data.Item("BBSL")
+            SetVizData "970000",3 ,"int",""
+            SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+            SetVizData "990102","" ,"string",""
+            SetVizData "990200",Data.Item("BBSL") ,"string","BB Subline"
         end if
         SetLFTitle Data.Item("SHL")
         select case Data.item("STYP")
@@ -5399,15 +5458,15 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*MEGAFACTS START"& Chr(34)
             dir="MEGAFACTS"
-            SetVizData "020500" ,""
+            SetVizData "020500" ,"","string",""
             ids=21102
             for i=1 to 5
-                SetVizData "0"&ids,Data.Item("MF1"&i)
-                SetVizData "0"&ids+1,Data.Item("MF2"&i)
+                SetVizData "0"&ids,Data.Item("MF1"&i) ,"string","MF 1 "&i
+                SetVizData "0"&ids+1,Data.Item("MF2"&i) ,"string","MF 2 "&i
                 ids=ids+100
 
             next
-            SetVizData "020004",Data.Item("MFITEMCOUNT")
+            SetVizData "020004",Data.Item("MFITEMCOUNT"),"int","MF Count"
         case "1"
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*TABELLE_1 START"& Chr(34)
             dir="TABELLE_1"
@@ -5417,12 +5476,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             for i = 1 to 10                   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("TABPLACE"&i)
-                SetVizData "0"&ids+2,Data.Item("TABNAME"&i)
-                SetVizData "0"&ids+3,Data.Item("TABGAMES"&i)
-                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)
-                SetVizData "0"&ids+4,Data.Item("TABGOALS"&i)
-                SetVizData "0"&ids+5,Data.Item("TABDIFF"&i)
+                SetVizData "0"&ids,Data.Item("TABPLACE"&i) ,"string","Tab Place "&i
+                SetVizData "0"&ids+2,Data.Item("TABNAME"&i),"string","Tab Team "&i
+                SetVizData "0"&ids+3,Data.Item("TABGAMES"&i) ,"string","Tab Games "&i
+                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)  ,"string","Tab Points "&i
+                SetVizData "0"&ids+4,Data.Item("TABGOALS"&i) ,"string","Tab Goals "&i
+                SetVizData "0"&ids+5,Data.Item("TABDIFF"&i) ,"string","Tab Diff "&i
 
                 if false then
                 if     i = 2 then
@@ -5455,43 +5514,43 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 ids=ids+100
             next
 
-            SetVizData "070500", Data.Item("REHL")
+            SetVizData "070500", Data.Item("REHL") ,"string","Result Headline"
             ids=71102
             for i=1 to 5
             SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("RENAMEA"&i)
-                SetVizData "0"&ids+2,Data.Item("RERESULT"&i)
-                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i)
+                SetVizData "0"&ids,Data.Item("RENAMEA"&i) ,"string","Res Name A "&i
+                SetVizData "0"&ids+2,Data.Item("RERESULT"&i) ,"string","Res Result "&i
+                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i) ,"string","Res Name B "&i
                 SetVizDataBufferOff
                 ids=ids+100
             next
-            SetVizData "070004",5
+            SetVizData "070004",5 ,"int",""
 
         case "2"
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*ERGEBNISSE START"& Chr(34)
             dir="ERGEBNISSE"
-            SetVizData "070500", Data.Item("REHL")
+            SetVizData "070500", Data.Item("REHL") ,"string","Result Headline"
             ids=71102
             for i=1 to 5
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("RENAMEA"&i)
-                SetVizData "0"&ids+2,Data.Item("RERESULT"&i)
-                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i)
+                SetVizData "0"&ids,Data.Item("RENAMEA"&i) ,"string","Res Name A "&i
+                SetVizData "0"&ids+2,Data.Item("RERESULT"&i),"string","Res Result "&i
+                SetVizData "0"&ids+4,Data.Item("RENAMEB"&i) ,"string","Res Name B "&i
                 SetVizDataBufferOff
                 ids=ids+100
             next
-            SetVizData "070004",5
+            SetVizData "070004",5 ,"int",""
 
             'SetText "TABELLE$txt_Titel", UCase(Data.Item("TABHL"))
             ids=91100
             for i = 1 to 10                   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("TABPLACE"&i)
-                SetVizData "0"&ids+2,Data.Item("TABNAME"&i)
-                SetVizData "0"&ids+3,Data.Item("TABGAMES"&i)
-                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)
-                SetVizData "0"&ids+4,Data.Item("TABGOALS"&i)
-                SetVizData "0"&ids+5,Data.Item("TABDIFF"&i)
+                SetVizData "0"&ids,Data.Item("TABPLACE"&i),"string","Tab Place "&i
+                SetVizData "0"&ids+2,Data.Item("TABNAME"&i),"string","Tab Team "&i
+                SetVizData "0"&ids+3,Data.Item("TABGAMES"&i) ,"string","Tab Gamse "&i
+                SetVizData "0"&ids+6,Data.Item("TABPTS"&i)   ,"string","Tab Points "&i
+                SetVizData "0"&ids+4,Data.Item("TABGOALS"&i) ,"string","Tab Goals "&i
+                SetVizData "0"&ids+5,Data.Item("TABDIFF"&i)  ,"string","Tab Diff "&i
 
                 if false then
                 if     i = 2 then
@@ -5526,18 +5585,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         case "3"
             obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*STATISTIK START"& Chr(34)
             dir="STATISTIK"
-            SetVizData "010500",Data.Item("STNAME1")
-            SetVizData "010501",Data.Item("STNAME2")
+            SetVizData "010500",Data.Item("STNAME1") ,"string", "Stat Name A"
+            SetVizData "010501",Data.Item("STNAME2"),"string","Stat Name B"
             ids= 11101
             for i=1 to 8
                 SetVizDataBufferOn
-                SetVizData "0"&ids,Data.Item("STPARAM_A"&i)
-                SetVizData "0"&ids+1,Data.Item("STTEXT"&i)
-                SetVizData "0"&ids+2,Data.Item("STPARAM_B"&i)
+                SetVizData "0"&ids,Data.Item("STPARAM_A"&i) ,"string","Stat Value A "&i
+                SetVizData "0"&ids+1,Data.Item("STTEXT"&i),"string","Stat Para "&i
+                SetVizData "0"&ids+2,Data.Item("STPARAM_B"&i) ,"string","Stat Value B "&i
                 SetVizDataBufferOff
                 ids=ids+100
             next
-            SetVizData "010004",Data.Item("STITEMCOUNT")
+            SetVizData "010004",Data.Item("STITEMCOUNT") ,"int","Stat Count"
         end select
 
         GetPreview "Default 3.0 ", "MEGAFACTS 2.5" , sScene                         '
@@ -5559,53 +5618,53 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitelDefaultHeaderLF
         if Data.item("BBTYP") = 0 then
             if Data.Item("BBSTATTYP") = 0 then
-                SetVizData "970000",3
-                SetVizData "990100",Data.Item("BBHL")
-                SetVizData "990102",""
-                SetVizData "990200",Data.Item("BBSL")
+                SetVizData "970000",3 ,"int",""
+                SetVizData "990100",Data.Item("BBHL"),"string","BB Headline"
+                SetVizData "990102","" ,"string",""
+                SetVizData "990200",Data.Item("BBSL") ,"string","BB Subline"
 
             else
-                SetVizData "970000",1
-                SetVizData "970100",Data.Item("BBHL")
-                SetVizData "970102",Data.Item("FNAME")
-                SetVizData "970120",Data.Item("BBSL")
-                SetVizData "970095",Data.Item("NR")
+                SetVizData "970000",1 ,"int",""
+                SetVizData "970100",Data.Item("BBHL") ,"string","BB Headline"
+                SetVizData "970102",Data.Item("FNAME") ,"string","BB Name"
+                SetVizData "970120",Data.Item("BBSL") ,"string","BB Subline"
+                SetVizData "970095",Data.Item("NR") ,"string","BB Number"
                 ids=971110
                 for i=1 to 3
-                    SetVizData ids,Data.Item("BBSTATTEXT"&i)
-                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i)
+                    SetVizData ids,Data.Item("BBSTATTEXT"&i),"string","BB Stat Text "&i
+                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i),"string","BB Value "&i
                     ids=ids+100
                 next
-                SetVizData 970005,3
-                SetTeamLogo 970090,LCase(Data.Item("LOGO1"))
+                SetVizData 970005,3 ,"int",""
+                SetTeamLogo 970090,LCase(Data.Item("LOGO1")),"Logo A"
             end if
         elseif Data.item("BBTYP") = 1 then
-            SetVizData "970000",2
-            SetVizData "980149",0
-            SetVizData "980150","vs"
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2  ,"int",""
+            SetVizData "980149",0  ,"int",""
+            SetVizData "980150","vs" ,"string",""
+            SetVizData "980100",Data.Item("NAME1")  ,"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2"),"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo A"
+            SetVizData "981100",Data.Item("BBSL") ,"string","BB Subline"
         elseif Data.item("BBTYP") = 2 then
-            SetVizData "970000",2
-            SetVizData "980149",1
-            SetVizData "980150",Data.Item("BBSCORE")
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2 ,"int",""
+            SetVizData "980149",1 ,"int",""
+            SetVizData "980150",Data.Item("BBSCORE"),"string","BB Score"
+            SetVizData "980100",Data.Item("NAME1"),"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2") ,"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo A"
+            SetVizData "981100",Data.Item("BBSL"),"string","BB Subline"
 
         else
-            SetVizData "970000",3
-            SetVizData "990100",Data.Item("BBHL")
-            SetVizData "990102",""
-            SetVizData "990200",Data.Item("BBSL")
+            SetVizData "970000",3 ,"int",""
+            SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+            SetVizData "990102","" ,"string",""
+            SetVizData "990200",Data.Item("BBSL")  ,"string","BB Subline"
         end if
         SetLFTitle Data.Item("STHL")
-        SetVizData "060500",Data.Item("STSTAT")
+        SetVizData "060500",Data.Item("STSTAT") ,"string","Stats"
 
             'obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*Default*KEY*$ACTION*VALUE SET " & Chr(34) &"THIS_SCENE*STAGE*DIRECTOR*VERGLEICH START"& Chr(34)
          select case Data.Item("STTYP")
@@ -5617,14 +5676,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 ids= 61102
                 for i=1 to 5
                     SetVizDataBufferOn
-                    SetVizData "0"&ids,Data.Item("STNAME"&i)
-                    SetVizData "0"&ids+1,Data.Item("STTEXT"&i)
-                    SetVizData "0"&ids+2,Data.Item("STVALUE"&i)
+                    SetVizData "0"&ids,Data.Item("STNAME"&i)  ,"string","Stat Name "&i
+                    SetVizData "0"&ids+1,Data.Item("STTEXT"&i) ,"string","Stat Para "&i
+                    SetVizData "0"&ids+2,Data.Item("STVALUE"&i),"string","Stat Value "&i
                     SetVizDataBufferOff
                     ids=ids+100
                 next
                 if Data.Item("STITEMCOUNT")>5 then  Data.Item("STITEMCOUNT")=5
-                SetVizData "060004",Data.Item("STITEMCOUNT")
+                SetVizData "060004",Data.Item("STITEMCOUNT") ,"int","Stat Count"
 
             case "2"
 
@@ -5647,62 +5706,62 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         obj__TV.DoEffect elMainLayer,  "ALL", efReset
         if Data.item("BBTYP") = 0 then
             if Data.Item("BBSTATTYP") = 0 then
-                SetVizData "970000",3
-                SetVizData "990100",Data.Item("BBHL")
-                SetVizData "990102",""
-                SetVizData "990200",Data.Item("BBSL")
+                SetVizData "970000",3 ,"int",""
+                SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+                SetVizData "990102",""  ,"string",""
+                SetVizData "990200",Data.Item("BBSL"),"string","BB Subline"
 
             else
-                SetVizData "970000",1
-                SetVizData "970100",Data.Item("BBHL")
-                SetVizData "970102",Data.Item("FNAME")
-                SetVizData "970120",Data.Item("BBSL")
-                SetVizData "970095",Data.Item("NR")
+                SetVizData "970000",1 ,"int",""
+                SetVizData "970100",Data.Item("BBHL"),"string","BB Headline"
+                SetVizData "970102",Data.Item("FNAME")  ,"string","BB Name"
+                SetVizData "970120",Data.Item("BBSL")  ,"string","BB Subline"
+                SetVizData "970095",Data.Item("NR")   ,"string","BB Number"
                 ids=971110
                 for i=1 to 3
-                    SetVizData ids,Data.Item("BBSTATTEXT"&i)
-                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i)
+                    SetVizData ids,Data.Item("BBSTATTEXT"&i),"string","BB Stat Text "&i
+                    SetVizData ids+5,Data.Item("BBSTATVALUE"&i) ,"string","BB Value "&i
                     ids=ids+100
                 next
-                SetVizData 970005,3
-                SetTeamLogo 970090,LCase(Data.Item("LOGO1"))
+                SetVizData 970005,3 ,"int",""
+                SetTeamLogo 970090,LCase(Data.Item("LOGO1")),"Logo A"
             end if
         elseif Data.item("BBTYP") = 1 then
-            SetVizData "970000",2
-            SetVizData "980149",0
-            SetVizData "980150","vs"
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2 ,"int",""
+            SetVizData "980149",0 ,"int",""
+            SetVizData "980150","vs" ,"string",""
+            SetVizData "980100",Data.Item("NAME1")  ,"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2") ,"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo B"
+            SetVizData "981100",Data.Item("BBSL") ,"string","BB Subline"
         elseif Data.item("BBTYP") = 2 then
-            SetVizData "970000",2
-            SetVizData "980149",1
-            SetVizData "980150",Data.Item("BBSCORE")
-            SetVizData "980100",Data.Item("NAME1")
-            SetVizData "980200",Data.Item("NAME2")
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "970000",2 ,"int",""
+            SetVizData "980149",1 ,"int",""
+            SetVizData "980150",Data.Item("BBSCORE"),"string","BB Score"
+            SetVizData "980100",Data.Item("NAME1"),"string","BB Name A"
+            SetVizData "980200",Data.Item("NAME2") ,"string","BB Name B"
+            SetTeamLogo "980090", Data.Item("LOGO1"),"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo B"
+            SetVizData "981100",Data.Item("BBSL") ,"string","BB Subline"
 
         elseif Data.item("BBTYP") = 3 then
-            SetVizData "970000",3
-            SetVizData "990100",Data.Item("BBHL")
-            SetVizData "990102",""
-            SetVizData "990200",Data.Item("BBSL")
+            SetVizData "970000",3 ,"int",""
+            SetVizData "990100",Data.Item("BBHL") ,"string","BB Headline"
+            SetVizData "990102",""    ,"string",""
+            SetVizData "990200",Data.Item("BBSL"),"string","BB Subline"
         else
-            SetVizData "970000",4
+            SetVizData "970000",4 ,"int",""
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlHeim", crClear,  ""
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlHeim", crScript, Data.Item("BBHL")
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlHeim", crReset, ""
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlGast", crClear,  ""
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlGast", crScript, Data.Item("BBCRAWL2")
             obj__TV.SetCrawl "BAUCHBINDEN$CRAWL$txt_CrawlGast", crReset, ""
-            SetVizData "981100",Data.Item("BBSL")
+            SetVizData "981100",Data.Item("BBSL"),"string","BB Subline"
 
-            SetTeamLogo "980090", Data.Item("LOGO1")
-            SetTeamLogo "980190", Data.Item("LOGO2")
+            SetTeamLogo "980090", Data.Item("LOGO1"),"Logo A"
+            SetTeamLogo "980190", Data.Item("LOGO2"),"Logo B"
 
             if Data.item("CRAWLLEFT") then
                 obj__TV.HideObject "BAUCHBINDEN$CRAWL$LOGO_2"
@@ -5730,14 +5789,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             LineupID = Lineup_A
             Lineup.ActiveLineup = "Team A"
         end if
-        SetVizData "000100",Data.Item("LNAME1")
-        SetVizData "000102",""
-        SetVizData "000110",Data.Item("LNAME2")
-        SetVizData "000112",""
-        SetTeamLogo "000090",LCase(Data.Item("LLOGO1"))
+        SetVizData "000100",Data.Item("LNAME1") ,"string","Teamname A"
+        SetVizData "000102",""  ,"string",""
+        SetVizData "000110",Data.Item("LNAME2") ,"string","Teamname B"
+        SetVizData "000112","" ,"string",""
+        SetTeamLogo "000090",LCase(Data.Item("LLOGO1")),"Logo A"
         'SetVizData "000100",Data.Item("LNAME1")
         'SetVizData "000102",""
-        SetTeamLogo "000095",LCase(Data.Item("LLOGO2"))
+        SetTeamLogo "000095",LCase(Data.Item("LLOGO2")),"Logo B"
         dim ids: ids=191100
         dim o0,p
         For i = 1 to 11
@@ -5760,10 +5819,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'ScenePosX  = Replace(Formatnumber((x_Pos - 480) / (LineupWidth / SceneWidth), 1), ",", ".") '- 21
             'ScenePosY  = Replace(Formatnumber((y_Pos - 288) / (LineupHeight / SceneHeight), 1), ",", ".") +16'-41
 
-            SetVizData ids,P_nr
-            SetVizData ids+2,P_Name
-            SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+            SetVizData ids,P_nr  ,"string","Player Number "&i
+            SetVizData ids+2,P_Name ,"string","Player Name "&i
+            SetVizData (ids+10)&".x1",ScenePosX  ,"double","PosX "&i
+            SetVizData (ids+10)&".y1",ScenePosY  ,"double","PosY "&i
             ids=ids+100
             SetVizDataBufferOff
             if isPlayerHL(P_Nr,Team) =true then
@@ -5802,10 +5861,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
             ScenePosY    = Replace(o0, ",", ".")
 
-            SetVizData ids,P_nr
-            SetVizData ids+2,P_Name
-            SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+            SetVizData ids,P_nr ,"string","Player Number "&i
+            SetVizData ids+2,P_Name ,"string","Player Name "&i
+            SetVizData (ids+10)&".x1",ScenePosX ,"double","PosX "&i
+            SetVizData (ids+10)&".y1",ScenePosY ,"double","PosY "&i
             ids=ids+100
             SetVizDataBufferOff
             if isPlayerHL(P_Nr,Team) =true then
@@ -5847,14 +5906,14 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim ids
         if Team = "A" then
             ids=191000+(Data.Item("Curr")*100)
-            SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+            SetVizData (ids+10)&".x1",ScenePosX  ,"double",""
+            SetVizData (ids+10)&".y1",ScenePosY  ,"double",""
             obj__TV.SendCommand "SCENE*" & s__VizPath & "/VB_Lframe3070_Aufstellung*TREE*$SPIELER_HEIM$SPIELER_" & Data.Item("Curr") & "$POS*TRANSFORMATION*POSITION SET " & ScenePosX & " " & ScenePosY & " 0.0"
 
         else
             ds=193000+(Data.Item("Curr")*100)
-            SetVizData (ids+10)&".x1",ScenePosX
-            SetVizData (ids+10)&".y1",ScenePosY
+            SetVizData (ids+10)&".x1",ScenePosX  ,"double",""
+            SetVizData (ids+10)&".y1",ScenePosY  ,"double",""
             obj__TV.SendCommand "SCENE*" & s__VizPath & "/VB_Lframe3070_Aufstellung*TREE*$SPIELER_GAST$SPIELER_" & Data.Item("Curr") & "$POS*TRANSFORMATION*POSITION SET " & ScenePosX & " " & ScenePosY & " 0.0"
         end if
 
@@ -5915,10 +5974,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         'SetTeamLogo "0060",lCase(Data.Item("LOGO1"))
         'SetTeamLogo "0070",lCase(Data.Item("LOGO2"))
-        SetVizData "1100", Data.Item("PAGE1")
-        SetVizData "1200",Data.Item("PAGE2")
-        SetVizData "1300",Data.Item("PAGE3")
-        SetVizData "0004",1
+        SetVizData "1100", Data.Item("PAGE1") ,"string","Text 1"
+        SetVizData "1200",Data.Item("PAGE2") ,"string","Text 2"
+        SetVizData "1300",Data.Item("PAGE3") ,"string","Text 3"
+        SetVizData "0004",1 ,"int",""
         GetPreview "Default", "0.6", sScene
         Redim ActionList(2, 1)
         ActionList(1, 0) = "Default"
@@ -5966,13 +6025,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         LoadScene elMainLayer, sScene
         obj__TV.DoEffect elMainLayer,  "ALL", efReset
         SetShow
-        SetVizData "0100",""
-        SetVizData "0102",Data.Item("HLL")
-        SetVizData "2100",""
-        SetVizData "2102",Data.Item("HLR")
+        SetVizData "0100",""  ,"string",""
+        SetVizData "0102",Data.Item("HLL")  ,"string","Headline Links"
+        SetVizData "2100","" ,"string",""
+        SetVizData "2102",Data.Item("HLR"),"string","Headline Rechts"
         
-        SetVizData "0200",Data.Item("SLL")
-        SetVizData "2200",Data.Item("SLR")
+        SetVizData "0200",Data.Item("SLL"),"string","Subline Links"
+        SetVizData "2200",Data.Item("SLR"),"string","Subline Rechts"
 
 
 
@@ -6004,13 +6063,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetTitle Data.Item("TITLE")
         dim ids:ids=210
         for i=1 to Data.Item("ITEMCOUNT")
-            SetVizData ids&".active",1
-            SetVizData ids+1,Data.Item("HIT"&i)
-            SetVizData ids&".position",Data.Item("X"&i) & " " & Data.Item("Y"&i) & " 0.0"
+            SetVizData ids&".active",1 ,"int","On/Off "&i
+            SetVizData ids+1,Data.Item("HIT"&i) ,"string","Hit "&i
+            SetVizData ids&".position",Data.Item("X"&i) & " " & Data.Item("Y"&i) & " 0.0" ,"tuple","Pos "&i
             ids=ids+10
         next
         for i=Data.Item("ITEMCOUNT")+1 to 20
-            SetVizData ids&".active",0
+            SetVizData ids&".active",0 ,"int","On/Off "&i
             ids=ids+10
         next
 
@@ -6032,30 +6091,30 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetIBSide
         SetShow
 
-        SetVizData "0006",Data.Item("TYP")
+        SetVizData "0006",Data.Item("TYP")  ,"string","Typ"
         SetTitle Data.Item("HL")
-        SetVizData "1202",Data.Item("SL1")
-        SetVizData "1203",Data.Item("SL2")
-        SetVizData "0200",Data.Item("QUESTION")
-        SetVizData "1100", Data.Item("VS1")
-        SetVizData "1101", Data.Item("VE1")
-        SetVizData "1200", Data.Item("VS2")
-        SetVizData "1201", Data.Item("VE2")
+        SetVizData "1202",Data.Item("SL1")  ,"string","Subline 1"
+        SetVizData "1203",Data.Item("SL2")  ,"string","Subline 2"
+        SetVizData "0200",Data.Item("QUESTION") ,"string","question"
+        SetVizData "1100", Data.Item("VS1") ,"string","Start 1"
+        SetVizData "1101", Data.Item("VE1") ,"string","Ende 1"
+        SetVizData "1200", Data.Item("VS2") ,"string","Start 2"
+        SetVizData "1201", Data.Item("VE2") ,"string","Ende 2"
         
-        SetTeamLogo "0610",Data.Item("LOGO1")
-        SetTeamLogo "0710",Data.Item("LOGO2")
-        SetPlayerHS "0600",Data.Item("LOGO1"),Data.Item("PHOTO1")
-        SetPlayerHS "0700",Data.Item("LOGO2"),Data.Item("PHOTO2")
+        SetTeamLogo "0610",Data.Item("LOGO1"),"Logo A"
+        SetTeamLogo "0710",Data.Item("LOGO2"),"Logo A"
+        SetPlayerHS "0600",Data.Item("LOGO1"),Data.Item("PHOTO1"),"Photo A"
+        SetPlayerHS "0700",Data.Item("LOGO2"),Data.Item("PHOTO2"),"Photo B"
         
         if Data.Item("PHOTO")= true then
-            SetVizData "0007",1
+            SetVizData "0007",1 ,"int","Photo On/Off"
         else
-            SetVizData "0007",0
+            SetVizData "0007",0 ,"int","Photo On/Off"
         end if
         if Data.Item("TWITTER")= true then
-            SetVizData "0085",1
+            SetVizData "0085",1 ,"int","Twitter On/Off"
         else
-            SetVizData "0085",0
+            SetVizData "0085",0 ,"int","Twitter On/Off"
         end if
         GetPreview "Default", "3.0", sScene
         Redim ActionList(2, 1)
@@ -6264,10 +6323,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         sScene = "BB_Crosspromo_1"
         LoadScene elMainLayer, sScene
         SetShow
-        SetVizData "0100", Data.Item("LINE1")
-        SetVizData "0201", Data.Item("LINE2")
-        SetVizData "0202", Data.Item("LINE3")
-        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &Data.Item("IMG")
+        SetVizData "0100", Data.Item("LINE1"),"string","Line 1"
+        SetVizData "0201", Data.Item("LINE2"),"string","Line 2"
+        SetVizData "0202", Data.Item("LINE3"),"string","Line 3"
+        SetVizData "0090","IMAGE*"&s__LogoPathDiv & "/" &Data.Item("IMG"),"image","Image"
 
         GetPreview "Default", "2.0", sScene
         Redim ActionList(2, 1)
@@ -6299,7 +6358,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 dim sResult
                 sResult = obj__TV.SendCommandEx("RENDERER*MAIN_LAYER SET_OBJECT SCENE*" & s__VizPathWF & "/" & scene)
                 sResult = obj__TV.SendCommandEx("RENDERER*" & sLayer & "*NAME GET")
-                SetVizData "1114", team
+                SetVizData "1114", team ,"reserved",""
 
                 obj__TV.RendererUpdate true
             else

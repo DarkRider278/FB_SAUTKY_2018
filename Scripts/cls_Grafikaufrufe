@@ -194,7 +194,8 @@ Class cls_Grafikaufrufe
             else
                 For i = 0 to int_TVCount
                     If not obj_TVList(i) is Nothing Then
-                        obj_TVList(i).SaveAR(sn)
+                        'obj_TVList(i).SaveAR(sn)
+                        obj_TVList(i).ExportARXml(sn)
                     End If
                 Next
             end if
