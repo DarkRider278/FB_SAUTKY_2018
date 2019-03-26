@@ -1619,6 +1619,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
         dim i, sCont
         dim showp
+        dim isdiv:isdiv=true
         showp=false
         select case Data.Item("ANIM_TYPE")
             case 1  sScene = "VB_Erg"
@@ -1626,8 +1627,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 3  sScene = "VB_Tab_Erg"
             case 4  sScene = "VB_Tab_12"
             case 5  sScene = "VB_Erg3_Tab6"
-            case 6  sScene = "VB_Tab_M"
-            case 7  sScene = "VB_Tab_Q"
+            case 6
+                sScene = "VB_Tab_M"
+                if isdiv=true then  sScene = "VB_Erg3_Tab6"
+            case 7
+                sScene = "VB_Tab_Q"
+                if isdiv=true then  sScene = "VB_Erg3_Tab6"
         end select
         LoadScene elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1645,7 +1650,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetDropLine ""
         end if
 
-        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
+        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") <> 6  and Data.Item("ANIM_TYPE") <> 7 then
             dim ids : ids=1101
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
@@ -1697,6 +1702,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         
         if Data.Item("ANIM_TYPE") = 6 or Data.Item("ANIM_TYPE") = 7 then
             ids =1100
+            if isdiv  then ids=ids+400
             dim s,e,count
             count=1
             if  Data.Item("ANIM_TYPE") = 6 then
@@ -1724,6 +1730,33 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 ids=ids+100
                 count=count+1
               next
+              if isdiv then
+                if  Data.Item("ANIM_TYPE") = 6 then
+                    s=1
+                    e=3
+                else
+                    s=4
+                    e=6
+                end if
+                ids=1101
+                for i = s to e  ' DAILY RESULTS
+                   SetVizDataBufferOn
+                   SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+                   SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
+
+                   SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
+
+                   SetVizData ids+5,Data.Item("NAME_B" & i) ,"string","Tem Name 2 "&i
+                   SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
+                   SetVizDataBufferOff
+                   ids=ids+100
+                next
+                SetTitle Data.item("OPT_TITLE")
+                SetTitleSubLine  ""
+                SetDropLine ""
+                SetVizData "0500",Data.item("TITLE") ,"string","Subline"
+                SetVizData "0003",3,"int","Count Erg"
+            end if
         end if
 
         GetPreview "Default 3.5", "L1 3.5 L2 3.5 L3 3.5 L4 3.5 L5 3.5 L6 3.5 L7 3.5 L8 3.5 L9 3.5 L10 3.5 L11 3.5 L12 3.5", sScene
@@ -1754,7 +1787,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 4
                 sScene = "VB_Tabelle"
                 dir="TABELLE 3.0"
-            case 5  sScene = "VB_Erg3_Tab6"
+            case 6
+                sScene = "VB_ERG_Tabelle"
+            case 7
+                sScene = "VB_ERG_Tabelle"
         end select
         LoadSceneWF elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1813,7 +1849,60 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         end if
 
+        if Data.Item("ANIM_TYPE") = 6 or Data.Item("ANIM_TYPE") = 7 then
+            ids =1100
+            if isdiv  then ids=ids+400
+            dim s,e,count
+            count=1
+            if  Data.Item("ANIM_TYPE") = 6 then
+                s=1
+                e=6
+            else
+                s=7
+                e=12
+            end if
+            ids =2109
+            if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =3 then ids=ids+1000
+            if Data.Item("ANIM_TYPE") =5  then ids=ids+400
+            for i = s to e   ' FULL STANDINGS TABLE
+                SetVizDataBufferOn
+                SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO"&i)  ,"image","Logo "&i
+                SetVizData ids+1,Data.Item("PLACE" & i) ,"string","Place "&i
+                SetVizDataUpper ids+2,Data.Item("NAME" & i) ,"string","Name "&i
+                SetVizData ids+3,Data.Item("GAMES" & i)  ,"string","Games "&i
+                SetVizData ids+4,Data.Item("GOALS" & i)  ,"string","Goals "&i
+                SetVizData ids+5,Data.Item("DIFF" & i)   ,"string","Diff "&i
+                SetVizData ids+6,Data.Item("PTS" & i)    ,"string","Points "&i
+                select case Data.Item("TREND" & i)
+                    case "+"    SetVizData ids+9,1    ,"int","Trend "&i
+                    case ""     SetVizData ids+9,0    ,"int","Trend "&i
+                    case "-"    SetVizData ids+9,2    ,"int","Trend "&i
+                end select
+                SetVizDataBufferOff
+                ids=ids+100
+              next
+            if  Data.Item("ANIM_TYPE") = 6 then
+                s=1
+                e=3
+            else
+                s=4
+                e=6
+            end if
 
+            ids=200
+            for i = s to e  ' DAILY RESULTS
+               SetVizDataBufferOn
+               SetVizData "0"&ids+5,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+               SetVizDataUpper "0"&ids,Data.Item("SNAME_A" & i) ,"string","Team Name 1 "&i
+               SetVizData "0"&ids+20,0  ,"int",""
+               SetVizData "0"&ids+25, Data.Item("RESULT" & i) ,"string","Result "&i
+
+               SetVizDataUpper "0"&ids+10,Data.Item("SNAME_B" & i) ,"string","Team Name 2 "&i
+               SetVizData "0"&ids+15,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
+               SetVizDataBufferOff
+               ids=ids+100
+            next
+        end if
 
 
 
@@ -4995,6 +5084,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             'Replace(pnggenerate,"?FILENAME?",TimeStamp&"_"&sScene
             'obj__TV.SendCommand(pnggenerate)
             ExportPNG(TimeStamp&"_"&sScene)
+            ExportPNG(sScene)
         end if
 
     End Sub
@@ -5330,6 +5420,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         dim ids
         dim dir
         sScene = "VB_Lframe_Tabelle"
+        if Data.Item("ANIM_TYPE") <> 0 then sScene="VB_Lframe_ERG_Tabelle_3_6"
         'if pg_settings.rb_opmode.ItemIndex=1 then  sScene=sScene&"_KONF"
         LoadSceneWF elMainLayer, sScene
         SetCommercialOnOff "LFrame Info"
@@ -5350,8 +5441,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetVizDataUpper "2100", Data.Item("TABHL"),"string","Tab Headline"
         ids=2110
-
-        for i = 1 to 12                   ' FULL STANDINGS TABLE
+        dim s,e
+        if Data.Item("ANIM_TYPE") =0 then
+            s=1
+            e=12
+        elseif Data.Item("ANIM_TYPE")=1 then
+            s=1
+            e=6
+        else
+            s=7
+            e=12
+        end if
+        for i = s to e                   ' FULL STANDINGS TABLE
             SetVizDataBufferOn
             SetVizData ids,Data.Item("TABPLACE"&i),"string","Tab Place "&i
             SetVizDataUpper ids+1,Data.Item("TABNAME"&i) ,"string","Tab Team "&i
@@ -5366,8 +5467,17 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         
         SetVizDataUpper "4000", Data.Item("REHL"),"string","Result Headline"
         ids=4005
-
-        for i=1 to 6
+        if Data.Item("ANIM_TYPE") =0 then
+            s=1
+            e=6
+        elseif Data.Item("ANIM_TYPE")=1 then
+            s=1
+            e=3
+        else
+            s=4
+            e=6
+        end if
+        for i=s to e
            SetVizDataBufferOn
             SetVizData ids,0 ,"int",""
             SetVizDataUpper ids+5,Data.Item("RENAMEA" & i) ,"string","Res Name A "&i

@@ -63,6 +63,8 @@ sub tw_l_info_rb_s_typClick (Sender)
         tw_l_info.bt_changeteam.Visible=true
         tw_l_info.bt_changetotab.Visible=false
         tw_l_info.bt_changetoerg.Visible=false
+        tw_l_info.bt_show1.Visible=false
+        tw_l_info.bt_show2.Visible=false
     elseif  tw_l_info.rb_s_typ.ItemIndex=1 then
         tw_l_info.pa_tabelle.Visible=true
         tw_l_info.pa_team.Visible=false
@@ -71,6 +73,8 @@ sub tw_l_info_rb_s_typClick (Sender)
         tw_l_info.bt_changeteam.Visible=false
         tw_l_info.bt_changetotab.Visible=false
         tw_l_info.bt_changetoerg.Visible=false
+        tw_l_info.bt_show1.Visible=true
+        tw_l_info.bt_show2.Visible=true
     elseif  tw_l_info.rb_s_typ.ItemIndex=2 then
         tw_l_info.pa_tabelle.Visible=false
         tw_l_info.pa_team.Visible=false
@@ -79,6 +83,8 @@ sub tw_l_info_rb_s_typClick (Sender)
         tw_l_info.bt_changeteam.Visible=false
         tw_l_info.bt_changetotab.Visible=true
         tw_l_info.bt_changetoerg.Visible=false
+        tw_l_info.bt_show1.Visible=true
+        tw_l_info.bt_show2.Visible=true
     else
         tw_l_info.pa_tabelle.Visible=false
         tw_l_info.pa_team.Visible=false
@@ -87,6 +93,8 @@ sub tw_l_info_rb_s_typClick (Sender)
         tw_l_info.bt_changeteam.Visible=false
         tw_l_info.bt_changetotab.Visible=false
         tw_l_info.bt_changetoerg.Visible=false
+        tw_l_info.bt_show1.Visible=false
+        tw_l_info.bt_show2.Visible=false
     end if
 end sub
 
@@ -155,7 +163,7 @@ sub RefreshData_L_I
     RefreshLineup2_L_I
     RefreshTabelle_L_I
     RefreshResults_L_I
-    call tw_l_info.gr_s_tab.SortByCol(1,true)
+    'call tw_l_info.gr_s_tab.SortByCol(1,true)
 end sub
 
 sub RefreshLineup1_L_I
@@ -350,16 +358,19 @@ sub RefreshLineup2_L_I
 end sub
 
 sub refreshTabelle_L_I
-    dim rank, games,i
+    dim rank, games,i ,group
     games = TSP.GetRound(TSP_ROUND)
     i = 0
     tw_l_info.ed_s_tab_headline.Text=  games & ". Runde"
+    tw_l_info.gr_s_tab.FixedCols=0
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
+                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
+                    tw_l_info.gr_s_tab.Cells(i, 0)=group+rank &"."
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "#"))     = rank &"."
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Games")) = TSP.GetSQLData("ANZGAMES")
@@ -384,7 +395,8 @@ sub refreshTabelle_L_I
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
-
+    call tw_l_info.gr_s_tab.SortByCol(0,true)
+    tw_l_info.gr_s_tab.FixedCols=1
 end sub
 
 sub refreshResults_L_I
@@ -392,37 +404,41 @@ sub refreshResults_L_I
     games = TSP.GetRound(TSP_ROUND)
     i = 0
     dim found
-        tw_l_info.ed_s_result_headline.Text=  games & ". Runde"
-        If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
-            i = 0
-            If TSP.SetSQLPos("First") Then
-                Do
-                    i = i + 1
-                    if i <= 6 then
+    tw_l_info.ed_s_result_headline.Text=  games & ". Runde"
+    tw_l_info.gr_s_res.FixedCols=0
+    If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
+        i = 0
+        If TSP.SetSQLPos("First") Then
+            Do
+                i = i + 1
+                if i <= 6 then
 
-                        tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 1")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_a_name"))
-                        tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 2")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_b_name"))
-                        if pg_settings.cb_lformauto.Checked = true then
-                            found = false
-                            MatchID = mid(TSP.GetSQLData("text"),2)
-                            for k = 1 to 6          ' Aktuellen SpielStand aus den Konferenz Panels ziehen (falls mgl)
-                                if tw_konferenz.ComponentByName("pn_game" & k).UserData = MatchID then
-                                    tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = tw_konferenz.ComponentByName("score" & 2*k-1).Caption & ":" & tw_konferenz.ComponentByName("score" & 2*k).Caption
-                                    found=true
-                                    exit for
-                                end if
-                            next
-                            if not found then
-                                tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
+                    tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 1")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_a_name"))
+                    tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 2")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_b_name"))
+                    tw_l_info.gr_s_res.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_1","LONG_NAME", TSP.GetSQLData("team_a_name"))
+                    if pg_settings.cb_lformauto.Checked = true then
+                        found = false
+                        MatchID = mid(TSP.GetSQLData("text"),2)
+                        for k = 1 to 6          ' Aktuellen SpielStand aus den Konferenz Panels ziehen (falls mgl)
+                            if tw_konferenz.ComponentByName("pn_game" & k).UserData = MatchID then
+                                tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = tw_konferenz.ComponentByName("score" & 2*k-1).Caption & ":" & tw_konferenz.ComponentByName("score" & 2*k).Caption
+                                found=true
+                                exit for
                             end if
-                        else
+                        next
+                        if not found then
                             tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                         end if
-                        tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "hl?"))   = ""
+                    else
+                        tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                     end if
-                Loop While TSP.SetSQLPos("Next")
-            end if
+                    tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "hl?"))   = ""
+                end if
+            Loop While TSP.SetSQLPos("Next")
         end if
+    end if
+    call tw_l_info.gr_s_res.SortByCol(0,true)
+    tw_l_info.gr_s_res.FixedCols=1
 end sub
 
 sub tw_l_info_bt_showClick (Sender)
@@ -483,6 +499,7 @@ sub tw_l_info_bt_showClick (Sender)
         end if
     next
     Data.Item("REITEMCOUNT")  = k
+    Data.Item("ANIM_TYPE")  = Right(Sender.Name, 1)
 
     'Spiele
     Data.Item("GHL") = tw_l_info.ed_s_g_headline.Text

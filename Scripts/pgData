@@ -32,7 +32,7 @@ sub OPTA_UPDATE_GAME_RESULTS(file)         ' -results.xml
     On Error resume Next
 
     cc.SF.Debugtext "[FileWatcher " & split(now())(1) & "] UPDATE GAME_RESULTS " & file, clBlue
-    cc.sf.debugtext "EXIT"         ' Die Daten die hier reinkommen überschreiben meine eigenen Match Daten!!!
+    'cc.sf.debugtext "EXIT"         ' Die Daten die hier reinkommen überschreiben meine eigenen Match Daten!!!
     'exit sub
 
 
@@ -136,6 +136,7 @@ sub OPTA_UPDATE_STANDING(file)
        DbgErr "Found no Standings", clRed
     Else
         For each objNode in NodeList
+        'cc.sf.DebugText   objNode.GetAttribute("TeamRef")
             out_.SQL          = "SELECT * FROM TEAMS.DBF WHERE tv_name_3='"& objNode.GetAttribute("TeamRef") &"'"
             out_.RequestLive  = True
             out_.Active       = True

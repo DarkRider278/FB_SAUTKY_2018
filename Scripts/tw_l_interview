@@ -123,21 +123,23 @@ sub RefreshData_L_IN
     RefreshTabelle_L_IN
     RefreshResults_L_IN
     
-    call tw_l_interview.gr_s_tab.SortByCol(1,true)
+    'call tw_l_interview.gr_s_tab.SortByCol(1,true)
 end sub
 
 sub refreshTabelle_L_IN
-    dim rank, games,i
+    dim rank, games,i ,group
     games = TSP.GetRound(TSP_ROUND)
-
+    tw_l_interview.gr_s_tab.FixedCols=0
     i = 0
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
+                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
                 if (rank <= 12) and (rank > 0) then
 
                     i = i + 1
+                    tw_l_interview.gr_s_tab.Cells(i, 0)=group+rank &"."
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "#"))     = rank & "."
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Games")) = TSP.GetSQLData("ANZGAMES")
@@ -161,12 +163,15 @@ sub refreshTabelle_L_IN
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
+    call tw_l_interview.gr_s_tab.SortByCol(0,true)
+    tw_l_interview.gr_s_tab.FixedCols=1
 end sub
 
 sub refreshResults_L_IN
     dim rank, games,i
     games = TSP.GetRound(TSP_ROUND)
     i = 0
+    tw_l_interview.gr_s_res.FixedCols=0
     tw_l_interview.ed_s_result_headline.Text=  games & ". Runde"
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
@@ -177,6 +182,7 @@ sub refreshResults_L_IN
 
                     tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_interview.gr_s_res, "Team 1")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_a_name"))
                     tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_interview.gr_s_res, "Team 2")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_b_name"))
+                    tw_l_interview.gr_s_res.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_1","LONG_NAME", TSP.GetSQLData("team_a_name"))
                     if pg_settings.cb_lformauto.Checked = true then
                             found = false
                             MatchID = mid(TSP.GetSQLData("text"),2)
@@ -198,6 +204,8 @@ sub refreshResults_L_IN
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
+    call tw_l_interview.gr_s_res.SortByCol(0,true)
+    tw_l_interview.gr_s_res.FixedCols=1
 end sub
 
 sub tw_l_interview_bt_showClick (Sender)

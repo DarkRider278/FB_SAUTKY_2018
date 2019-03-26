@@ -56,16 +56,20 @@ end sub
 
 ' Versucht die Daten direkt aus dem TSP Server zu bekommen
 sub fetch_standing_from_tsp()
-    dim rank, games,i
+    dim rank, games,i,group
     games = TSP.GetRound(TSP_ROUND)
+     tw_standing.grid.FixedCols=0
 '    cc.sf.debugtext "SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'"
     i = 0
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
+                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
+                'cc.SF.DebugText rank& "-"&group&"-"& TSP.GetSQLData("long_name")
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
+                    tw_standing.grid.Cells(i, 0)=group+rank &"."
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "#"))     = rank &"."
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "Club"))  = TSP.GetSQLData("long_name") & TSP.GetSQLData("tv_name_2")
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "Games")) = TSP.GetSQLData("ANZGAMES")
@@ -90,9 +94,11 @@ sub fetch_standing_from_tsp()
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
-
+    call tw_standing.grid.SortByCol(0,true)
+     tw_standing.grid.FixedCols=1
     tw_standing.ed_header.text = games & ". Runde"
 '    cc.sf.debugtext "SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')"
+    tw_standing.Grid2.FixedCols=0
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
         If TSP.SetSQLPos("First") Then
@@ -103,10 +109,13 @@ sub fetch_standing_from_tsp()
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "Team 2")) = TSP.GetSQLData("team_b_name")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "hl?"))   = ""
+                    tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_1","LONG_NAME", TSP.GetSQLData("team_a_name"))
                 end if
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
+    call tw_standing.Grid2.SortByCol(0,true)
+    tw_standing.Grid2.FixedCols=1
 end sub
 
 sub tw_standing_gridDblClick (Sender)

@@ -640,7 +640,7 @@ sub pgMain_bt_standingsClick (Sender)
 
     'if tw_Layout.layout.ItemIndex = 0 then
         fetch_standing_from_tsp() ' Daten Update
-        call tw_standing.grid.SortByCol(1,true)
+        'call tw_standing.grid.SortByCol(1,true)
         tw_standing.Visible = True
         tw_standing.BringToFront
     'else
