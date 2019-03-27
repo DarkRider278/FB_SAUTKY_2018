@@ -54,12 +54,15 @@ sub pgMain_bt_BlitzTabClick (Sender)
     else
         games = 0
         i = 0
+        tw_blitztab.grid1.FixedCols=0
         If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id = '"  & TSP.GetRound(TSP_LEAGUE_ID) &  "'") then
             If TSP.SetSQLPos("First") Then
                 Do
                     rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
+                    group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
                     if (rank <= 12) and (rank > 0) then
                         i = i + 1
+                        tw_blitztab.Grid1.Cells(i, 0)=group+rank
                         tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Place")) = rank & "."
                         tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Name"))  = TSP.GetSQLData("long_name")
                         tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Goals")) = TSP.GetSQLData("GOALS") & ":" & TSP.GetSQLData("GOALS_AGAINST")
@@ -72,7 +75,8 @@ sub pgMain_bt_BlitzTabClick (Sender)
             end if
         end if
         call tw_blitztab.Grid1.SortByCol(2,true)
-
+        call tw_blitztab.Grid1.SortByCol(0,true)
+        tw_blitztab.grid1.FixedCols=1
         tw_blitztab.Visible = True
         tw_blitztab.BringToFront
     end if

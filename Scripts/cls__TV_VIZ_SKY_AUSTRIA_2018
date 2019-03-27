@@ -1628,11 +1628,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 4  sScene = "VB_Tab_12"
             case 5  sScene = "VB_Erg3_Tab6"
             case 6
-                sScene = "VB_Tab_M"
-                if isdiv=true then  sScene = "VB_Erg3_Tab6_M"
+                sScene = "VB_Erg3_Tab6_M"
             case 7
+                sScene = "VB_Erg3_Tab6_Q"
+            case 8
+                sScene = "VB_Tab_M"
+            case 9
                 sScene = "VB_Tab_Q"
-                if isdiv=true then  sScene = "VB_Erg3_Tab6_Q"
         end select
         LoadScene elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1650,7 +1652,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetDropLine ""
         end if
 
-        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") <> 6  and Data.Item("ANIM_TYPE") <> 7 then
+        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") < 6  then
             dim ids : ids=1101
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
@@ -1673,7 +1675,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
 
 
-        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
+        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE") < 6  then
             ids =1100
             if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =3 then ids=ids+1000
             if Data.Item("ANIM_TYPE") =4  then ids=ids+1000
@@ -1700,12 +1702,12 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         end if
         
-        if Data.Item("ANIM_TYPE") = 6 or Data.Item("ANIM_TYPE") = 7 then
+        if Data.Item("ANIM_TYPE") > 5 then
             ids =1100
-            if isdiv  then ids=ids+400
+            if Data.Item("ANIM_TYPE") =6 or Data.Item("ANIM_TYPE")=7 then ids=ids+400
             dim s,e,count
             count=1
-            if  Data.Item("ANIM_TYPE") = 6 then
+            if  Data.Item("ANIM_TYPE") = 6  or Data.Item("ANIM_TYPE")=8 then
                 s=1
                 e=6
             else
@@ -1734,7 +1736,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 ids=ids+100
                 count=count+1
               next
-              if isdiv then
+              if Data.Item("ANIM_TYPE") < 8 then
                 if  Data.Item("ANIM_TYPE") = 6 then
                     s=1
                     e=3
@@ -1792,9 +1794,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 sScene = "VB_Tabelle"
                 dir="TABELLE 3.0"
             case 6
-                sScene = "VB_ERG_Tabelle"
+                sScene = "VB_ERG_Tabelle_M"
             case 7
-                sScene = "VB_ERG_Tabelle"
+                sScene = "VB_ERG_Tabelle_Q"
         end select
         LoadSceneWF elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1802,11 +1804,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
         SetBGOnOffWF
          SetCommercialOnOffManual true,"VB Erg Tab"
-        SetVizDataUpper "0100", Data.item("OPT_TITLE"),"string","Opt Title"
+        if Data.Item("ANIM_TYPE")<6 then SetVizDataUpper "0100", Data.item("OPT_TITLE"),"string","Opt Title"
         SetVizDataUpper "0110",Data.item("TITLE"),"string","Title"
 
 
-        if Data.Item("ANIM_TYPE") <> 4 then
+        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE")<6 then
             dim ids : ids=2000
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
@@ -1829,7 +1831,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
 
 
-        if Data.Item("ANIM_TYPE") <> 1 then
+        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE")<6 then
             ids =2109
             if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =3 then ids=ids+1000
             if Data.Item("ANIM_TYPE") =5  then ids=ids+400

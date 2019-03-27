@@ -4,7 +4,11 @@
 <script_body>
 
 sub tw_standing_bt_Erg1Click (Sender)
-    dim i
+    shows Right(Sender.Name, 1)
+end sub
+
+sub shows(typ)
+dim i
     dim Data : Set Data = CreateObject("Scripting.Dictionary")
     dim k : k = 0
     for i = 1 to tw_standing.grid.RowCount - 1
@@ -43,11 +47,11 @@ sub tw_standing_bt_Erg1Click (Sender)
     Data.Item("TITLE")      = tw_standing.ed_header.Text
     Data.Item("OPT_TITLE")  = tw_standing.ed_opt_title.Text
     Data.Item("OPT_ZUSATZ") = tw_standing.ed_opt_zusatz.Text
-    
+
   '  Data.Item("HEAD")      = tw_standing.rg_header.ItemIndex
 
-    Data.Item("ANIM_TYPE")  = Right(Sender.Name, 1)  ' Es gibt 4 verschiedene Grafiken
-    
+    Data.Item("ANIM_TYPE")  = typ  ' Es gibt 4 verschiedene Grafiken
+
     Hide_DSS
     HideVorlaufLogos
     AllTV.TV__VB_Standing Data
@@ -69,7 +73,7 @@ sub fetch_standing_from_tsp()
                 'cc.SF.DebugText rank& "-"&group&"-"& TSP.GetSQLData("long_name")
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
-                    tw_standing.grid.Cells(i, 0)=group+rank &"."
+                    tw_standing.grid.Cells(i, 0)=group+rank
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "#"))     = rank &"."
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "Club"))  = TSP.GetSQLData("long_name") & TSP.GetSQLData("tv_name_2")
                     tw_standing.grid.Cells(i, GetColIdx(tw_standing.grid, "Games")) = TSP.GetSQLData("ANZGAMES")
@@ -143,6 +147,23 @@ end sub
 
 sub tw_standing_cb_templateChange (Sender)
     tw_standing.ed_opt_title.Text = tw_standing.cb_template.Text
+end sub
+
+sub tw_standing_bt_Erg6MouseUp (Sender, Button, Shift, X, Y)
+  if Button = 1 then
+       shows "8"
+  else
+      shows "6"
+  end if
+end sub
+
+sub tw_standing_bt_Erg7MouseUp (Sender, Button, Shift, X, Y)
+if Button = 1 then
+       shows "9"
+  else
+      shows "7"
+  end if
+
 end sub
 
 </script_body>
