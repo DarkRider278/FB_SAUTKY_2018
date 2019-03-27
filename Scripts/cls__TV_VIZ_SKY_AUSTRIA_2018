@@ -1629,10 +1629,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             case 5  sScene = "VB_Erg3_Tab6"
             case 6
                 sScene = "VB_Tab_M"
-                if isdiv=true then  sScene = "VB_Erg3_Tab6"
+                if isdiv=true then  sScene = "VB_Erg3_Tab6_M"
             case 7
                 sScene = "VB_Tab_Q"
-                if isdiv=true then  sScene = "VB_Erg3_Tab6"
+                if isdiv=true then  sScene = "VB_Erg3_Tab6_Q"
         end select
         LoadScene elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1720,7 +1720,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 SetVizData ids+3,Data.Item("GAMES" & i) ,"string","Games "&i
                 SetVizData ids+4,Data.Item("GOALS" & i) ,"string","Goals "&i
                 SetVizData ids+5,Data.Item("DIFF" & i)  ,"string","Diff "&i
+                if isdiv then
+                    SetVizData ids+6,Data.Item("PTS" & i)  ,"string","Points "&i
+                else
                 SetVizData ids+6,Data.Item("PTSH" & i)  ,"string","Points "&i
+                end if
                 select case Data.Item("TREND" & i)
                     case "+"    SetVizData ids+9,1  ,"int","Trend "&i
                     case ""     SetVizData ids+9,0  ,"int","Trend "&i
@@ -1751,9 +1755,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                    SetVizDataBufferOff
                    ids=ids+100
                 next
-                SetTitle Data.item("OPT_TITLE")
-                SetTitleSubLine  ""
-                SetDropLine ""
+                'SetTitle Data.item("OPT_TITLE")
+                'SetTitleSubLine  ""
+                'SetDropLine ""
                 SetVizData "0500",Data.item("TITLE") ,"string","Subline"
                 SetVizData "0003",3,"int","Count Erg"
             end if

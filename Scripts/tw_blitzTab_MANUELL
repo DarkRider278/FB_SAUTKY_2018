@@ -26,7 +26,7 @@ sub get_standings_of_day(day)
 
     dim fName , group
 
-    if day > 22 then
+    if day > 0 then
         FName = "srml-" & CURRENT_LEAGUE & "-" & pgData.cb_season.Text & "-seasonstandings.xml"
     else
         FName = "srml-" & CURRENT_LEAGUE & "-" & pgData.cb_season.Text & "-seasonstandings_22.xml"
@@ -48,7 +48,7 @@ sub get_standings_of_day(day)
     End If
     i = 0
 
-    if day>22 then
+    if day>0 then
         Set NodeList = oXML.SelectNodes("//TeamStandings[@Matchday='" & day & "']/Round/TeamRecord")
         If NodeList.Length = 0 Then
            DbgErr "Found no Standings for day " & day

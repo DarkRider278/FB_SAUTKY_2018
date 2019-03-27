@@ -151,7 +151,30 @@ object tw_blitzTab_MANUELL: TccToolWindow
     Height = 21
     Style = csDropDownList
     TabOrder = 0
-    ItemIndex = -1
+    Text = '21'
+    Items.WideStrings = (
+      '1'
+      '2'
+      '3'
+      '4'
+      '5'
+      '6'
+      '7'
+      '8'
+      '9'
+      '10'
+      '11'
+      '12'
+      '13'
+      '14'
+      '15'
+      '16'
+      '17'
+      '18'
+      '19'
+      '20'
+      '21')
+    ItemIndex = 20
     DroppedWidth = 76
     DropDownAutoSize = False
     FixedStyle = True
@@ -162,9 +185,9 @@ object tw_blitzTab_MANUELL: TccToolWindow
   object Grid1: TptGrid
     Left = 10
     Top = 40
-    Width = 506
+    Width = 561
     Height = 241
-    ColCount = 8
+    ColCount = 9
     DefaultRowHeight = 17
     RowCount = 13
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goAlwaysShowEditor]
@@ -182,35 +205,36 @@ object tw_blitzTab_MANUELL: TccToolWindow
       'Won'
       'Away Won'
       'Games'
-      'Last_Rank')
+      'Last_Rank'
+      'GP')
     RowHeaders.WideStrings = (
       'Team'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. Pölten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. Pölten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     RowHeaders.WideStrings_UTF7 = (
       'Team'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. P+APY-lten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. P+APY-lten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     FixedColWidth = 80
     FixedRowHeight = 17
     FixedFont.Charset = DEFAULT_CHARSET
@@ -228,10 +252,13 @@ object tw_blitzTab_MANUELL: TccToolWindow
     ProtectFixedCols = True
     DrawSortingArrow = True
     DataString = 
-      'Team,Points,Diff,Goals,Won,"Away Won",Games,Last_Rank;Altach,,,,' +
-      ',,,;Admira,,,,,,,;Salzburg,,,,,,,;Innsbruck,,,,,,,;Austria,,,,,,' +
-      ',;LASK,,,,,,,;Wolfsberg,,,,,,,;Sturm,,,,,,,;Rapid,,,,,,,;"St. Pö' +
-      'lten",,,,,,,;Mattersburg,,,,,,,;Hartberg,,,,,,,;'
+      'Team,Points,Diff,Goals,Won,"Away Won",Games,Last_Rank,GP;Salzbur' +
+      'g,52,31,49,16,7,21,1,0;LASK,43,20,38,12,6,21,2,0;Austria,30,2,29' +
+      ',9,3,21,3,0;"St. Pölten",30,-2,26,8,3,21,4,0;Wolfsberg,29,1,30,7' +
+      ',3,21,5,0;Sturm,28,2,25,6,3,21,6,0;Rapid,26,-3,24,7,3,21,7,0;Mat' +
+      'tersburg,26,-9,27,7,3,21,8,0;Hartberg,25,-10,33,7,3,21,9,0;Admir' +
+      'a,20,-16,24,5,3,21,10,0;Altach,18,-1,29,4,2,21,11,0;Innsbruck,17' +
+      ',-15,17,4,1,21,12,0;'
     RowSizing = False
     RowMoving = False
     ColSizing = True
@@ -248,6 +275,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
       60
       60
       46
+      60
       60)
     RowHeights = (
       17
@@ -264,10 +292,13 @@ object tw_blitzTab_MANUELL: TccToolWindow
       17
       17)
     DataString_UTF7 = 
-      'Team,Points,Diff,Goals,Won,"Away Won",Games,Last_Rank;Altach,,,,' +
-      ',,,;Admira,,,,,,,;Salzburg,,,,,,,;Innsbruck,,,,,,,;Austria,,,,,,' +
-      ',;LASK,,,,,,,;Wolfsberg,,,,,,,;Sturm,,,,,,,;Rapid,,,,,,,;"St. P+' +
-      'APY-lten",,,,,,,;Mattersburg,,,,,,,;Hartberg,,,,,,,;'
+      'Team,Points,Diff,Goals,Won,"Away Won",Games,Last_Rank,GP;Salzbur' +
+      'g,52,31,49,16,7,21,1,0;LASK,43,20,38,12,6,21,2,0;Austria,30,2,29' +
+      ',9,3,21,3,0;"St. P+APY-lten",30,-2,26,8,3,21,4,0;Wolfsberg,29,1,' +
+      '30,7,3,21,5,0;Sturm,28,2,25,6,3,21,6,0;Rapid,26,-3,24,7,3,21,7,0' +
+      ';Mattersburg,26,-9,27,7,3,21,8,0;Hartberg,25,-10,33,7,3,21,9,0;A' +
+      'dmira,20,-16,24,5,3,21,10,0;Altach,18,-1,29,4,2,21,11,0;Innsbruc' +
+      'k,17,-15,17,4,1,21,12,0;'
   end
   object Grid2: TptGrid
     Left = 10
@@ -286,60 +317,60 @@ object tw_blitzTab_MANUELL: TccToolWindow
     SelectedFont.Style = []
     ColumnHeaders.WideStrings = (
       '1'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. Pölten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. Pölten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     ColumnHeaders.WideStrings_UTF7 = (
       '1'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. P+APY-lten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. P+APY-lten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     RowHeaders.WideStrings = (
       '1'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. Pölten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. Pölten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     RowHeaders.WideStrings_UTF7 = (
       '1'
-      'Altach'
-      'Admira'
       'Salzburg'
-      'Innsbruck'
-      'Austria'
       'LASK'
+      'Austria'
+      'St. P+APY-lten'
       'Wolfsberg'
       'Sturm'
       'Rapid'
-      'St. P+APY-lten'
       'Mattersburg'
-      'Hartberg')
+      'Hartberg'
+      'Admira'
+      'Altach'
+      'Innsbruck')
     FixedColWidth = 60
     FixedRowHeight = 17
     FixedFont.Charset = DEFAULT_CHARSET
@@ -357,12 +388,13 @@ object tw_blitzTab_MANUELL: TccToolWindow
     ProtectFixedCols = False
     DrawSortingArrow = True
     DataString = 
-      '1,Altach,Admira,Salzburg,Innsbruck,Austria,LASK,Wolfsberg,Sturm,' +
-      'Rapid,"St. Pölten",Mattersburg,Hartberg;Altach,,,,,,,,,,,,;Admir' +
-      'a,,,,,,,,,,,,;Salzburg,,,,,,,,,,,,;Innsbruck,,,,,,,,,,,,;Austria' +
-      ',,,,,,,,,,,,;LASK,,,,,,,,,,,,;Wolfsberg,,,,,,,,,,,,;Sturm,,,,,,,' +
-      ',,,,,;Rapid,,,,,,,,,,,,;"St. Pölten",,,,,,,,,,,,;Mattersburg,,,,' +
-      ',,,,,,,,;Hartberg,,,,,,,,,,,,;'
+      '1,Salzburg,LASK,Austria,"St. Pölten",Wolfsberg,Sturm,Rapid,Matte' +
+      'rsburg,Hartberg,Admira,Altach,Innsbruck;Salzburg,,,1,1,1,1,,1,1,' +
+      ',1,;LASK,,,1,,,1,1,1,1,1,,;Austria,,,,,,,1,,1,1,,;"St. Pölten",,' +
+      ',,,,,1,,,,1,1;Wolfsberg,,,1,,,,,1,,,1,;Sturm,,,,,,,,,,1,1,1;Rapi' +
+      'd,,,,1,,,,,,1,,1;Mattersburg,,,,,,1,,,,,1,1;Hartberg,,,,,1,,,1,,' +
+      '1,,;Admira,,,,,,,,,1,,1,1;Altach,,,,,,,,,,1,,;Innsbruck,,,,,,,,,' +
+      ',,1,;'
     RowSizing = False
     RowMoving = False
     ColSizing = True
@@ -400,12 +432,13 @@ object tw_blitzTab_MANUELL: TccToolWindow
       17
       17)
     DataString_UTF7 = 
-      '1,Altach,Admira,Salzburg,Innsbruck,Austria,LASK,Wolfsberg,Sturm,' +
-      'Rapid,"St. P+APY-lten",Mattersburg,Hartberg;Altach,,,,,,,,,,,,;A' +
-      'dmira,,,,,,,,,,,,;Salzburg,,,,,,,,,,,,;Innsbruck,,,,,,,,,,,,;Aus' +
-      'tria,,,,,,,,,,,,;LASK,,,,,,,,,,,,;Wolfsberg,,,,,,,,,,,,;Sturm,,,' +
-      ',,,,,,,,,;Rapid,,,,,,,,,,,,;"St. P+APY-lten",,,,,,,,,,,,;Matters' +
-      'burg,,,,,,,,,,,,;Hartberg,,,,,,,,,,,,;'
+      '1,Salzburg,LASK,Austria,"St. P+APY-lten",Wolfsberg,Sturm,Rapid,M' +
+      'attersburg,Hartberg,Admira,Altach,Innsbruck;Salzburg,,,1,1,1,1,,' +
+      '1,1,,1,;LASK,,,1,,,1,1,1,1,1,,;Austria,,,,,,,1,,1,1,,;"St. P+APY' +
+      '-lten",,,,,,,1,,,,1,1;Wolfsberg,,,1,,,,,1,,,1,;Sturm,,,,,,,,,,1,' +
+      '1,1;Rapid,,,,1,,,,,,1,,1;Mattersburg,,,,,,1,,,,,1,1;Hartberg,,,,' +
+      ',1,,,1,,1,,;Admira,,,,,,,,,1,,1,1;Altach,,,,,,,,,,1,,;Innsbruck,' +
+      ',,,,,,,,,,1,;'
   end
   object teamA1: TptEdit
     Left = 10
@@ -415,7 +448,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 3
-    Text = 'FK Austria Wien'
+    Text = 'Cashpoint SCR Altach'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -428,7 +461,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 4
-    Text = 'FC Wacker Innsbruck'
+    Text = 'LASK'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -465,7 +498,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 7
-    Text = 'Cashpoint SCR Altach'
+    Text = 'FC Wacker Innsbruck'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -478,7 +511,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 8
-    Text = 'SV Mattersburg'
+    Text = 'FC Red Bull Salzburg'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -515,7 +548,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 11
-    Text = 'SK Puntigamer Sturm Graz'
+    Text = 'RZ Pellets WAC'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -528,7 +561,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 12
-    Text = 'TSV Prolactal Hartberg'
+    Text = 'FC Flyeralarm Admira'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -565,7 +598,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 15
-    Text = 'FC Flyeralarm Admira'
+    Text = 'SK Puntigamer Sturm Graz'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -578,7 +611,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 16
-    Text = 'SK Rapid Wien'
+    Text = 'FK Austria Wien'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -615,7 +648,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 19
-    Text = 'FC Red Bull Salzburg'
+    Text = 'SK Rapid Wien'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -628,7 +661,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 20
-    Text = 'LASK'
+    Text = 'TSV Prolactal Hartberg'
     Numeric = False
     InputType = itAnything
     Locked = False
@@ -1937,7 +1970,7 @@ object tw_blitzTab_MANUELL: TccToolWindow
     MaxLength = 0
     ReadOnly = True
     TabOrder = 27
-    Text = 'RZ Pellets WAC'
+    Text = 'SV Mattersburg'
     Numeric = False
     InputType = itAnything
     Locked = False
