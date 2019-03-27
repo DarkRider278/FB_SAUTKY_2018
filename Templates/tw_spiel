@@ -9,6 +9,7 @@ object tw_spiel: TccToolWindow
   LastDock = frmMain.dckBottom
   Resizable = False
   TabOrder = 0
+  Visible = False
   Floating = True
   ParentColor = False
   Float = True

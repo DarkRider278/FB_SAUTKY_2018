@@ -150,6 +150,7 @@ sub tw_blitztab_bt_show_goals_dssClick (Sender)
             if Trim(grd.Cells(i, GetColIdx(grd, "Name"))) <> "" then
                 if grd.Cells(i, GetColIdx(grd, "Show?")) = "X" then
                     k = k + 1
+                    Data.Item("SORT"&k) =grd.Cells(i,0)
                     Data.Item("PLACE" & k) = Trim(grd.Cells(i, GetColIdx(grd, "Place")))
                     Data.Item("NAME"  & k) = TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_TV_NAME_2)
                     if Data.Item("NAME" & k)= "" then

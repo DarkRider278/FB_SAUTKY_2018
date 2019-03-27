@@ -10,6 +10,7 @@ object tw_vorlauf: TccToolWindow
   LastDock = frmMain.dckTop
   Resizable = False
   TabOrder = 0
+  Visible = False
   Floating = True
   ParentColor = False
   Float = True

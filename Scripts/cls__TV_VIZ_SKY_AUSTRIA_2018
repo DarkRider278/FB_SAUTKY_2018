@@ -1646,7 +1646,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE")= 5 then
             SetTitleLogo "el_logo_quer",true
         end if
-        if Data.Item("ANIM_TYPE") <> 6 and Data.Item("ANIM_TYPE") <> 7 then
+        if Data.Item("ANIM_TYPE") < 6 then
             SetTitle Data.item("OPT_TITLE")
             SetTitleSubLine Data.item("TITLE")
             SetDropLine ""
@@ -1805,7 +1805,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetBGOnOffWF
          SetCommercialOnOffManual true,"VB Erg Tab"
         if Data.Item("ANIM_TYPE")<6 then SetVizDataUpper "0100", Data.item("OPT_TITLE"),"string","Opt Title"
-        SetVizDataUpper "0110",Data.item("TITLE"),"string","Title"
+        if Data.Item("ANIM_TYPE")<6 then SetVizDataUpper "0110",Data.item("TITLE"),"string","Title"
 
 
         if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE")<6 then
@@ -3532,19 +3532,20 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetVizDataUpperFL ids+1,Data.Item("NAME" & k)
             SetVizDataFL ids+2,Data.Item("GOALS" & k)
             SetVizDataFL ids+3,Data.Item("POINTS" & k)
-            if p="1." or p="2." then
+            p= Data.Item("SORT" & k)
+            if p="11" or p="12" then
                 SetVizDataFL ids+4,0
                 if k<3 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/cl_icon")
                 end if
-            elseif p="3." or p="4." then
+            elseif p="13" or p="14" then
                 SetVizDataFL ids+4,1
                 if k<5 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/el_icon")
                 end if
-            elseif p="12." then
+            elseif (p="22" and  Data.Item("PLACE" & k)="12.")or p="26" then
                 SetVizDataFL ids+4,1
                 if k<5 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 0")
