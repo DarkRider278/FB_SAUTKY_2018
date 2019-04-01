@@ -59,7 +59,7 @@ sub pgMain_bt_BlitzTabClick (Sender)
             If TSP.SetSQLPos("First") Then
                 Do
                     rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
-                    group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
+                    group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                     if (rank <= 12) and (rank > 0) then
                         i = i + 1
                         tw_blitztab.Grid1.Cells(i, 0)=group+rank

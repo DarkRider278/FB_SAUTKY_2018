@@ -69,7 +69,7 @@ sub fetch_standing_from_tsp()
         If TSP.SetSQLPos("First") Then
             Do
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
-                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
+                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                 'cc.SF.DebugText rank& "-"&group&"-"& TSP.GetSQLData("long_name")
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
@@ -102,7 +102,7 @@ sub fetch_standing_from_tsp()
      tw_standing.grid.FixedCols=1
     tw_standing.ed_header.text = games & ". Runde"
 '    cc.sf.debugtext "SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')"
-    tw_standing.Grid2.FixedCols=0
+    'tw_standing.Grid2.FixedCols=0
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
         If TSP.SetSQLPos("First") Then
@@ -113,13 +113,13 @@ sub fetch_standing_from_tsp()
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "Team 2")) = TSP.GetSQLData("team_b_name")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "hl?"))   = ""
-                    tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_1","LONG_NAME", TSP.GetSQLData("team_a_name"))
+                   ' tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_2","LONG_NAME", TSP.GetSQLData("team_a_name"))
                 end if
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
-    call tw_standing.Grid2.SortByCol(0,true)
-    tw_standing.Grid2.FixedCols=1
+    'call tw_standing.Grid2.SortByCol(0,true)
+    'tw_standing.Grid2.FixedCols=1
 end sub
 
 sub tw_standing_gridDblClick (Sender)
@@ -140,9 +140,11 @@ end sub
 
 sub tw_standing_gridMouseUp (Sender, Button, Shift, X, Y)
     dim i : i = 0
-   for i = 1 to tw_standing.grid.RowCount - 1
-        'Sender.Cells(i, 1)=i & "."
-   next
+    if Shift=4 then
+       for i = 1 to tw_standing.grid.RowCount - 1
+            Sender.Cells(i, 1)=i & "."
+       next
+    end if
 end sub
 
 sub tw_standing_cb_templateChange (Sender)

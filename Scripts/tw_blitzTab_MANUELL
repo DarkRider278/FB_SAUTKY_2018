@@ -57,7 +57,7 @@ sub get_standings_of_day(day)
                i = i + 1
                team_id   = objNode.GetAttribute("TeamRef")
                team_name = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "tv_name_3", team_id)
-               group = cInt(TSP_get_info_from_db("TEAMS", "TEXT_1", "tv_name_3", team_id))*10
+               group = cInt(TSP_get_info_from_db("TEAMS", "TEXT_2", "tv_name_3", team_id))*10
                tw_blitzTab_MANUELL.Grid1.Cells(i,0) = team_name
                tw_blitzTab_MANUELL.Grid2.Cells(i,0) = team_name
                tw_blitzTab_MANUELL.Grid2.Cells(0,i) = team_name

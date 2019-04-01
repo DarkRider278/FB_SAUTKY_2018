@@ -69,10 +69,12 @@ sub tw_blitztab_Grid1ClickCell (Sender, AColumn, ARow)
 end sub
 
 sub tw_blitztab_Grid1MouseUp (Sender, Button, Shift, X, Y)
-dim i : i = 0
-   for i = 1 to tw_blitztab.Grid1.RowCount - 1
-        tw_blitztab.Grid1.Cells(i, 2)=i & "."
-   next
+    dim i : i = 0
+    if Shift=4 then
+        for i = 1 to tw_blitztab.Grid1.RowCount - 1
+            tw_blitztab.Grid1.Cells(i, 2)=i & "."
+        next
+    end if
 end sub
 
 sub tw_blitztab_cb_templateChange (Sender)

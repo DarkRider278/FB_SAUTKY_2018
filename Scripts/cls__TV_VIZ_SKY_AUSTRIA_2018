@@ -128,8 +128,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
     end sub
 
-    public Sub SetVizDataUpper(id, value,typ,desc)	
-		SetVizData id,ucase(value),typ,desc       
+    public Sub SetVizDataUpper(id, value,typ,desc)   
+      SetVizData id,ucase(value),typ,desc       
     end sub
     
     public sub SetVizDataBufferOn
@@ -1489,10 +1489,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_Wechsel_WF(ByRef Data)
 
         'SetTName Data.Item("TEAMNAME")
-        SetVizDataFL "5005",Data.Item("P_NR_OUT") ,"string"
-        SetVizDataUpperFL "5011" ,Data.Item("P_LNAME_OUT") ,"string"
-        SetVizDataFL "5007",Data.Item("P_NR_IN") ,"string"
-        SetVizDataUpperFL "5012" ,Data.Item("P_LNAME_IN") ,"string"
+        SetVizDataFL "5005",Data.Item("P_NR_OUT")
+        SetVizDataUpperFL "5011" ,Data.Item("P_LNAME_OUT")
+        SetVizDataFL "5007",Data.Item("P_NR_IN")
+        SetVizDataUpperFL "5012" ,Data.Item("P_LNAME_IN")
 
         sScene="DSS"
         GetPreviewWF "SPIELERWECHSEL", "2.52", sScene
@@ -1795,8 +1795,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 dir="TABELLE 3.0"
             case 6
                 sScene = "VB_ERG_Tabelle_M"
+                dir="TABELLE 3.0 Z1 3.0 Z2 3.0 Z3 3.0 Z4 3.0 Z5 3.0 Z6 3.0"
             case 7
                 sScene = "VB_ERG_Tabelle_Q"
+                dir="TABELLE 3.0 Z1 3.0 Z2 3.0 Z3 3.0 Z4 3.0 Z5 3.0 Z6 3.0"
         end select
         LoadSceneWF elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -2064,7 +2066,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
 
     public sub VB_Opening(ByRef Data)
-    	if getGFXV =2 then
+       if getGFXV =2 then
             VB_Opening_WF Data
             exit sub
         end if
@@ -2481,7 +2483,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
     public sub VB_IB_BB_FreeText(ByRef Data,msg)
 
-		if getGFXV =2 then
+      if getGFXV =2 then
             VB_IB_BB_FreeText_WF Data,msg
             exit sub
         end if
@@ -2749,7 +2751,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
     public sub VB_MegaFacts(ByRef Data)
         dim sCont, i
-		if getGFXV =2 then
+      if getGFXV =2 then
             VB_MegaFacts_WF Data
             exit sub
         end if
@@ -2995,7 +2997,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     end sub
 
       Public Sub FP_TactLineup(ByRef Data)
- 		if getGFXV =2 then
+       if getGFXV =2 then
             FP_TactLineup_WF Data
             exit sub
         end if
@@ -3314,7 +3316,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_RestProgramm_Show(ByRef Data)
         'if getGFXV =2 then
             DSS_RestProgramm_Show_WF Data
-        	exit sub
+           exit sub
         'end if
         dim i
         SetVizDataFL "3001",GetString("RESTPROGRAMM", i__TVLanguage)&" "&Data.Item("NAME")
@@ -3358,7 +3360,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_Karte_Show(ByRef Data)
         if getGFXV =2 then
             DSS_Karte_Show_WF Data
-        	exit sub
+           exit sub
         end if
 
     end sub
@@ -3384,7 +3386,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_GoalScorer_Show(ByRef Data)
         if getGFXV =2 then
             DSS_GoalScorer_Show_WF Data
-        	exit sub
+           exit sub
         end if
 
     end sub
@@ -3494,7 +3496,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_BlitzTabelle_Show(ByRef Data)
         'if getGFXV =2 then
             DSS_BlitzTabelle_Show_WF Data
-        	exit sub
+           exit sub
         'end if
         dim k
 
@@ -3571,7 +3573,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_BlitzErgebnisse_Show(ByRef Data)
         if getGFXV =2 then
             DSS_BlitzErgebnisse_Show_WF Data
-        	exit sub
+           exit sub
         end if
     end sub
 
@@ -3596,7 +3598,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub DSS_Stat_Show(ByRef Data)
         if getGFXV =2 then
             DSS_Stat_Show_WF Data
-        	exit sub
+           exit sub
         end if
     end sub
 
@@ -4684,7 +4686,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if not b__VisibleDSS then exit sub
         if getGFXV =2 then
             DSS_Zusatz_Show_WF msg
-        	exit sub
+           exit sub
         end if
         SetVizDataFL "0500", msg
         if not b__VisibleText then
@@ -4707,7 +4709,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     Public Sub DSS_Zusatz_Hide()
         if getGFXV =2 then
             DSS_Zusatz_Hide_WF
-        	exit sub
+           exit sub
         end if
         IF b__VisibleText THEN
             obj__TV.DoEffect elFrontLayer, "ZUSATZINFO", efContinue
@@ -5219,7 +5221,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     End Property
     'L-Forms
     public sub LF_Info( ByRef Data)
-    	if getGFXV =2 then
+       if getGFXV =2 then
             LF_Info_WF Data
             exit sub
         end if

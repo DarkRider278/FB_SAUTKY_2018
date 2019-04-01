@@ -165,7 +165,7 @@ sub pg_settings_bt_defaultgfx_on_1Click (Sender)
     TSP.SetTeamPos("A") 'Werte TeamA
     t = TSP.GetSTeam(TSP_Short_name)
     TSP.SetTeamPos("B") 'Werte Team B
-    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    t = t&" - "&TSP.GetSTeam(TSP_Short_name)
     TSP.RestoreSelection
     on error goto 0
     If not AllTV.obj_TVList(0) is Nothing Then

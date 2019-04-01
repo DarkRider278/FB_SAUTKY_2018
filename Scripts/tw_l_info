@@ -367,7 +367,7 @@ sub refreshTabelle_L_I
         If TSP.SetSQLPos("First") Then
             Do
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
-                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_1")))*10
+                group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
                     tw_l_info.gr_s_tab.Cells(i, 0)=group+rank &"."
@@ -415,7 +415,7 @@ sub refreshResults_L_I
 
                     tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 1")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_a_name"))
                     tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 2")) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", TSP.GetSQLData("team_b_name"))
-                    tw_l_info.gr_s_res.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_1","LONG_NAME", TSP.GetSQLData("team_a_name"))
+                    tw_l_info.gr_s_res.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_2","LONG_NAME", TSP.GetSQLData("team_a_name"))
                     if pg_settings.cb_lformauto.Checked = true then
                         found = false
                         MatchID = mid(TSP.GetSQLData("text"),2)
