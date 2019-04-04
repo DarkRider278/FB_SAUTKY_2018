@@ -1705,7 +1705,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE") > 5 then
             ids =1100
             if Data.Item("ANIM_TYPE") =6 or Data.Item("ANIM_TYPE")=7 then ids=ids+400
-            dim s,e,count
+            dim s,e,count,g
             count=1
             if  Data.Item("ANIM_TYPE") = 6  or Data.Item("ANIM_TYPE")=8 then
                 s=1
@@ -1740,22 +1740,26 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 if  Data.Item("ANIM_TYPE") = 6 then
                     s=1
                     e=3
+                    g="1"
                 else
                     s=4
                     e=6
+                    g="2"
                 end if
                 ids=1101
-                for i = s to e  ' DAILY RESULTS
-                   SetVizDataBufferOn
-                   SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
-                   SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
+                for i = 1 to 6  ' DAILY RESULTS
+                    if Data.Item("GROUP"&i)=g  then
+                       SetVizDataBufferOn
+                       SetVizData ids,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+                       SetVizData ids+1,Data.Item("NAME_A" & i) ,"string","Team Name 1 "&i
 
-                   SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
+                       SetVizData ids+3, Data.Item("RESULT" & i),"string","Result "&i
 
-                   SetVizData ids+5,Data.Item("NAME_B" & i) ,"string","Tem Name 2 "&i
-                   SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
-                   SetVizDataBufferOff
-                   ids=ids+100
+                       SetVizData ids+5,Data.Item("NAME_B" & i) ,"string","Tem Name 2 "&i
+                       SetVizData ids+6,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
+                       SetVizDataBufferOff
+                       ids=ids+100
+                   end if
                 next
                 'SetTitle Data.item("OPT_TITLE")
                 'SetTitleSubLine  ""
@@ -1860,7 +1864,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE") = 6 or Data.Item("ANIM_TYPE") = 7 then
             ids =1100
             if isdiv  then ids=ids+400
-            dim s,e,count
+            dim s,e,count ,g
             count=1
             if  Data.Item("ANIM_TYPE") = 6 then
                 s=1
@@ -1892,23 +1896,28 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             if  Data.Item("ANIM_TYPE") = 6 then
                 s=1
                 e=3
+                g="1"
             else
                 s=4
                 e=6
+                g="2"
             end if
 
             ids=200
-            for i = s to e  ' DAILY RESULTS
-               SetVizDataBufferOn
-               SetVizData "0"&ids+5,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
-               SetVizDataUpper "0"&ids,Data.Item("SNAME_A" & i) ,"string","Team Name 1 "&i
-               SetVizData "0"&ids+20,0  ,"int",""
-               SetVizData "0"&ids+25, Data.Item("RESULT" & i) ,"string","Result "&i
+            for i = 1 to 6  ' DAILY RESULTS
 
-               SetVizDataUpper "0"&ids+10,Data.Item("SNAME_B" & i) ,"string","Team Name 2 "&i
-               SetVizData "0"&ids+15,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
-               SetVizDataBufferOff
-               ids=ids+100
+                if Data.Item("GROUP"&i)=g  then
+                   SetVizDataBufferOn
+                   SetVizData "0"&ids+5,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_A"&i) ,"image","Logo 1 "&i
+                   SetVizDataUpper "0"&ids,Data.Item("SNAME_A" & i) ,"string","Team Name 1 "&i
+                   SetVizData "0"&ids+20,0  ,"int",""
+                   SetVizData "0"&ids+25, Data.Item("RESULT" & i) ,"string","Result "&i
+
+                   SetVizDataUpper "0"&ids+10,Data.Item("SNAME_B" & i) ,"string","Team Name 2 "&i
+                   SetVizData "0"&ids+15,"IMAGE*"&s__LogoPath & "/" &Data.Item("LOGO_B"&i) ,"image","Logo 2 "&i
+                   SetVizDataBufferOff
+                   ids=ids+100
+               end if
             next
         end if
 
@@ -3541,9 +3550,9 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/cl_icon")
                 end if
-            elseif p="13" or p="14" then
+            elseif p="13" or p="14" or p="15" or (p="21" and Data.Item("PLACE" & k)="1.") then
                 SetVizDataFL ids+4,1
-                if k<5 then
+                if k<6 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/el_icon")
                 end if
@@ -3554,7 +3563,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 end if
             else
                 SetVizDataFL ids+4,2
-                if k<5 then
+                if k<6 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 0")
                 end if
             end if

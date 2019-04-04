@@ -190,7 +190,7 @@ sub pg_settings_bt_defaultgfx_on_2Click (Sender)
     TSP.SetTeamPos("A") 'Werte TeamA
     t = TSP.GetSTeam(TSP_Short_name)
     TSP.SetTeamPos("B") 'Werte Team B
-    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    t = t&" - "&TSP.GetSTeam(TSP_Short_name)
     TSP.RestoreSelection
     If not AllTV.obj_TVList(1) is Nothing Then
         AllTV.obj_TVList(1).TVContent=0
@@ -213,7 +213,7 @@ sub pg_settings_bt_defaultgfx_on_out_1Click (Sender)
     TSP.SetTeamPos("A") 'Werte TeamA
     t = TSP.GetSTeam(TSP_Short_name)
     TSP.SetTeamPos("B") 'Werte Team B
-    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    t = t&" - "&TSP.GetSTeam(TSP_Short_name)
     TSP.RestoreSelection
     If not AllTV.obj_TVList(0) is Nothing Then
         AllTV.obj_TVList(0).TVContent=0
@@ -229,7 +229,7 @@ sub pg_settings_bt_defaultgfx_on_out_2Click (Sender)
     TSP.SetTeamPos("A") 'Werte TeamA
     t = TSP.GetSTeam(TSP_Short_name)
     TSP.SetTeamPos("B") 'Werte Team B
-    t = t&" - "&TSP.GetSTeam(TSP_logo)
+    t = t&" - "&TSP.GetSTeam(TSP_Short_name)
     TSP.RestoreSelection
   If not AllTV.obj_TVList(1) is Nothing Then
         AllTV.obj_TVList(1).TVContent=0

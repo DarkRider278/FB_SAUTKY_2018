@@ -40,6 +40,8 @@ dim i
             Data.Item("LOGO_B" & k) = TSP_get_info_from_db ("TEAMS","LOGO","LONG_NAME", Data.Item("NAME_B"  & k))
             Data.Item("SNAME_A" & k) = TSP_get_info_from_db ("TEAMS","SHORT_NAME","LONG_NAME", Data.Item("NAME_A"  & k))
             Data.Item("SNAME_B" & k) = TSP_get_info_from_db ("TEAMS","SHORT_NAME","LONG_NAME", Data.Item("NAME_B"  & k))
+            Data.Item("GROUP" & k) = tw_standing.grid2.Cells(i, 0)
+            'cc.sf.DebugText  Data.Item("GROUP" & k)
         end if
     next
     Data.Item("ITEMCOUNT")  = k
@@ -102,7 +104,7 @@ sub fetch_standing_from_tsp()
      tw_standing.grid.FixedCols=1
     tw_standing.ed_header.text = games & ". Runde"
 '    cc.sf.debugtext "SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')"
-    'tw_standing.Grid2.FixedCols=0
+    tw_standing.Grid2.FixedCols=0
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
         If TSP.SetSQLPos("First") Then
@@ -113,13 +115,13 @@ sub fetch_standing_from_tsp()
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "Team 2")) = TSP.GetSQLData("team_b_name")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "hl?"))   = ""
-                   ' tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_2","LONG_NAME", TSP.GetSQLData("team_a_name"))
+                    tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_2","LONG_NAME", TSP.GetSQLData("team_a_name"))
                 end if
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
     'call tw_standing.Grid2.SortByCol(0,true)
-    'tw_standing.Grid2.FixedCols=1
+    tw_standing.Grid2.FixedCols=1
 end sub
 
 sub tw_standing_gridDblClick (Sender)
