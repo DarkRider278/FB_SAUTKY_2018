@@ -73,8 +73,8 @@ sub tw_l_info_rb_s_typClick (Sender)
         tw_l_info.bt_changeteam.Visible=false
         tw_l_info.bt_changetotab.Visible=false
         tw_l_info.bt_changetoerg.Visible=false
-        tw_l_info.bt_show1.Visible=true
-        tw_l_info.bt_show2.Visible=true
+        tw_l_info.bt_show1.Visible=false
+        tw_l_info.bt_show2.Visible=false
     elseif  tw_l_info.rb_s_typ.ItemIndex=2 then
         tw_l_info.pa_tabelle.Visible=false
         tw_l_info.pa_team.Visible=false
@@ -358,21 +358,26 @@ sub RefreshLineup2_L_I
 end sub
 
 sub refreshTabelle_L_I
-    dim rank, games,i ,group
+    dim rank, games,i ,group ,ast
     games = TSP.GetRound(TSP_ROUND)
+
     i = 0
     tw_l_info.ed_s_tab_headline.Text=  games & ". Runde"
     tw_l_info.gr_s_tab.FixedCols=0
+    tw_l_info.gr_s_tab.Clear(false)
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
+                ast=""
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
                 group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                 if (rank <= 12) and (rank > 0) then
                     i = i + 1
+
                     tw_l_info.gr_s_tab.Cells(i, 0)=group+rank &"."
+                    if  EmptyToZero(TSP.GetSQLData("TEXT_3"))=1 then ast="*"
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "#"))     = rank &"."
-                    tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")
+                    tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")  &ast
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Games")) = TSP.GetSQLData("ANZGAMES")
                     if cInt(EmptyToZero(TSP.GetSQLData("ANZGAMES"))) > games then games = cInt(TSP.GetSQLData("ANZGAMES"))
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Goals")) = TSP.GetSQLData("GOALS") & ":" & TSP.GetSQLData("GOALS_AGAINST")
@@ -383,6 +388,7 @@ sub refreshTabelle_L_I
                     end if
 
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Pts"))   = TSP.GetSQLData("POINTS")
+
                     tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "HL?"))   = "" ' Vielleicht sollte man die markieren die sich verändert/gespielt haben?!
                     if cInt(EmptyToZero(TSP.GetSQLData("RANK"))) < cInt(EmptyToZero(TSP.GetSQLData("RANK_PREV"))) then
                         tw_l_info.gr_s_tab.Cells(i, GetColIdx(tw_l_info.gr_s_tab, "Trend")) = "+"
@@ -406,6 +412,7 @@ sub refreshResults_L_I
     dim found
     tw_l_info.ed_s_result_headline.Text=  games & ". Runde"
     tw_l_info.gr_s_res.FixedCols=0
+    tw_l_info.gr_s_res.Clear(false)
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
         If TSP.SetSQLPos("First") Then

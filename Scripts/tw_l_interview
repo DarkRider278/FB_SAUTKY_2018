@@ -130,18 +130,21 @@ sub refreshTabelle_L_IN
     dim rank, games,i ,group
     games = TSP.GetRound(TSP_ROUND)
     tw_l_interview.gr_s_tab.FixedCols=0
+    dim ast
     i = 0
     If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "'") then
         If TSP.SetSQLPos("First") Then
             Do
+            ast=""
                 rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
                 group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                 if (rank <= 12) and (rank > 0) then
 
                     i = i + 1
                     tw_l_interview.gr_s_tab.Cells(i, 0)=group+rank &"."
+                    if  EmptyToZero(TSP.GetSQLData("TEXT_3"))=1 then ast="*"
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "#"))     = rank & "."
-                    tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")
+                    tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Club"))  = TSP.GetSQLData("short_name") & TSP.GetSQLData("tv_name_2")&ast
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Games")) = TSP.GetSQLData("ANZGAMES")
                     if cInt(EmptyToZero(TSP.GetSQLData("ANZGAMES"))) > games then games = cInt(TSP.GetSQLData("ANZGAMES"))
                     tw_l_interview.gr_s_tab.Cells(i, GetColIdx(tw_l_interview.gr_s_tab, "Goals")) = TSP.GetSQLData("GOALS") & ":" & TSP.GetSQLData("GOALS_AGAINST")

@@ -63,8 +63,8 @@ sub setButtonSky(onoff)
     tw_vorlauf.bt_coldopen.Visible=onoff
     tw_vorlauf.bt_Restprog.Visible=onoff
     tw_vorlauf.bt_vbLineup.Visible=onoff
-    tw_vorlauf.bt_lform_interview.Visible=onoff
-    tw_vorlauf.bt_lform_lineup.Visible=onoff
+    'tw_vorlauf.bt_lform_interview.Visible=onoff
+    'tw_vorlauf.bt_lform_lineup.Visible=onoff
     tw_vorlauf.bt_lform_playerstat.Visible=onoff
     
     'tw_spiel.bt_TVprog.Visible=onoff
