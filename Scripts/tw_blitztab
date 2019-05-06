@@ -5,7 +5,7 @@
 
 sub tw_blitztab_bt_showClick (Sender)
     dim Data : set Data = CreateObject("Scripting.Dictionary")
-    dim i,k
+    dim i,k,name,ast
     dim grd : set grd = tw_blitztab.Grid1
     
     if Sender is tw_blitztab.bt_show_goals then
@@ -21,10 +21,16 @@ sub tw_blitztab_bt_showClick (Sender)
             if grd.Cells(i, GetColIdx(grd, "Show?")) = "X" then
                 k = k + 1
                 Data.Item("PLACE" & k) = Trim(grd.Cells(i, GetColIdx(grd, "Place")))
-                Data.Item("NAME"  & k) = TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_TV_NAME_2)
+                name=grd.Cells(i,GetColIdx(grd, "Name"))
+                ast=InStr(name,"*")
+                name=Replace(name,"*","")
+                Data.Item("NAME"  & k) = TSP.GetTeamByName(name , TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName( name, TSP.GetGroup(), TSP_TV_NAME_2)
                 if Data.Item("NAME" & k)= "" then
                     Data.Item("NAME" & k) =grd.Cells(i, GetColIdx(grd, "Name"))
+                elseif ast>0 then
+                    Data.Item("NAME" & k)=Data.Item("NAME" & k)&"*"
                 end if
+
                 if Sender is tw_blitztab.bt_show_goals then
                     Data.Item("GOALS" & k) = Trim(grd.Cells(i, GetColIdx(grd, "Goals")))
                 else
@@ -138,7 +144,7 @@ dim dsscount
 sub tw_blitztab_bt_show_goals_dssClick (Sender)
     if Sender.Down=true then
         dim Data : set Data = CreateObject("Scripting.Dictionary")
-        dim i,k
+        dim i,k ,name,ast
         dim grd : set grd = tw_blitztab.Grid1
 
         if Sender is tw_blitztab.bt_show_goals_dss then
@@ -154,9 +160,15 @@ sub tw_blitztab_bt_show_goals_dssClick (Sender)
                     k = k + 1
                     Data.Item("SORT"&k) =grd.Cells(i,0)
                     Data.Item("PLACE" & k) = Trim(grd.Cells(i, GetColIdx(grd, "Place")))
-                    Data.Item("NAME"  & k) = TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_TV_NAME_2)
+                    name=grd.Cells(i,GetColIdx(grd, "Name"))
+                    ast=InStr(name,"*")
+                    name=Replace(name,"*","")
+                    Data.Item("NAME"  & k) = TSP.GetTeamByName(name , TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName( name, TSP.GetGroup(), TSP_TV_NAME_2)
+                    'Data.Item("NAME"  & k) = TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_SHORT_NAME) & TSP.GetTeamByName(grd.Cells(i, GetColIdx(grd, "Name")), TSP.GetGroup(), TSP_TV_NAME_2)
                     if Data.Item("NAME" & k)= "" then
                         Data.Item("NAME" & k) =grd.Cells(i, GetColIdx(grd, "Name"))
+                    elseif ast>0 then
+                        Data.Item("NAME" & k)=Data.Item("NAME" & k)&"*"
                     end if
                     if Sender is tw_blitztab.bt_show_goals_dss then
                         Data.Item("GOALS" & k) = Trim(grd.Cells(i, GetColIdx(grd, "Goals")))

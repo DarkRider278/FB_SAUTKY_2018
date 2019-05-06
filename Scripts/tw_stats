@@ -5,7 +5,7 @@
 
 ' BLITZTABELLE VON OPTA
 sub pgMain_bt_BlitzTabClick (Sender)
-    dim rank, games,i, diff, id
+    dim rank, games,i, diff, id,ast
     dim teams()     ' Ich muss wissen welche Teams in MEINER AKTUELLEN GRUPPE spielen
     if tw_Layout.layout.ItemIndex = 11110 then
         dim my_grp : my_grp = TSP_get_info_from_db("ROUNDS_LIST", "gruppe", "DB_ID", tsp.ActualGameID)
@@ -58,13 +58,15 @@ sub pgMain_bt_BlitzTabClick (Sender)
         If TSP.LoadSQLData("SELECT * FROM TEAMS WHERE league_id = '"  & TSP.GetRound(TSP_LEAGUE_ID) &  "'") then
             If TSP.SetSQLPos("First") Then
                 Do
+                    ast=""
                     rank = cInt(EmptyToZero(TSP.GetSQLData("RANK")))
                     group = cInt(EmptyToZero(TSP.GetSQLData("TEXT_2")))*10
                     if (rank <= 12) and (rank > 0) then
                         i = i + 1
                         tw_blitztab.Grid1.Cells(i, 0)=group+rank
+                        if  EmptyToZero(TSP.GetSQLData("TEXT_3"))=1 then ast="*"
                         tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Place")) = rank & "."
-                        tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Name"))  = TSP.GetSQLData("long_name")
+                        tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Name"))  = TSP.GetSQLData("long_name")  &ast
                         tw_blitztab.Grid1.Cells(i, GetColIdx(tw_blitztab.Grid1, "Goals")) = TSP.GetSQLData("GOALS") & ":" & TSP.GetSQLData("GOALS_AGAINST")
                         diff = cint(EmptyToZero(TSP.GetSQLData("GOALS"))) - cint(EmptyToZero(TSP.GetSQLData("GOALS_AGAINST")))
                         if diff > 0 then diff = "+" & diff

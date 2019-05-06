@@ -175,6 +175,7 @@ sub refreshResults_L_IN
     games = TSP.GetRound(TSP_ROUND)
     i = 0
     tw_l_interview.gr_s_res.FixedCols=0
+    tw_l_interview.gr_s_res.Clear(false)
     tw_l_interview.ed_s_result_headline.Text=  games & ". Runde"
     If TSP.LoadSQLData("SELECT * FROM ROUNDS_LIST WHERE (round='" & games & "') and (league_id='" & TSP.GetRound(TSP_LEAGUE_ID) & "')") then
         i = 0
@@ -191,13 +192,13 @@ sub refreshResults_L_IN
                             MatchID = mid(TSP.GetSQLData("text"),2)
                             for k = 1 to 6          ' Aktuellen SpielStand aus den Konferenz Panels ziehen (falls mgl)
                                 if tw_konferenz.ComponentByName("pn_game" & k).UserData = MatchID then
-                                    tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = tw_konferenz.ComponentByName("score" & 2*k-1).Caption & ":" & tw_konferenz.ComponentByName("score" & 2*k).Caption
+                                    tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_interview.gr_s_res, "result")) = tw_konferenz.ComponentByName("score" & 2*k-1).Caption & ":" & tw_konferenz.ComponentByName("score" & 2*k).Caption
                                     found=true
                                     exit for
                                 end if
                             next
                             if not found then
-                                tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
+                                tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_interview.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
                             end if
                         else
                             tw_l_interview.gr_s_res.Cells(i, GetColIdx(tw_l_interview.gr_s_res, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
@@ -207,8 +208,9 @@ sub refreshResults_L_IN
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
-    call tw_l_interview.gr_s_res.SortByCol(0,true)
+    'call tw_l_interview.gr_s_res.SortByCol(0,true)
     tw_l_interview.gr_s_res.FixedCols=1
+    if  tw_l_interview.Visible then    tw_l_interview.SetFocus
 end sub
 
 sub tw_l_interview_bt_showClick (Sender)

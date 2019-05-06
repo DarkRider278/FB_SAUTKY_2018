@@ -444,8 +444,9 @@ sub refreshResults_L_I
             Loop While TSP.SetSQLPos("Next")
         end if
     end if
-    call tw_l_info.gr_s_res.SortByCol(0,true)
+    'call tw_l_info.gr_s_res.SortByCol(0,true)
     tw_l_info.gr_s_res.FixedCols=1
+    if  tw_l_info.Visible then    tw_l_info.SetFocus
 end sub
 
 sub tw_l_info_bt_showClick (Sender)
