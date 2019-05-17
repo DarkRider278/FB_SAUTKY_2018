@@ -5459,10 +5459,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         SetVizDataUpper "2100", Data.Item("TABHL"),"string","Tab Headline"
         ids=2110
-        dim s,e
+        dim s,e,g
         if Data.Item("ANIM_TYPE") =0 then
             s=1
             e=12
+
         elseif Data.Item("ANIM_TYPE")=1 then
             s=1
             e=6
@@ -5488,24 +5489,30 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE") =0 then
             s=1
             e=6
+            g=""
         elseif Data.Item("ANIM_TYPE")=1 then
             s=1
             e=3
+            g="1"
         else
             s=4
             e=6
+            g="2"
         end if
-        for i=s to e
-           SetVizDataBufferOn
-            SetVizData ids,0 ,"int",""
-            SetVizDataUpper ids+5,Data.Item("RENAMEA" & i) ,"string","Res Name A "&i
-            SetTeamLogo ids+10, Data.Item("RELOGOA" & i),"Res Logo A "&i
-            SetVizDataUpper ids+15,Data.Item("RENAMEB" & i) ,"string","Res Name B "&i 
-            SetTeamLogo ids+20, Data.Item("RELOGOB" & i),"Res Logo B "&i
-            SetVizData ids+1,Data.Item("RERESULT" & i)  ,"string","Res Result "&i
+        for i=1 to 6
+            if g="" or g= Data.Item("REGRP" & i)  then
+               SetVizDataBufferOn
+                SetVizData ids,0 ,"int",""
+                SetVizDataUpper ids+5,Data.Item("RENAMEA" & i) ,"string","Res Name A "&i
+                SetTeamLogo ids+10, Data.Item("RELOGOA" & i),"Res Logo A "&i
+                SetVizDataUpper ids+15,Data.Item("RENAMEB" & i) ,"string","Res Name B "&i
+                SetTeamLogo ids+20, Data.Item("RELOGOB" & i),"Res Logo B "&i
+                SetVizData ids+1,Data.Item("RERESULT" & i)  ,"string","Res Result "&i
 
-            SetVizDataBufferOff
-            ids=ids+1000
+                SetVizDataBufferOff
+
+                ids=ids+1000
+            end if
         next
 
         GetPreviewWF "Default 2.82", dir&" 2.5", sScene

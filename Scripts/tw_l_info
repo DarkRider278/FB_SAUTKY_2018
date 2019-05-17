@@ -498,6 +498,7 @@ sub tw_l_info_bt_showClick (Sender)
     for i = 1 to tw_l_info.gr_s_res.RowCount - 1
         if Trim(tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 1"))) <> "" then
             k = k + 1
+            Data.Item("REGRP" & k) = tw_l_info.gr_s_res.Cells(i, 0)
             Data.Item("RENAMEA" & k) = tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 1"))
             Data.Item("RELOGOA" & k) =  TSP_get_info_from_db("TEAMS", "LOGO", "SHORT_NAME", Data.Item("RENAMEA" & k))
             Data.Item("RENAMEB" & k) =tw_l_info.gr_s_res.Cells(i, GetColIdx(tw_l_info.gr_s_res, "Team 2"))
