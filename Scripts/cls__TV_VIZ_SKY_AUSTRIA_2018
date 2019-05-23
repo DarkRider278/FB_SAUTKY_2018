@@ -6501,6 +6501,142 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             end if
         end if
     end sub
+    Private arr__Penalties (2,5)
+    Public Sub BB_Penalties(ByRef Data)
+         if not getGFXV =2 then
+            exit sub
+        end if
+        'ShowDataObject oData
+        strMainCont = "STAND"
+        sScene = "BB_11m"
+
+
+
+
+        SELECT CASE oData.Item("PENALTIES_TYPE")
+            CASE "HIDE"
+
+                   obj__TV.DoEffect elMainLayer, "Default", efContinue
+                   exit sub
+
+
+            CASE "SHOW"
+
+                 LoadSceneWF elMainLayer, sScene
+                SetCommercialOnOff "BB 11m Schieﬂen"
+                
+                SetVizData "0102",UCase(Data.Item("T_SNAME_1")) ,"string","Team Name 1"
+                SetVizData "0104",UCase(Data.Item("T_SNAME_2")) ,"string","Team Name 2"
+
+                SetTLogo LCase(Data.Item("T_LOGO_1"))
+                SetTLogo2_WF LCase(Data.Item("T_LOGO_2"))
+
+                SetVizData "0103",oData.Item("Score_A")&"-"&oData.Item("Score_B"),"string","Score"
+
+                dim ids              ,s2
+               FOR k = 1 TO 2
+                   IF k = 1 THEN
+                    strTeam = "HEIM"
+                    s2="A"
+                    ids=199
+                   ELSE
+                    strTeam = "GAST"
+                    s2="B"
+                    ids=299
+                   END IF
+                   intShotsMade = 0
+                   FOR i = 1 TO 5
+                        SELECT CASE oData.Item("ShootType_"&s2&"_" & CStr(i))
+                            CASE 0 ' noch nicht geschossen
+                                obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                arr__Penalties (k,i) = 0
+                            CASE 1 ' treffer
+                                intShotsMade = intShotsMade + 1
+                                IF intShotsMade = i THEN
+                                    SetVizData ids+i,0,"int","Schuss "&strTeam& " "&i
+                                    obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW 0.48"
+                                    arr__Penalties (k,i) = 1
+                                ELSE
+                                    obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                    arr__Penalties (k,i) = 0
+                                END IF
+
+                            CASE 2 ' vorbei gehauen ... looser!
+                                intShotsMade = intShotsMade + 1
+                                IF intShotsMade = i THEN
+                                    SetVizData ids+i,1,"int","Schuss "&strTeam& " "&i
+                                    obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW 0.48"
+                                    arr__Penalties (k,i) = 2
+                                ELSE
+                                    obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                    arr__Penalties (k,i) = 0
+                                END IF
+                        END SELECT
+                        'cc.SF.DebugText "Team: " & strTeam & " : " & arr__Penalties (k,i)
+                   NEXT
+                   'cc.SF.DebugText "--UPDATE-------------------------------------------------------"
+               NEXT
+
+            obj__TV.DoEffect elMainLayer, "Default", efPlay
+           CASE "UPDATE"
+
+                   SetVizData "0103",oData.Item("Score_A")&"-"&oData.Item("Score_B"),"string","Score"
+
+                   FOR k = 1 TO 2
+                        IF k = 1 THEN
+                            strTeam = "HEIM"
+                            ids=199
+                            s2="A"
+                        ELSE
+                            strTeam = "GAST"
+                            ids=299
+                            s2="B"
+                           END IF
+                       intShotsMade = 0
+                       FOR i = 1 TO 5
+                            SELECT CASE oData.Item("ShootType_"&s2&"_" & CStr(i))
+                                CASE 0 ' noch nicht geschossen
+                                    IF NOT arr__Penalties (k,i) = 0 THEN
+                                        obj__TV.DoEffect elMainLayer, strTeam&"_11M_"&i, efContinue
+                                    ELSE
+                                        obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                    END IF
+                                    arr__Penalties (k,i) = 0
+                                CASE 1 ' treffer
+                                    intShotsMade = intShotsMade + 1
+                                    IF intShotsMade = i THEN
+                                        SetVizData ids+i,0,"int","Schuss "&strTeam& " "&i
+                                        SELECT CASE arr__Penalties (k,i)
+                                            CASE 0
+                                                obj__TV.DoEffect elMainLayer, strTeam&"_11M_"&i, efPlay
+                                        END SELECT
+                                        arr__Penalties (k,i) = 1
+                                    ELSE
+                                        obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                        arr__Penalties (k,i) = 0
+                                    END IF
+                                CASE 2 ' vorbei gehauen ... looser!
+                                    intShotsMade = intShotsMade + 1
+                                    IF intShotsMade = i THEN
+                                        SetVizData ids+i,1,"int","Schuss "&strTeam& " "&i
+                                        SELECT CASE arr__Penalties (k,i)
+                                            CASE 0
+                                                obj__TV.DoEffect elMainLayer, strTeam&"_11M_"&i, efPlay
+                                        END SELECT
+                                        arr__Penalties (k,i) = 2
+                                    ELSE
+                                        obj__TV.SendCommand "RENDERER*MAIN_LAYER*STAGE*DIRECTOR*"&strTeam&"_11M_"&i&" SHOW SHOW 0.0"
+                                        arr__Penalties (k,i) = 0
+                                    END IF
+                            END SELECT
+                            'cc.SF.DebugText "Team: " & strTeam & " : " & arr__Penalties (k,i)
+                       NEXT
+
+                   NEXT
+
+            end select
+
+    End Sub
 End Class
 
 </script_body>

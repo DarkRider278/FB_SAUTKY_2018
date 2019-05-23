@@ -253,5 +253,11 @@ sub pg_settings_btn_reset1Click (Sender)
     TSP.ExecSQL("UPDATE PLAYERS_2 SET DUMMY_2='0' WHERE (team_id='" & tID_a & "') or (team_id='" & tID_b & "')")
 end sub
 
+sub pg_settings_bt_11mClick (Sender)
+SetColor_11m
+tw_11m.Visible=true
+tw_11m.BringToFront
+end sub
+
 </script_body>
 </script>

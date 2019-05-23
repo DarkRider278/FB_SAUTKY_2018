@@ -2850,6 +2850,33 @@ Class cls_Grafikaufrufe
            End If
        Next
     end sub
+    
+    Public Sub TV__Show_Penalties(Data)
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).BB_Penalties Data
+              End If
+           End If
+       Next
+
+    End Sub
+
+    Public Sub TV__Hide_Penalties(Data)
+       bConnFound = False
+
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then  'Nicht Grafikfeed allein
+                 bConnFound = True
+                 obj_TVList(i).BB_Penalties Data
+              End If
+           End If
+       Next
+    End Sub
 End Class
 
 </script_body>

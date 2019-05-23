@@ -1,0 +1,149 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+Dim lngPShotOff, lngPShotSucc, lngPShotFail
+
+Sub SetColor_11m ()
+    lngPShotOff  = RGB(128, 128, 128) ' Farbe für "Noch nicht geworfen"
+    lngPShotSucc = RGB(125, 255, 0)   ' Farbe für "Treffer"
+    lngPShotFail = RGB(255, 128, 128) ' Farbe für "Kein Treffer"
+End Sub
+  
+sub tw_11m_Btn_PenaltiesShowClick (Sender)
+    DIM strTmID
+    TSP.SaveSelection
+    TSP.SetTeamPos "A"
+    oData.Item("T_SNAME_1")     = GetNameTranslation("T", TSP.GetSTeam(TSP_db_id), TSP_short_name) ' TSP.GetSTeam(TSP_short_name)
+    oData.Item("T_LOGO_1")      = TSP.GetSTeam(TSP_logo)
+    TSP.SetTeamPos "B"
+    oData.Item("T_SNAME_2")     = GetNameTranslation("T", TSP.GetSTeam(TSP_db_id), TSP_short_name) ' TSP.GetSTeam(TSP_short_name)
+    oData.Item("T_LOGO_2")      = TSP.GetSTeam(TSP_logo)
+    TSP.RestoreSelection
+    SELECT CASE Sender.Name
+        CASE "Btn_PenaltiesShow"
+            oData.Item("PENALTIES_TYPE") = "SHOW"
+        CASE ELSE
+            oData.Item("PENALTIES_TYPE") = "UPDATE"
+    END SELECT
+
+    oData.Item("Score_A") = GetScore_11m("A")
+    oData.Item("Score_B") = GetScore_11m("B")
+
+    For i = 1 To 2
+        If i = 1 Then strTmID = "A" Else strTmID = "B"
+        For k = 1 To 5
+            Select Case CLng(tw_11m.ComponentByName("Img_Wurf" & strTmID & CStr(k)).BrushColor)
+                Case lngPShotSucc
+                    oData.Item("ShootType_" & strTmID & "_" & CStr(k)) = 1
+                Case lngPShotFail
+                    oData.Item("ShootType_" & strTmID & "_" & CStr(k)) = 2
+                Case Else ' deaktiviert
+                    oData.Item("ShootType_" & strTmID & "_" & CStr(k)) = 0
+            End Select
+        Next
+    Next
+    oData.Item("Score_Shift") = CNumType(tw_11m.edtShift.Text, vbInteger, 1, null, 1)
+    ALLTV.TV__Show_Penalties oData
+
+end sub
+
+sub tw_11m_Btn_HideDSSPenaltiesClick (Sender)
+    oData.Item("PENALTIES_TYPE") = "HIDE"
+    ALLTV.TV__Hide_Penalties oData
+end sub
+
+sub tw_11m_btn_ResetClick (Sender)
+
+  Dim strTemp, i
+
+    strTemp = "Hiermit werden die Daten in diesem Fenster zurückgesetzt." & vbCrlf & vbCrLf
+    strTemp = strTemp & "Sollen neben den einzelnen Würfen auch die Punkte zurückgesetzt werden?" & vbCrLf
+
+    Select Case Msgbox(strTemp, vbQuestion Or vbYesNoCancel, AppName)
+        Case vbCancel
+            Exit Sub ' Abbruch, gar nichts ändern
+        Case vbYes
+            tw_11m.ed_ScoreA.Text = "0"
+            tw_11m.ed_ScoreB.Text = "0"
+    End Select
+
+    For i = 1 To 5
+        tw_11m.ComponentByName("Img_WurfA" & CStr(i)).BrushColor = lngPShotOff
+        tw_11m.ComponentByName("Img_WurfB" & CStr(i)).BrushColor = lngPShotOff
+    Next
+    tw_11m.edtShift.Text = 1
+end sub
+
+sub tw_11m_btn_Reset1Click (Sender)
+    if msgbox("No Undo available. Really?", vbYesNo) <> vbYes then exit sub
+
+    for i = 1 to 4
+        tw_11m.ComponentByName("Img_WurfA" & CStr(i)).BrushColor = tw_11m.ComponentByName("Img_WurfA" & CStr(i+1)).BrushColor
+        tw_11m.ComponentByName("Img_WurfB" & CStr(i)).BrushColor = tw_11m.ComponentByName("Img_WurfB" & CStr(i+1)).BrushColor
+    next
+    tw_11m.ComponentByName("Img_WurfA5").BrushColor = lngPShotOff
+    tw_11m.ComponentByName("Img_WurfB5").BrushColor = lngPShotOff
+
+    tw_11m.edtShift.Text = CNumType(tw_11m.edtShift.Text, vbInteger, 1, null, 1)+1
+
+end sub
+
+sub tw_11m_Btn_PlusAClick (Sender)
+    tw_11m.ed_ScoreA.Text = CStr(GetScore_11m("A") + 1)
+end sub
+
+sub tw_11m_Btn_MinusAClick (Sender)
+    tw_11m.ed_ScoreA.Text = CStr(MakeNumber(GetScore_11m("A") - 1, 1, 0, "", 0))
+end sub
+
+sub tw_11m_Btn_PlusBClick (Sender)
+    tw_11m.ed_ScoreB.Text = CStr(GetScore_11m("B") + 1)
+end sub
+
+sub tw_11m_Btn_MinusBClick (Sender)
+    tw_11m.ed_ScoreB.Text = CStr(MakeNumber(GetScore_11m("B") - 1, 1, 0, "", 0))
+end sub
+
+Function GetScore_11m(ByVal strTeam)
+    If UCase(strTeam) = "A" Then
+        GetScore_11m = MakeNumber(tw_11m.ed_ScoreA.Text, 1, 0, "", 0)
+    Else
+        GetScore_11m = MakeNumber(tw_11m.ed_ScoreB.Text, 1, 0, "", 0)
+    End If
+End Function
+
+sub tw_11m_Img_WurfA1Click (Sender)
+    ID = Mid(Sender.Name, 9, 1)
+    Score = GetScore_11m(ID)
+
+    If CLng(Sender.BrushColor) = lngPShotSucc Then
+        Score = Score - 1
+        If Score < 0 Then Score = 0
+        tw_11m.ComponentByName("ed_Score" & ID).Text = Score
+        Sender.BrushColor = RGB(255, 128, 128)
+    Else
+        Score = Score + 1
+        tw_11m.ComponentByName("ed_Score" & ID).Text = Score
+        Sender.BrushColor = lngPShotSucc
+    End If
+
+end sub
+
+sub tw_11m_Img_WurfA1MouseUp (Sender, Button, Shift, X, Y)
+    If Button = 1 Then
+        ID = Mid(Sender.Name, 9, 1)
+        Score = GetScore_11m(ID)
+
+        If CLng(Sender.BrushColor) = lngPShotSucc Then
+            Score = Score - 1
+            If Score < 0 Then Score = 0
+            tw_11m.ComponentByName("ed_Score" & ID).Text = Score
+        End If
+
+        Sender.BrushColor = lngPShotOff
+    End If
+end sub
+
+</script_body>
+</script>
