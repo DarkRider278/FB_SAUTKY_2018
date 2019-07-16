@@ -1,0 +1,26 @@
+<script>
+<script_header>
+</script_header>
+<script_body>
+
+sub dlg_openfiles_lb_filesClick (Sender)
+
+end sub
+
+
+sub LoadFiles(path)
+    dlg_openfiles.lb_files.Items.Clear
+    dim objFSO
+    set objFSO = CreateObject("Scripting.FileSystemObject")
+    dim of
+    set of = objFSO.GetFolder(path)
+
+    for each file in of.files
+        if Instr(file.Name,".txt") then
+            dlg_openfiles.lb_files.Items.Add file.name
+        end if
+    next
+end sub
+
+</script_body>
+</script>

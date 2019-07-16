@@ -1243,5 +1243,127 @@ Sub XML_Import_Teams_update (file)
     cc.SF.HideSplashForm
 End Sub
 
+sub pgData_ed_data_import_pathClick (Sender)
+    dim dir : dir = CC.Dialogs.DirDialog(Sender.text)
+    if dir = "" then exit sub
+    Sender.Text = dir
+end sub
+
+sub pgData_btn_import_modsClick (Sender)
+    dim data
+    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"tw_moderator.txt",false)
+    dim ccount
+    dim import2
+    import2=false
+    ccount=0
+    data=Split(data,vbNewLine)
+    ccount=ubound(data)
+    tw_moderator.cb_Moderator.Items.Clear
+    tw_moderator.cb_Moderator1.Items.clear
+    dim line
+    for i=0 to ccount
+        line=trim(data(i))
+        if line="" and import2=false then
+            import2=true
+        else
+            if import2=true then
+               tw_moderator.cb_Moderator1.Items.Add(line)
+            else
+                tw_moderator.cb_Moderator.Items.Add(line)
+            end if
+        end if
+    next
+    cc.sf.DebugText "Import Moderatoren fertig"  ,ClGreen
+end sub
+
+sub pgData_btn_import_bbClick (Sender)
+    dim data
+    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"tw_bb.txt",false)
+    dim ccount
+     ccount=0
+    data=Split(data,vbNewLine)
+    ccount=ubound(data)
+    'Titel;Name;logo;2zeilig(0/1);zeile1;zeile2;zeile3;zeile4
+                             ' Wenn mal kein Name im Dialog Fenster erscheint, dann wurde der Spieler anscheinend ohne Namen in der Databar abgespeichert.
+    pgMain.ed_FName.Text = ""
+
+    pgMain.cb_bb_typ.ItemIndex=0
+    pgMain.ed_NR.Text=""
+    pgmain.cb_showHS.Checked=false
+    dbholdrefresh=true
+    for i = pgMain.DataBar1.DataItemCount to 0 step -1
+        if Left(pgMain.DataBar1.DataItems(i), 2) = "x_" then
+            pgMain.DataBar1.DeleteData(pgMain.DataBar1.DataItems(i))
+        end if
+    next
+
+    for i=0 to ccount
+        line=trim(data(i))
+        if line <> "" then
+            line=Split(line,";")
+
+            pgMain.ed_Name.Text = trim(line(1))
+            pgMain.ed_logo.Text = trim(line(2))
+
+            pgMain.cb_two_lines.Checked = (line(3)="1")
+
+            pgMain.Memo1.Lines.Clear
+            if trim(line(4)) <> "" then  pgMain.Memo1.Lines.Add  trim(line(4))
+            if trim(line(5)) <> "" then  pgMain.Memo1.Lines.Add  trim(line(5))
+            if trim(line(6)) <> "" then  pgMain.Memo1.Lines.Add  trim(line(6))
+            if trim(line(7)) <> "" then  pgMain.Memo1.Lines.Add  trim(line(7))
+
+            pgMain.DataBar1.SaveData("x_"&line(0))
+        end if
+    next
+    dbholdrefresh=false
+    tw_player_BB_list_refresh
+     cc.sf.DebugText "Import BB fertig" ,ClGreen
+end sub
+
+
+
+sub pgData_btn_import_mfClick (Sender)
+    LoadFiles pgData.ed_data_import_path_mf.Text
+    dlg_openfiles.Show
+    If dlg_openfiles.ModalResult=mrCancel then exit sub
+
+
+    dim files,data ,db
+
+    for i=0 to dlg_openfiles.lb_files.Items.Count-1
+        if  dlg_openfiles.lb_files.Selected(i) then
+            db= dlg_openfiles.lb_files.Items.Strings(i)
+            cc.SF.DebugText "Import;"&db,clPurple
+            data=cc.Strings.LoadFromFile(pgData.ed_data_import_path_mf.Text&db,false)
+            db=Replace(db,".txt","")
+            CC.Strings.StringsObj.Clear
+            CC.Strings.StringsObj.CommaText = data
+            tw_megafacts.RadioGroup2.ItemIndex =CInt(CC.Strings.StringsObj.Values("TYP"))
+
+            tw_megafacts.cb_name1_new.Text=  CC.Strings.StringsObj.Values("LOGO1")
+            tw_megafacts.cb_name2_new.Text=  CC.Strings.StringsObj.Values("LOGO2")
+
+            tw_megafacts.ed_nr.Text= CC.Strings.StringsObj.Values("NR")
+
+            tw_megafacts.cb_foto.Text = CC.Strings.StringsObj.Values("IMG1")
+            tw_megafacts.cb_foto_2.Text  = CC.Strings.StringsObj.Values("IMG2")
+
+            tw_megafacts.ed_title_new.Text = CC.Strings.StringsObj.Values("TITLE")
+            tw_megafacts.ed_subtitle_new.Text  = CC.Strings.StringsObj.Values("SUBTITLE")
+
+            for k = 1 to 5
+                tw_megafacts.ComponentByName("Memo" & k&"_new").Lines.Clear
+                tw_megafacts.ComponentByName("Memo" & k&"_new").Lines.Add CC.Strings.StringsObj.Values("TEXT1" & k)
+                tw_megafacts.ComponentByName("Memo" & k&"_new").Lines.Add CC.Strings.StringsObj.Values("TEXT2" & k)
+            next
+            
+            tw_megafacts.DataBar1.SaveData(db)
+        end if
+        
+    next
+     cc.sf.DebugText "Import MF fertig" ,ClGreen
+end sub
+
 </script_body>
 </script>

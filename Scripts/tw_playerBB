@@ -76,8 +76,10 @@ sub tw_playerBB_listClick (Sender)
         pgMain.DataBar1.LoadData pgMain.list.Items.Strings(Sender.itemindex)
     end if
 end sub
-
+dim dbholdrefresh
+dbholdrefresh=false
 sub tw_player_BB_list_refresh()
+    if  dbholdrefresh then exit sub
     dim i
     pgMain.list.Items.Clear
     for i = 0 to pgMain.DataBar1.DataItemCount
@@ -99,12 +101,14 @@ end sub
 
 
 sub tw_playerBB_DataBar1BeforeDataSave (Sender, ComboText)
+    if  dbholdrefresh then exit sub
     if pgMain.list.Items.IndexOf(ComboText) = -1 then
         pgMain.list.Items.add ComboText
     end if
 end sub
 
 sub tw_playerBB_DataBar1BeforeDataDelete (Sender, ComboText)
+    if  dbholdrefresh then exit sub
     if pgMain.list.Items.IndexOf(ComboText) <> -1 then
         pgMain.list.Items.Delete(pgMain.list.Items.IndexOf(ComboText))
     end if

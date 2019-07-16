@@ -1,0 +1,55 @@
+object dlg_openfiles: TccDialogWindow
+  Tag = -1
+  Left = 1049
+  Top = 440
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Open Files'
+  ClientHeight = 490
+  ClientWidth = 455
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  BtnHelpEnabled = True
+  BtnHelpVisible = False
+  BtnPreviewEnabled = False
+  BtnPreviewVisible = False
+  BtnCustomEnabled = False
+  BtnCustomVisible = False
+  BtnCustomCaption = 'Cu&stom'
+  BtnOKVisible = True
+  BtnOKEnabled = True
+  BtnCancelVisible = True
+  BtnCancelEnabled = True
+  ShowButtonFrame = True
+  CloseAfterPreviewClick = False
+  CloseAfterCustomClick = False
+  CloseAfterOKClick = True
+  CloseAfterCancelClick = True
+  CloseAfterHelpClick = True
+  ID = '{D2B117F7-CED2-4DD4-BD87-AE8A1C1A0DFE}'
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lb_files: TptListBox
+    Left = 5
+    Top = 5
+    Width = 436
+    Height = 416
+    ItemHeight = 13
+    Items.WideStrings = (
+      '05 Rapid GFX.txt'
+      'LUSTENAU.txt'
+      'Sendehinweise.txt')
+    MultiSelect = True
+    TabOrder = 1
+    SaveStyle = ssNone
+    Locked = False
+    EventDataNames = 'OnClick=dlg_openfiles_lb_filesClick'
+  end
+end

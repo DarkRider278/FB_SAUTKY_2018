@@ -69,3 +69,5 @@ tw_gfx_select
 tw_commercial
 tw_connectionpreset
 tw_11m
+tw_openfiledialog
+dlg_openfiles

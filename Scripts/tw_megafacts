@@ -121,5 +121,38 @@ sub tw_megafacts_bt_show_ibClick (Sender)
 
 end sub
 
+sub tw_megafacts_btn_export_mfClick (Sender)
+    dim sn ,data
+    sn=  tw_megafacts.DataBar1.DataItems(tw_megafacts.DataBar1.ActualDataIndex)
+    sn = InputBox("Export Name:","Export MF",sn,200,200)
+    if sn=false then
+        exit sub
+    else
+        cc.Strings.StringsObj.Clear
+        cc.Strings.StringsObj.Add("TYP="&tw_megafacts.RadioGroup2.ItemIndex)
+
+        cc.Strings.StringsObj.Add("LOGO1="&tw_megafacts.cb_name1_new.Text)
+        cc.Strings.StringsObj.Add("LOGO2="&tw_megafacts.cb_name2_new.Text)
+
+        cc.Strings.StringsObj.Add("NR="&tw_megafacts.ed_nr.Text)
+
+        cc.Strings.StringsObj.Add("IMG1="&tw_megafacts.cb_foto.Text)
+        cc.Strings.StringsObj.Add("IMG2="&tw_megafacts.cb_foto_2.Text)
+
+        cc.Strings.StringsObj.Add("TITLE="&tw_megafacts.ed_title_new.Text)
+        cc.Strings.StringsObj.Add("SUBTITLE="&tw_megafacts.ed_subtitle_new.Text)
+        dim k
+        for i = 1 to 5
+            cc.Strings.StringsObj.Add("TEXT1" & i&"="& tw_megafacts.ComponentByName("Memo" & i&"_new").Lines.Strings(0))
+            cc.Strings.StringsObj.Add("TEXT2" & i&"="& tw_megafacts.ComponentByName("Memo" & i&"_new").Lines.Strings(1))
+        next
+        data=cc.Strings.StringsObj.CommaText
+        cc.Strings.SaveToFile pgData.ed_data_import_path_mf.Text &sn&".txt",data    'Replace(sn," ","_")
+        cc.sf.DebugText "Export "&sn&" fertig",ClGreen
+    end if
+
+
+end sub
+
 </script_body>
 </script>

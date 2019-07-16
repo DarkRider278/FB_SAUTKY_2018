@@ -1057,7 +1057,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             sScene = "BB_FotoAufstellungscrawl"
         end if
         LoadSceneWF elMainLayer, sScene
-        SetCommercialOnOff"BB Lineupcrawl"
+
+        SetCommercialOnOffManual false,"BB Lineupcrawl"
         SetTitle ucase(Data.Item("TNAME") )
         SetTitleSubLine ucase(Data.Item("TRAINER") )
         SetTLogo LCase(Data.Item("LOGO"))
@@ -2348,6 +2349,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             CB_Highlight_WF min, Name, info, logo1, logo2,rechts
             exit sub
         end if
+        if not i_variant=1 then exit sub
         sScene = "CB_Torschuetze"
 
 
@@ -6471,6 +6473,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     end sub
     
     public sub PP
+        if not i_variant=1 then exit sub
         sScene = "CB_Produktplazierung"
         LoadScene elMainLayer, sScene
         obj__TV.DoEffect elMainLayer, "Default",efPlay

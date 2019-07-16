@@ -10,7 +10,6 @@ object tw_megafacts: TccToolWindow
   LastDock = frmMain.dckTop
   Resizable = False
   TabOrder = 0
-  Visible = False
   Floating = True
   ParentColor = False
   Float = True
@@ -929,7 +928,7 @@ object tw_megafacts: TccToolWindow
       Font.Height = -13
       Font.Name = 'Trebuchet MS'
       Font.Style = [fsBold]
-      ItemIndex = 5
+      ItemIndex = 4
       Items.WideStrings = (
         'Logo A (IB+WF)'
         'Logo B (IB+WF)'
@@ -939,7 +938,7 @@ object tw_megafacts: TccToolWindow
         'No Logo/Photo(only IB)')
       ParentFont = False
       TabOrder = 0
-      Data = '5'
+      Data = '4'
       Locked = False
       ExtendedFocusing = True
       EventDataNames = 'OnClick=tw_megafacts_RadioGroup2Click'
@@ -949,12 +948,17 @@ object tw_megafacts: TccToolWindow
       Top = 240
       Width = 276
       Height = 55
+      Lines.WideStrings = (
+        '7 Pflichtspiele in Folge gewonnen -'
+        'erstmals seit September 2008')
       TabOrder = 1
       WordWrap = False
       Data = 
-        '"Donnerstag ab 18:30 Uhr - UEFA Europa League","Rijeka - Austria' +
-        '"'
-      LineText = 'Donnerstag ab 18:30 Uhr - UEFA Europa League'#13#10'Rijeka - Austria'#13#10
+        '"7 Pflichtspiele in Folge gewonnen -","erstmals seit September 2' +
+        '008"'
+      LineText = 
+        '7 Pflichtspiele in Folge gewonnen -'#13#10'erstmals seit September 200' +
+        '8'#13#10
       Locked = False
     end
     object Memo2_new: TptMemo
@@ -962,14 +966,13 @@ object tw_megafacts: TccToolWindow
       Top = 300
       Width = 276
       Height = 55
+      Lines.WideStrings = (
+        '8 BL-Spiele ungeschlagen - '
+        'erstmals seit August 2015')
       TabOrder = 2
       WordWrap = False
-      Data = 
-        '"Donnerstag ab 21:05 Uhr - UEFA Europa League","Salzburg - Konya' +
-        'spor "'
-      LineText = 
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'#13#10'Salzburg - Konyasp' +
-        'or '#13#10
+      Data = '"8 BL-Spiele ungeschlagen - ","erstmals seit August 2015"'
+      LineText = '8 BL-Spiele ungeschlagen - '#13#10'erstmals seit August 2015'#13#10
       Locked = False
       EventDataNames = 'OnChange=tw_megafacts_Memo2Change'
     end
@@ -978,14 +981,17 @@ object tw_megafacts: TccToolWindow
       Top = 360
       Width = 276
       Height = 55
+      Lines.WideStrings = (
+        'die vergangenen 5 Spiele jeweils mit einem Tor '
+        'Differenz gewonnen')
       TabOrder = 3
       WordWrap = False
       Data = 
-        '"Donnerstag ab 21:05 Uhr - UEFA Europa League","Salzburg - Konya' +
-        'spor "'
+        '"die vergangenen 5 Spiele jeweils mit einem Tor ","Differenz gew' +
+        'onnen"'
       LineText = 
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'#13#10'Salzburg - Konyasp' +
-        'or '#13#10
+        'die vergangenen 5 Spiele jeweils mit einem Tor '#13#10'Differenz gewon' +
+        'nen'#13#10
       Locked = False
     end
     object Memo4_new: TptMemo
@@ -994,16 +1000,12 @@ object tw_megafacts: TccToolWindow
       Width = 276
       Height = 55
       Lines.WideStrings = (
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'
-        'Salzburg - Konyaspor ')
+        'Mit Galvao und Ljubicic noch unbesiegt'
+        '')
       TabOrder = 4
       WordWrap = False
-      Data = 
-        '"Donnerstag ab 21:05 Uhr - UEFA Europa League","Salzburg - Konya' +
-        'spor "'
-      LineText = 
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'#13#10'Salzburg - Konyasp' +
-        'or '
+      Data = '"Mit Galvao und Ljubicic noch unbesiegt",'
+      LineText = 'Mit Galvao und Ljubicic noch unbesiegt'#13#10#13#10
       Locked = False
       EventDataNames = 'OnChange=tw_megafacts_Memo4Change'
     end
@@ -1014,7 +1016,7 @@ object tw_megafacts: TccToolWindow
       Height = 21
       MaxLength = 0
       TabOrder = 5
-      Text = 'Sky Sport Austria HD'
+      Text = 'Rapid wieder Titelkandidat?'
       Numeric = False
       InputType = itAnything
       Locked = False
@@ -1026,32 +1028,37 @@ object tw_megafacts: TccToolWindow
       Height = 21
       Sorted = True
       TabOrder = 6
-      Text = 'austria_wien'
-      Visible = False
+      Text = 'rapid_wien'
       Items.WideStrings = (
         '1860'
         'admira'
+        'admira'
         'altach'
         'austria_lustenau'
+        'austria_wien'
         'austria_wien'
         'fac'
         'fc_liefering'
         'fc_linz'
         'graz'
+        'hartberg'
         'horn'
         'kapfenberg'
         'linz'
         'mattersburg'
         'pellets'
         'rapid_wien'
+        'rapid_wien'
         'ried'
         'salzburg'
+        'salzburg'
+        'st_poelten'
         'st_poelten'
         'wacker_innsbruck'
         'wattens'
         'wiener_neustadt'
         'wuerzburg')
-      ItemIndex = -1
+      ItemIndex = 17
       DroppedWidth = 145
       DropDownAutoSize = False
       FixedStyle = False
@@ -1066,32 +1073,37 @@ object tw_megafacts: TccToolWindow
       Height = 21
       Sorted = True
       TabOrder = 7
-      Text = 'wacker_innsbruck'
-      Visible = False
+      Text = 'rapid_wien'
       Items.WideStrings = (
         '1860'
         'admira'
+        'admira'
         'altach'
         'austria_lustenau'
+        'austria_wien'
         'austria_wien'
         'fac'
         'fc_liefering'
         'fc_linz'
         'graz'
+        'hartberg'
         'horn'
         'kapfenberg'
         'linz'
         'mattersburg'
         'pellets'
         'rapid_wien'
+        'rapid_wien'
         'ried'
         'salzburg'
+        'salzburg'
+        'st_poelten'
         'st_poelten'
         'wacker_innsbruck'
         'wattens'
         'wiener_neustadt'
         'wuerzburg')
-      ItemIndex = -1
+      ItemIndex = 17
       DroppedWidth = 145
       DropDownAutoSize = False
       FixedStyle = False
@@ -1105,16 +1117,12 @@ object tw_megafacts: TccToolWindow
       Width = 276
       Height = 55
       Lines.WideStrings = (
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'
-        'Salzburg - Konyaspor ')
+        ''
+        '')
       TabOrder = 8
       WordWrap = False
-      Data = 
-        '"Donnerstag ab 21:05 Uhr - UEFA Europa League","Salzburg - Konya' +
-        'spor "'
-      LineText = 
-        'Donnerstag ab 21:05 Uhr - UEFA Europa League'#13#10'Salzburg - Konyasp' +
-        'or '
+      Data = ','
+      LineText = #13#10#13#10
       Locked = False
       EventDataNames = 'OnChange=tw_megafacts_Memo4Change'
     end
@@ -1125,7 +1133,6 @@ object tw_megafacts: TccToolWindow
       Height = 21
       MaxLength = 0
       TabOrder = 9
-      Text = 'Live auf Sky'
       Numeric = False
       InputType = itAnything
       Locked = False
@@ -1138,7 +1145,6 @@ object tw_megafacts: TccToolWindow
       MaxLength = 0
       TabOrder = 10
       Text = '10'
-      Visible = False
       Numeric = False
       InputType = itAnything
       Locked = False
@@ -1150,8 +1156,7 @@ object tw_megafacts: TccToolWindow
       Height = 21
       Sorted = True
       TabOrder = 11
-      Text = 'wrn_salihi_ebenhofer_jubel'
-      Visible = False
+      Text = 'scr_schaub_fingeroben'
       Items.WideStrings = (
         ''
         ''
@@ -1177,8 +1182,7 @@ object tw_megafacts: TccToolWindow
       Height = 21
       Sorted = True
       TabOrder = 12
-      Text = 'wrn_salihi_action_rechts'
-      Visible = False
+      Text = 'scr_00_djuricin'
       Items.WideStrings = (
         ''
         ''
@@ -1207,5 +1211,46 @@ object tw_megafacts: TccToolWindow
       Locked = False
       EventDataNames = 'OnChange=tw_megafacts_Memo4Change'
     end
+  end
+  object btn_export_mf: TptButton
+    Left = 220
+    Top = 4
+    Width = 46
+    Height = 27
+    Caption = 'Export'
+    ModalResult = mrNone
+    TabOrder = 3
+    ParentColor = False
+    Color = clBtnFace
+    ColorMouseOver = clBtnFace
+    ColorFocused = clBtnFace
+    DrawFocusRect = False
+    MultiLineCaption = False
+    Alignment = alMiddleCenter
+    FontFocused.Charset = DEFAULT_CHARSET
+    FontFocused.Color = clWindowText
+    FontFocused.Height = -11
+    FontFocused.Name = 'MS Sans Serif'
+    FontFocused.Style = []
+    FontMouseOver.Charset = DEFAULT_CHARSET
+    FontMouseOver.Color = clWindowText
+    FontMouseOver.Height = -11
+    FontMouseOver.Name = 'MS Sans Serif'
+    FontMouseOver.Style = []
+    PreferFocused = False
+    FrameSize = 2
+    BackgroundTransparent = False
+    BackgroundStretch = True
+    BackgroundTransparentColor = clBlack
+    Down = False
+    DrawFocusBorder = True
+    Checkable = False
+    RightPressDown = False
+    StoreBackground = True
+    Hotkey.Shift = []
+    Hotkey.IsLong = False
+    Hotkey.Enabled = True
+    Locked = False
+    EventDataNames = 'OnClick=tw_megafacts_btn_export_mfClick'
   end
 end
