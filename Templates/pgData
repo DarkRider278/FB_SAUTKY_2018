@@ -1560,43 +1560,35 @@ object pgData: TccTabSheet
     Color = 3289650
     Locked = False
     TabOrder = 13
-    object InplaceLabel1: TptInplaceLabel
+    object Label3: TptLabel
       Left = 20
-      Top = 20
-      Width = 161
-      Height = 17
-      LeftDependence = 0
-      RightDependence = 0
+      Top = 25
+      Width = 108
+      Height = 13
       Caption = 'Import Path Mods / BB'
+      Color = 3289650
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      SelectedFont.Charset = DEFAULT_CHARSET
-      SelectedFont.Color = clWindowText
-      SelectedFont.Height = -11
-      SelectedFont.Name = 'MS Sans Serif'
-      SelectedFont.Style = []
+      ParentColor = False
+      ParentFont = False
+      Locked = False
     end
-    object InplaceLabel2: TptInplaceLabel
+    object Label4: TptLabel
       Left = 20
-      Top = 140
-      Width = 161
-      Height = 17
-      LeftDependence = 0
-      RightDependence = 0
+      Top = 150
+      Width = 113
+      Height = 13
       Caption = 'Import / Export Path MF'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      SelectedFont.Charset = DEFAULT_CHARSET
-      SelectedFont.Color = clWindowText
-      SelectedFont.Height = -11
-      SelectedFont.Name = 'MS Sans Serif'
-      SelectedFont.Style = []
+      ParentFont = False
+      Locked = False
     end
     object ed_data_import_path: TptEdit
       Left = 20
