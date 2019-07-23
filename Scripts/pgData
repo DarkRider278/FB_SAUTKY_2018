@@ -1251,7 +1251,7 @@ end sub
 
 sub pgData_btn_import_modsClick (Sender)
     dim data
-    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"tw_moderator.txt",false)
+    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"\"+"tw_moderator.txt",false)
     dim ccount
     dim import2
     import2=false
@@ -1278,7 +1278,7 @@ end sub
 
 sub pgData_btn_import_bbClick (Sender)
     dim data
-    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"tw_bb.txt",false)
+    data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"\"+"tw_bb.txt",false)
     dim ccount
      ccount=0
     data=Split(data,vbNewLine)
@@ -1335,7 +1335,7 @@ sub pgData_btn_import_mfClick (Sender)
         if  dlg_openfiles.lb_files.Selected(i) then
             db= dlg_openfiles.lb_files.Items.Strings(i)
             cc.SF.DebugText "Import;"&db,clPurple
-            data=cc.Strings.LoadFromFile(pgData.ed_data_import_path_mf.Text&db,false)
+            data=cc.Strings.LoadFromFile(pgData.ed_data_import_path_mf.Text&+"\"+db,false)
             db=Replace(db,".txt","")
             CC.Strings.StringsObj.Clear
             CC.Strings.StringsObj.CommaText = data
