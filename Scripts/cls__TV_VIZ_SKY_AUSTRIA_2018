@@ -22,6 +22,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     private i_variant
     private pnggenerate
     public s_pngscene
+    private s__FreeImgPath
     
     private displaysponsor
     
@@ -45,6 +46,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         s__LogoPathDiv   = "image/SKY/Redesign_2016/Logos/Diverse"
         s__FotoPath   = "image/SKY/Redesign_2016/Fotos/Kommentatoren"
         s__PlayerFotoPath   = "image/SKY/Redesign_2016/Fotos/Spieler/AUT"
+        s__FreeImgPath   = "image/SKY/Redesign_2016/Fotos/Spieler"
         s__VartafelPath = "scene/SKY/Redesign_2016/Vartafeln/Austria"
         s__PhotoVirtual ="image/VIRTUAL"
         Set Obj__TV     = Nothing
@@ -390,6 +392,19 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
         on error goto 0
         get_available_logodiv = fList
+    end function
+    
+    public function get_available_freeimg()
+        dim fList
+        on error resume next
+        fList = obj__TV.GetGroupItems(s__FreeImgPath, gkImage)
+        if Err.Number <> 0 Then
+             MsgBox "Please connect to an everest provider first! " & Err.Number & " " & Err.Description
+             Err.Clear
+             exit function
+        end if
+        on error goto 0
+        get_available_freeimg = fList
     end function
 
     public function get_available_fotos()
@@ -1272,6 +1287,18 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         sScene =gfx
         LoadScene elMainLayer, sScene
         GetPreview "Default", "1.8", sScene
+        Redim ActionList(2, 1)
+        ActionList(1, 0) = "Default"
+        ActionList(1, 1) = "Default"
+        ActionList(2, 1) = efPlay
+    end sub
+    
+     public sub FreeImg(gfx)
+        if not i_variant=1 then exit sub
+        sScene ="VB_IMG"
+        LoadScene elMainLayer, sScene
+        SetVizData "1","IMAGE*"&s__FreeImgPath & "/" &gfx ,"image","Free Img"
+        GetPreview "Default", "0.5", sScene
         Redim ActionList(2, 1)
         ActionList(1, 0) = "Default"
         ActionList(1, 1) = "Default"
@@ -6057,6 +6084,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     End Sub
 
     Public sub VorlaufLogo_Show(byref Data)
+        if not i_variant=1 then exit sub
         sScene = "Cornerbug_Vorlauf"
         LoadScene elFrontlayer, sScene
         
@@ -6096,6 +6124,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         obj__TV.DoEffect elFrontlayer, "Default", efPlay
     end sub
     Public sub VorlaufLogo_Hide()
+    if not i_variant=1 then exit sub
         obj__TV.DoEffect elFrontlayer, "Default", efContinue
         cc.sf.Wait 1000,"Wait"
         'obj__TV.SetScene "DSS_Uhr"

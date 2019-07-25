@@ -126,6 +126,23 @@ Class cls_Grafikaufrufe
         on error goto 0
     end sub
     
+    sub Get_FreeImg
+        For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 fList = obj_TVList(i).get_available_freeimg()
+                 exit for
+              End If
+           End If
+        Next
+        on error resume next
+        pgMain.cb_freeimg.Items.Clear
+        for i = 0 to UBound(fList)
+            pgMain.cb_freeimg.Items.add fList(i)
+        next
+        on error goto 0
+    end sub
+    
     public sub Watermark
        For i = 0 to int_TVCount
            If not obj_TVList(i) is Nothing Then
@@ -575,6 +592,23 @@ Class cls_Grafikaufrufe
        Next
        If bConnFound Then
             if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Free GFX #" & gfx
+       end if
+    End Sub
+    
+     Public Sub TV__FreeImg(gfx)
+       dim i
+       bConnFound = False
+       For i = 0 to int_TVCount
+           If not obj_TVList(i) is Nothing Then
+              If not obj_TVList(i).TVContent = 0 Then
+                 bConnFound = True
+                 obj_TVList(i).FreeImg gfx
+              End If
+           End If
+       Next
+       If bConnFound Then
+            'if TV__Anzeigen(True) then pg_settings.list_sponsoren.Items.Add "[" & split(now())(1) & "]" & " Free GFX #" & gfx
+            TV__Anzeigen(True)
        end if
     End Sub
 

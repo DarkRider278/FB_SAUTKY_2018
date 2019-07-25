@@ -143,7 +143,7 @@ end sub
 
 sub tw_blitzTab_MANUELL_cb_dayChange (Sender)
     tw_blitzTab_MANUELL.bt_update.enabled = True    ' Ich kann die Werte nur einmal übernehmen weil ich damit das Standing überschreibe!
-    get_standings_of_day(cint(tw_blitzTab_MANUELL.cb_day.Text))
+    if  not tw_blitzTab_MANUELL.cb_day.Text = "" then    get_standings_of_day(cint(tw_blitzTab_MANUELL.cb_day.Text))
 end sub
 
 sub score_update (Sender)
