@@ -1998,5 +1998,9 @@ sub pgMain_bt_dsswechselClick (Sender)
     end if
 end sub
 
+sub pgMain_bt_freeimgClick (Sender)
+   AllTV.TV__FreeImg pgMain.cb_freeimg.Text
+end sub
+
 </script_body>
 </script>
