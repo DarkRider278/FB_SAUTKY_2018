@@ -32,17 +32,24 @@ sub tv_programm_bt_show_VBClick (Sender)
         
         if (name1 <> "") and (name2 <> "") and (tv_programm.ComponentByName("cb_show" & i).checked) then
             k = k + 1
-            if (Sender is tv_programm.bt_show_IB) then   'Wenn nur als Infobox, dann kurze Team Namen
-                Data.Item("NAME_A" & k) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", name1)
-                Data.Item("NAME_B" & k) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", name2)
+            if tv_programm.cb_customteams.Checked =true then
+                   Data.Item("NAME_A" & k)=   split(name1,"#")(0)
+                   Data.Item("NAME_B" & k)=   split(name2,"#")(0)
+                   if Instr(name1,"#") then Data.Item("LOGO_A" & k) = split(name1,"#")(1)
+                   if Instr(name2,"#") then Data.Item("LOGO_B" & k) = split(name2,"#")(1)
             else
-                Data.Item("NAME_A" & k) = name1
-                Data.Item("NAME_B" & k) = name2
-            end if
-            ' Die Logos dazu
+                if (Sender is tv_programm.bt_show_IB) then   'Wenn nur als Infobox, dann kurze Team Namen
+                    Data.Item("NAME_A" & k) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", name1)
+                    Data.Item("NAME_B" & k) = TSP_get_info_from_db("TEAMS", "SHORT_NAME", "LONG_NAME", name2)
+                else
+                    Data.Item("NAME_A" & k) = name1
+                    Data.Item("NAME_B" & k) = name2
+                end if
+                ' Die Logos dazu
 
-            Data.Item("LOGO_A" & k) = TSP_get_info_from_db("TEAMS", "LOGO", "LONG_NAME", name1)
-            Data.Item("LOGO_B" & k) = TSP_get_info_from_db("TEAMS", "LOGO", "LONG_NAME", name2)
+                Data.Item("LOGO_A" & k) = TSP_get_info_from_db("TEAMS", "LOGO", "LONG_NAME", name1)
+                Data.Item("LOGO_B" & k) = TSP_get_info_from_db("TEAMS", "LOGO", "LONG_NAME", name2)
+            end if
              'cc.sf.DebugText Data.Item("LOGO_A" & k)
             Data.Item("TIME" & k) = tv_programm.ComponentByName("ed_Zeit" & i).Text
             if i<7 then
@@ -169,11 +176,44 @@ sub uptv (Sender)
     tv_programm.ComponentByName("tb_q_g_" & id).text = tmp
 end sub
 
-sub tv_programm_ed_Zeit11Change (Sender)
-  ' script tv_programm_ed_Zeit11Change generated on 20.07.2018 at 09:25:37
-  ' description of params:
-  ' Sender as IccEdit
+sub tv_programm_cb_customteamsClick (Sender)
+    if tv_programm.cb_customteams.Checked =true then
+        tv_programm.bt_update.Visible=false
+        dim data
+        dim k,i, tmp_obj
+        data=cc.Strings.LoadFromFile(pgData.ed_data_import_path.text+"\"+"tv_programm.txt",false)
+        dim ccount
+        dim import2
+        ccount=0
+        data=Split(data,vbNewLine)
+        ccount=ubound(data)
 
+        for i = 0 to tv_programm.ComponentCount - 1
+            set tmp_obj = tv_programm.Components(i)
+            if tmp_obj.ComponentType = "TptComboBox" then
+                if tmp_obj.name <> "cb_league" and tmp_obj.name <> "cb_time" then
+                    tmp_obj.items.clear
+                    'tmp_obj.Items.Add " "
+                end if
+            end if
+        next
+
+        dim line
+        for i=0 to ccount
+            line=trim(data(i))
+            for j = 0 to tv_programm.ComponentCount - 1
+                set tmp_obj = tv_programm.Components(j)
+                if tmp_obj.ComponentType = "TptComboBox" then
+                    if tmp_obj.name <> "cb_league" and tmp_obj.name <> "cb_time" then
+                        tmp_obj.Items.Add line
+                    end if
+                end if
+            next
+        next
+    else
+        tv_programm.bt_update.Visible=true
+        pgMain_bt_TVprogClick 0
+    end if
 end sub
 
 </script_body>

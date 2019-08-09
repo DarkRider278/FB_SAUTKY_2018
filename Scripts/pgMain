@@ -1112,6 +1112,7 @@ end sub
 
 sub pgMain_bt_TVprogClick (Sender)
     dim k,i, tmp_obj
+    if tv_programm.cb_customteams.Checked=false then
     for i = 0 to tv_programm.ComponentCount - 1
         set tmp_obj = tv_programm.Components(i)
         if tmp_obj.ComponentType = "TptComboBox" then
@@ -1180,7 +1181,7 @@ sub pgMain_bt_TVprogClick (Sender)
     for i = i + 1 to 12
         tv_programm.ComponentByName("ed_Zeit" & i).Text = ""
     next
-
+     end if
     tv_programm.Visible = True
     tv_programm.BringToFront
 end sub
