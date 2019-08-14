@@ -11,7 +11,6 @@ object tv_programm: TccToolWindow
   LastDock = frmMain.dckTop
   Resizable = False
   TabOrder = 0
-  Visible = False
   Floating = True
   ParentColor = False
   Float = True
@@ -275,7 +274,6 @@ object tv_programm: TccToolWindow
     Numeric = False
     InputType = itAnything
     Locked = False
-    EventDataNames = 'OnChange=tv_programm_ed_Zeit11Change'
   end
   object cb_name23: TptComboBox
     Left = 275
@@ -471,7 +469,6 @@ object tv_programm: TccToolWindow
       ModalResult = mrNone
       ParentFont = False
       TabOrder = 0
-      Visible = False
       ParentColor = False
       Color = clBtnFace
       ColorMouseOver = clBtnFace
@@ -970,7 +967,6 @@ object tv_programm: TccToolWindow
       ModalResult = mrNone
       ParentFont = False
       TabOrder = 2
-      Visible = False
       ParentColor = False
       Color = clBtnFace
       ColorMouseOver = clBtnFace
@@ -3000,5 +2996,24 @@ object tv_programm: TccToolWindow
     Numeric = False
     InputType = itAnything
     Locked = False
+  end
+  object cb_customteams: TptCheckBox
+    Left = 400
+    Top = 55
+    Width = 97
+    Height = 17
+    Caption = 'Custom Teams'
+    Color = 3289650
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 74
+    Locked = False
+    ColorFocused = 3289650
+    ColorMouseOver = 3289650
+    EventDataNames = 'OnClick=tv_programm_cb_customteamsClick'
   end
 end
