@@ -29,6 +29,7 @@ Sub OnRunMode (Sender)
     TSP_MATCH_CHANGE ' das aktuelle Spiel im TSP nochmal triggern
     call pgData_btn_import_bbClick(0)
     call pgData_btn_import_modsClick(0)
+    call pgMain_btn_reset_rcClick(0)
 end sub
 
 sub System_ScriptHotkey1Execute (Sender)

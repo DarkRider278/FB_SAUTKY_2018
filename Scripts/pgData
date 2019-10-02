@@ -48,6 +48,7 @@ sub OPTA_UPDATE_GAME_RESULTS(file)         ' -results.xml
     If NodeList.Length = 0 Then
        DbgErr "Found no Games"
     Else
+    cc.sf.DebugText"----"
         For each objNode in NodeList
             out_.SQL          = "SELECT * FROM ROUNDS_LIST.DBF WHERE text='"& objNode.GetAttribute("uID") &"'"
             out_.RequestLive  = True
@@ -57,11 +58,13 @@ sub OPTA_UPDATE_GAME_RESULTS(file)         ' -results.xml
                 'out_.FieldByName("score_a") = cint(EmptyToZero(Text(objNode.SelectSingleNode(".//TeamData[@Side='Home']/@Score"))))
                 'out_.FieldByName("score_b") = cint(EmptyToZero(Text(objNode.SelectSingleNode(".//TeamData[@Side='Away']/@Score"))))
                 out_.FieldByName("match_date")= convert_to_local_time(objNode.SelectSingleNode(".//MatchInfo/Date").Text, objNode.SelectSingleNode(".//MatchInfo/TZ").Text)
+                out_.FieldByName("status")=cint(GetPeriod(objNode.SelectSingleNode(".//MatchInfo").GetAttribute("Period")))
                 out_.Post
             end if
             out_.RequestLive  = False
             out_.Active       = False
         Next
+
     End If
     Set NodeList = Nothing
 end sub
@@ -184,6 +187,7 @@ sub OPTA_UPDATE_MATCH(file)
     tmp_match_data.item("ATTENDANCE") = text(oXML.SelectSingleNode(".//Attendance"))    ' Zuschauer Zahlen
     tmp_match_data.item("MATCH_TIME") = text(oXML.SelectSingleNode(".//Stat[@Type='match_time']"))
     tmp_match_data.item("REFEREE")    = text(oXML.SelectSingleNode(".//OfficialName/First")) & " " & text(oXML.SelectSingleNode(".//OfficialName/Last"))
+    tmp_match_data.item("PERIOD")=Text(oXML.SelectSingleNode(".//MatchInfo").GetAttribute("Period"))
 
     for x = 1 to 2
         if x = 1 then
@@ -307,6 +311,7 @@ sub OPTA_UPDATE_MATCH(file)
     out_.Edit
     out_.FieldByName("score_a") = cint(EmptyToZero(tmp_match_data.item("HOME|GOALS")))
     out_.FieldByName("score_b") = cint(EmptyToZero(tmp_match_data.item("AWAY|GOALS")))
+    out_.FieldByName("status") = cint(GetPeriod(EmptyToZero(tmp_match_data.item("PERIOD"))))
     out_.Post
     out_.RequestLive  = False
     out_.Active       = False
@@ -428,6 +433,27 @@ end sub
     Set ResultNode  = Nothing
 end sub
 
+function GetPeriod(p)
+
+    select case p
+        case "First Half"           GetPeriod = 1
+        case "Half Time"            GetPeriod = 2    ' Pause
+        case "Second Half"          GetPeriod = 3
+        case "Extra Time"           GetPeriod = 4    ' Pause
+        case "Extra First Half"     GetPeriod = 5
+        case "Extra Half Time"      GetPeriod = 6    ' Pause
+        case "Extra Second Half"    GetPeriod = 7
+        case "After Extra"          GetPeriod = 8    ' Pause
+        case "Penalty Shootout"     GetPeriod = 9    ' Elfmeter
+        case "PostMatch"            GetPeriod = 10   ' END STAND
+        case "FullTime"            GetPeriod = 10   ' END STAND
+        case "PreMatch"             GetPeriod = 11   ' Vor dem Anstoß
+        case "Abandoned"            GetPeriod = 12   ' ABGESAGT
+        case else
+                                cc.sf.debugtext "UNKNOWN GAME PERIOD " &p, clRed
+                                GetPeriod=0
+    end select
+end function
 
 ' SEASONSTATS -> Enthält Spieler Saison Statistiken
 sub OPTA_UPDATE_SEASON_STATS(file)

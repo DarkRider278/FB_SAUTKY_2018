@@ -119,6 +119,9 @@ sub fetch_standing_from_tsp()
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "Team 1")) = TSP.GetSQLData("team_a_name")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "Team 2")) = TSP.GetSQLData("team_b_name")
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "result")) = TSP.GetSQLData("score_a") & ":" & TSP.GetSQLData("score_b")
+                    if TSP.GetSQLData("status")= 11 then
+                         tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "result"))= "-:-"
+                    end if
                     tw_standing.Grid2.Cells(i, GetColIdx(tw_standing.grid2, "hl?"))   = ""
                     tw_standing.Grid2.Cells(i,0)   =  TSP_get_info_from_db ("TEAMS","TEXT_2","LONG_NAME", TSP.GetSQLData("team_a_name"))
                 end if
