@@ -48,7 +48,7 @@ sub get_standings_of_day(day)
     End If
     i = 0
 
-    if day>0 then
+    if day>22 then
         Set NodeList = oXML.SelectNodes("//TeamStandings[@Matchday='" & day & "']/Round/TeamRecord")
         If NodeList.Length = 0 Then
            DbgErr "Found no Standings for day " & day
@@ -94,7 +94,7 @@ sub get_standings_of_day(day)
                tw_blitzTab_MANUELL.Grid1.Cells(i,5) = EmptyToZero(text(objNode.SelectSingleNode("./Standing/AwayWon")))
                tw_blitzTab_MANUELL.Grid1.Cells(i,6) = EmptyToZero(text(objNode.SelectSingleNode("./Standing/Played")))
                tw_blitzTab_MANUELL.Grid1.Cells(i,7) = EmptyToZero(text(objNode.SelectSingleNode("./Standing/Position")))
-               tw_blitzTab_MANUELL.Grid1.Cells(i,8) = 0
+               tw_blitzTab_MANUELL.Grid1.Cells(i,8) = 30
             Next
         End If
         Set NodeList = Nothing
@@ -315,12 +315,19 @@ sub tw_blitzTab_MANUELL_bt_calc_tableClick (Sender)
         tw_blitztab.Grid1.Cells(i,1) = "X"
         tw_blitztab.Grid1.Cells(i,2) = i & "."
         if gp <> "" then
+            dim npos2
             if gp="10" then
                 npos=npos-6   'Sollte bei 6 Teams eigentlich immer klappen nach den sortieren
+                npos2=npos
             elseif gp="20" then
                 npos=npos
+                npos2=npos
+            elseif gp="30" then
+                npos2=i
+                npos=npos-20
+
             end if
-            tw_blitztab.Grid1.Cells(i,2) = npos & "."
+            tw_blitztab.Grid1.Cells(i,2) = npos2 & "."
             tw_blitztab.Grid1.Cells(i,0) =cint(gp)+npos
 
         end if

@@ -57,11 +57,13 @@ FUNCTION GetNameTranslation(ByVal strType, ByVal strID, ByVal strValue)
                     GetNameTranslation =  tsp.GetPlayerByID(TSP_HPlayer, strID, strValue)
                 end if
             elseif strType= "TV" then
-                nick_name = tsp.GetPlayerByID(TSP_HPlayer, strID, "TV_NAME")
-                if trim(nick_name) <> "" then
-                    GetNameTranslation = nick_name
-                else
-                    GetNameTranslation =  tsp.GetPlayerByID(TSP_HPlayer, strID, strValue)
+                 if trim(strID) <> "" then
+                    nick_name = tsp.GetPlayerByID(TSP_HPlayer, strID, "TV_NAME")
+                    if trim(nick_name) <> "" then
+                        GetNameTranslation = nick_name
+                    else
+                        GetNameTranslation =  tsp.GetPlayerByID(TSP_HPlayer, strID, strValue)
+                    end if
                 end if
             elseif strType= "NCFN" then
                 nick_name = tsp.GetPlayerByID(TSP_HPlayer, strID, "NICK_NAME")

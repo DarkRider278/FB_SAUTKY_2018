@@ -3087,6 +3087,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetVizDataBufferOn
             P_Nr   = Trim(Lineup.GetPlayer(Lineup_Nr, i, LineupID))
             P_Name = (GetData(Team, P_Nr))
+            if  P_Name="" then P_Name=Trim(Lineup.GetPlayer(Lineup_Name, i, LineupID))
             x_Pos  = MakeNumber(Lineup.GetPlayer(Lineup_Name_X, i, LineupID),1,0,"",-1) - MakeNumber(Lineup.GetPlayer(Lineup_Nr_W, i, LineupID),1,0,"",-1)
             y_Pos  = MakeNumber(Lineup.GetPlayer(Lineup_Name_Y, i, LineupID),1,0,"",-1)  + 8 + MakeNumber(Lineup.GetPlayer(Lineup_Name_H, i, LineupID),1,0,"",-1)'Trim(Lineup.GetPlayer(Lineup_Name_Y, i))
 
@@ -3166,6 +3167,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
             SetVizDataBufferOn
             P_Nr   = Trim(Lineup.GetPlayer(Lineup_Nr, i, LineupID))
             P_Name = (GetData(Team, P_Nr))
+            if  P_Name="" then P_Name=Trim(Lineup.GetPlayer(Lineup_Name, i, LineupID))
             x_Pos  = MakeNumber(Lineup.GetPlayer(Lineup_Name_X, i, LineupID),1,0,"",-1) - MakeNumber(Lineup.GetPlayer(Lineup_Nr_W, i, LineupID),1,0,"",-1)
             y_Pos  = MakeNumber(Lineup.GetPlayer(Lineup_Name_Y, i, LineupID),1,0,"",-1)  + 8 + MakeNumber(Lineup.GetPlayer(Lineup_Name_H, i, LineupID),1,0,"",-1)'Trim(Lineup.GetPlayer(Lineup_Name_Y, i))
 
@@ -3585,7 +3587,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*IMAGE SET IMAGE*VizDbCube/scene/Live_Sports/Austria/Redesign_2018/Elemente/cl_icon")
                 end if
-            elseif p="13" or p="14" or p="15" or (p="21" and Data.Item("PLACE" & k)="1.") or (p="22" and Data.Item("PLACE" & k)="2.")then
+            elseif p="13" then 'or p="14" or p="15" or (p="21" and Data.Item("PLACE" & k)="1.") or (p="22" and Data.Item("PLACE" & k)="2.")
                 SetVizDataFL ids+4,1
                 if k<6 then
                     obj__TV.SendCommand("RENDERER*FRONT_LAYER*TREE*$object$DSS$ZUSATZ$BLITZTABELLE$SEITE1$LINE"&k&"$ELEMENTE$img_cl_icon*ACTIVE SET 1")

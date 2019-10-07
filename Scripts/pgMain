@@ -492,6 +492,12 @@ sub pgMain_bt_playerBBClick (Sender)
         tw_cards.ed_FName.Text = pFName
     end if
     tw_cards.ed_NR.text=TSP.GetTPlayer(TSP_dress_nr)
+    if tw_cards.ed_NR.text = 100 then
+    tw_cards.ed_NR.text= "T"
+    elseif tw_cards.ed_NR.text > 100 then
+        tw_cards.ed_NR.text=""
+    end if
+    
     tw_cards.cb_logo.Text = TSP.GetSTeam(TSP_logo)
      dim anzahl
     if tw_cards.rg_card.ItemIndex = 0 then ' Gelbe Karte
