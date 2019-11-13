@@ -51,6 +51,7 @@ sub tw_konferenz_setup_bt_applyClick (Sender)
             tw_konferenz.ComponentByName("cb_karusell_"&k).Checked=false
             'tw_konferenz.ComponentByName("cb_rc_h_"&k).Checked=false
             'tw_konferenz.ComponentByName("cb_rc_g_"&k).Checked=false
+            tw_konferenz.ComponentByName("ed_nachspiel" & i).text=""
             
             if msgbox("RESET GAME DATA (SCORE, TIME) FOR GAME " & k & "? ", vbYesNo) = vbYes then
                 tw_konferenz.ComponentByName("clock" & k).ClockEnabled  = False

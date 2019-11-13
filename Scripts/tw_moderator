@@ -2,9 +2,14 @@
 <script_header>
 </script_header>
 <script_body>
+'Moderator
+'[Vorname] Name[#Subline[;twitter|facebook|url|instagram]]
+
+'Funktioär
+'[Vorname] Name[#Funktion[;Logo]]
 
 sub tw_moderator_cb_ModeratorChange (Sender)
-    dim p,fn,n ,pos
+    dim p,fn,n ,pos  ,typ,sl
     p=Trim(tw_moderator.cb_Moderator.Text)
         pos=CC.Strings.StrPos(" ",p)
         if(pos>0 )then
@@ -14,11 +19,36 @@ sub tw_moderator_cb_ModeratorChange (Sender)
             n=p
             fn=""
         end if
+         pos =cc.Strings.StrPos("#",n)
+    if(pos>0 )then
+        sl=split(n,"#")(1)
+        n=split(n,"#")(0)
+    else
+        sl=""
+    end if
+     pos =cc.Strings.StrPos(";",sl)
+    if(pos>0 )then
+        typ=split(sl,";")(1)
+        sl=split(sl,";")(0)
+    else
+        typ=""
+    end if
+     pgMain.cb_bb_typ.ItemIndex=0
+     select case (typ)
+        case "twitter"
+           pgMain.cb_bb_typ.ItemIndex=1
+        case "facebook"
+           pgMain.cb_bb_typ.ItemIndex=2
+        case "url"
+           pgMain.cb_bb_typ.ItemIndex=3
+        case "instagram"
+           pgMain.cb_bb_typ.ItemIndex=4
+     end select
      pgMain.ed_Name.Text=n
      pgMain.ed_FName.Text=fn
      pgMain.ed_nr.text=""
      pgMain.Memo1.Lines.Clear
-     'pgMain.Memo1.Lines.Add "Moderator"
+     pgMain.Memo1.Lines.Add sl
      pgMain.ed_logo.Text=""
 end sub
 

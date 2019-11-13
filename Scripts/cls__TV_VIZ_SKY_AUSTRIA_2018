@@ -1548,21 +1548,21 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     public sub vbStanding_HL(ByRef Data)
         dim i
         select case Data.Item("ANIM_TYPE")
-            case 1,2,3,5
-                for i = 1 to 5
+            case 1,2,3,5,6,7,8,9,10,11
+                for i = 1 to 6
                     if Data.Item("THL" & i) then
                         obj__TV.DoEffect elMainLayer, "H" & i, efPlay
                         CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
                     end if
                 next
-                for i = 1 to 10
+                for i = 1 to 12
                     if Data.Item("HL" & i) then
                         obj__TV.DoEffect elMainLayer, "T" & i, efPlay
                         CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
                     end if
                 next
             case 4
-                for i = 1 to 10
+                for i = 1 to 12
                     if Data.Item("HL" & i) then
                         obj__TV.DoEffect elMainLayer, "H" & i, efPlay
                         CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
@@ -1669,6 +1669,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                 sScene = "VB_Tab_M"
             case 9
                 sScene = "VB_Tab_Q"
+            case 10
+                sScene = "VB_Erg3_Tab6_CL"
+            case 11
+                sScene = "VB_Erg3_Tab6_EL"
         end select
         LoadScene elMainLayer, sScene
         if  Data.Item("ANIM_TYPE") = 1 then
@@ -1680,13 +1684,13 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         if Data.Item("ANIM_TYPE")= 5 then
             SetTitleLogo "el_logo_quer",true
         end if
-        if Data.Item("ANIM_TYPE") < 6 then
+        if Data.Item("ANIM_TYPE") < 6 or Data.Item("ANIM_TYPE") >9 then
             SetTitle Data.item("OPT_TITLE")
             SetTitleSubLine Data.item("TITLE")
             SetDropLine ""
         end if
 
-        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") < 6  then
+        if Data.Item("ANIM_TYPE") <> 4 and Data.Item("ANIM_TYPE") < 6  or Data.Item("ANIM_TYPE") >9 then
             dim ids : ids=1101
             for i = 1 to 6  ' DAILY RESULTS
                SetVizDataBufferOn
@@ -1709,11 +1713,11 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         end if
 
 
-        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE") < 6  then
+        if Data.Item("ANIM_TYPE") <> 1 and Data.Item("ANIM_TYPE") < 6  or Data.Item("ANIM_TYPE") >9 then
             ids =1100
             if Data.Item("ANIM_TYPE") =2 or Data.Item("ANIM_TYPE") =3 then ids=ids+1000
             if Data.Item("ANIM_TYPE") =4  then ids=ids+1000
-            if Data.Item("ANIM_TYPE") =5  then ids=ids+400
+            if Data.Item("ANIM_TYPE") =5 or Data.Item("ANIM_TYPE") =10 or Data.Item("ANIM_TYPE") =11  then ids=ids+400
             for i = 1 to 12   ' FULL STANDINGS TABLE
                 SetVizDataBufferOn
                 SetVizData ids,Data.Item("PLACE" & i) ,"string","Place "&i
@@ -1736,7 +1740,7 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         end if
         
-        if Data.Item("ANIM_TYPE") > 5 then
+        if Data.Item("ANIM_TYPE") > 5 and Data.Item("ANIM_TYPE") <10 then
             ids =1100
             if Data.Item("ANIM_TYPE") =6 or Data.Item("ANIM_TYPE")=7 then ids=ids+400
             dim s,e,count,g
@@ -1984,8 +1988,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         SetShow
         SetVizData "0085",0,"int",""
 
-        SetTitle Data.item("OPT_TITLE"),"Opt Title"
-        SetTitleSubLine Data.item("OPT_ZUSATZ"),"Opt Zusatz"
+        SetTitle Data.item("OPT_TITLE")
+        SetTitleSubLine Data.item("OPT_ZUSATZ")
         SetDropLine ""
         count = Data.Item("ITEMCOUNTTAB")
         hcount=count

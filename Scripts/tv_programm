@@ -102,13 +102,13 @@ sub tv_programm_bt_updateClick (Sender)
 
                     match_date = cdate(tsp.GetSQLData("match_date"))        ' Wenn das SPiel heute stattfindet, nur die Uhrzeit anzeigen
                     if (day(now) = day(match_date)) and (month(now) = month(match_date)) then
-                        tv_programm.ComponentByName("ed_Zeit" & i).Text = split(tsp.GetSQLData("match_date"), " ")(1)
+                        'tv_programm.ComponentByName("ed_Zeit" & i).Text = split(tsp.GetSQLData("match_date"), " ")(1)
                     else
-                        tv_programm.ComponentByName("ed_Zeit" & i).Text = tsp.GetSQLData("match_date")
+                        'tv_programm.ComponentByName("ed_Zeit" & i).Text = tsp.GetSQLData("match_date")
                     end if
 
                     ' Das Datum wird mit Sekunden angegeben (":00") die will ich wegschneiden!
-                    tv_programm.ComponentByName("ed_Zeit" & i).Text = left(tv_programm.ComponentByName("ed_Zeit" & i).Text, len(tv_programm.ComponentByName("ed_Zeit" & i).Text) - 3)
+                    'tv_programm.ComponentByName("ed_Zeit" & i).Text = left(tv_programm.ComponentByName("ed_Zeit" & i).Text, len(tv_programm.ComponentByName("ed_Zeit" & i).Text) - 3)
                 end if
             Loop While TSP.SetSQLPos("Next")
         end if

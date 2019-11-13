@@ -111,6 +111,9 @@ sub TSP_MATCH_CHANGE()
 
             REDCARD_H=i
             REDCARD_G=i
+            if  tw_konferenz.ComponentByName("ed_nachspiel" & i).text <> "" then
+                pgMain.ed_nachspiel.Text=tw_konferenz.ComponentByName("ed_nachspiel" & i).text
+            end if
         else
             tw_konferenz.ComponentByName("lb_team" & 2*i-1).font.color = clBlack
             tw_konferenz.ComponentByName("lb_team" & 2*i).font.color   = clBlack
@@ -981,6 +984,12 @@ sub pgMain_bt_card1Click (Sender)
     tw_cards.cb_logo.Text = TSP.GetSTeam(TSP_logo)
     tw_cards.rg_card.ItemIndex = cint(Right(Sender.Name, 1)) - 1
     tw_cards.ed_NR.text=TSP.GetTPlayer(TSP_dress_nr)
+    
+    if tw_cards.ed_NR.text = 100 then
+    tw_cards.ed_NR.text= "T"
+    elseif tw_cards.ed_NR.text > 100 then
+        tw_cards.ed_NR.text=""
+    end if
     dim anzahl
     if tw_cards.rg_card.ItemIndex = 0 then ' Gelbe Karte
         anzahl = 1 + cInt(EmptyToZero(TSP_get_info_from_db("PLAYERS_2", PLAYER_STATS_SEASON.item("Gelbe Karten"), "PLAYER_ID",  TSP.GetTPlayer(TSP_player_id))))

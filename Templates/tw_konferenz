@@ -22,23 +22,23 @@ object tw_konferenz: TccToolWindow
     Top = 5
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988793'
+    Hint = 'OPTA_ID: 1063741'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 0
     StoreUserData = True
-    UserDataVer1 = {08000C000000390038003800370039003300}
+    UserDataVer1 = {08000E0000003100300036003300370034003100}
     object lb_team1: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'FAK'
+      Hint = 'ALT'
       Align = alTop
       Alignment = taCenter
-      Caption = 'FK Austria Wien'
+      Caption = 'CASHPOINT SCR Altach'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -53,10 +53,10 @@ object tw_konferenz: TccToolWindow
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'LIZ'
+      Hint = 'SCR'
       Align = alTop
       Alignment = taCenter
-      Caption = 'LASK'
+      Caption = 'SK Rapid Wien'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -365,7 +365,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_1: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 84
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -374,29 +374,41 @@ object tw_konferenz: TccToolWindow
       ColorFocused = 6776679
       ColorMouseOver = 6776679
     end
+    object ed_nachspiel1: TptEdit
+      Left = 100
+      Top = 107
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
+    end
   end
   object pn_game2: TptPanel
     Left = 135
     Top = 5
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988796'
+    Hint = 'OPTA_ID: 1063739'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
     StoreUserData = True
-    UserDataVer1 = {08000C000000390038003800370039003600}
+    UserDataVer1 = {08000E0000003100300036003300370033003900}
     object lb_team3: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'FCW'
+      Hint = 'STU'
       Align = alTop
       Alignment = taCenter
-      Caption = 'FC Wacker Innsbruck'
+      Caption = 'SK Puntigamer Sturm Graz'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -411,10 +423,10 @@ object tw_konferenz: TccToolWindow
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'ADM'
+      Hint = 'HTB'
       Align = alTop
       Alignment = taCenter
-      Caption = 'FC Flyeralarm Admira'
+      Caption = 'TSV Prolactal Hartberg'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -483,7 +495,7 @@ object tw_konferenz: TccToolWindow
       Hint = 'Double click to change period'
       Alignment = taCenter
       AutoSize = False
-      Caption = '11'
+      Caption = '1'
       Color = 5329233
       Font.Charset = ANSI_CHARSET
       Font.Color = clYellow
@@ -694,9 +706,9 @@ object tw_konferenz: TccToolWindow
       Hint = 'Click to start/stop;  SHIFT+click to set time'
       AutoSize = False
       Border = 1
-      Miliseconds = 0
-      Seconds = 0
-      Minutes = 0
+      Miliseconds = 656
+      Seconds = 59
+      Minutes = 58
       Hours = 0
       ReverseDirection = False
       ClockEnabled = False
@@ -723,7 +735,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_2: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 84
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -733,29 +745,42 @@ object tw_konferenz: TccToolWindow
       ColorFocused = 6776679
       ColorMouseOver = 6776679
     end
+    object ed_nachspiel2: TptEdit
+      Left = 100
+      Top = 105
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Text = '0'
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
+    end
   end
   object pn_game3: TptPanel
     Left = 265
     Top = 5
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988792'
+    Hint = 'OPTA_ID: 1063740'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 2
     StoreUserData = True
-    UserDataVer1 = {08000C000000390038003800370039003200}
+    UserDataVer1 = {08000E0000003100300036003300370034003000}
     object lb_team5: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'STU'
+      Hint = 'SKN'
       Align = alTop
       Alignment = taCenter
-      Caption = 'SK Puntigamer Sturm Graz'
+      Caption = 'spusu SKN St. Pölten'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -764,16 +789,17 @@ object tw_konferenz: TccToolWindow
       ParentFont = False
       Transparent = True
       Locked = False
+      Caption_UTF7 = 'spusu SKN St. P+APY-lten'
     end
     object lb_team6: TptLabel
       Left = 1
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'SVM'
+      Hint = 'WSG'
       Align = alTop
       Alignment = taCenter
-      Caption = 'SV Mattersburg'
+      Caption = 'WSG Swarovski Tirol'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -804,7 +830,7 @@ object tw_konferenz: TccToolWindow
       Height = 29
       Alignment = taCenter
       AutoSize = False
-      Caption = '0'
+      Caption = '1'
       Color = clBlack
       Font.Charset = ANSI_CHARSET
       Font.Color = clLime
@@ -842,7 +868,7 @@ object tw_konferenz: TccToolWindow
       Hint = 'Double click to change period'
       Alignment = taCenter
       AutoSize = False
-      Caption = '11'
+      Caption = '1'
       Color = 5329233
       Font.Charset = ANSI_CHARSET
       Font.Color = clYellow
@@ -1053,10 +1079,10 @@ object tw_konferenz: TccToolWindow
       Hint = 'Click to start/stop;  SHIFT+click to set time'
       AutoSize = False
       Border = 1
-      Miliseconds = 0
-      Seconds = 0
-      Minutes = 0
-      Hours = 0
+      Miliseconds = 234
+      Seconds = 57
+      Minutes = 9
+      Hours = 1
       ReverseDirection = False
       ClockEnabled = False
       Interval = 0
@@ -1082,7 +1108,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_3: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 79
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -1092,29 +1118,42 @@ object tw_konferenz: TccToolWindow
       ColorFocused = 6776679
       ColorMouseOver = 6776679
     end
+    object ed_nachspiel3: TptEdit
+      Left = 100
+      Top = 105
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Text = '2'
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
+    end
   end
   object pn_game4: TptPanel
     Left = 395
     Top = 5
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988794'
+    Hint = 'OPTA_ID: 1063738'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
     StoreUserData = True
-    UserDataVer1 = {08000C000000390038003800370039003400}
+    UserDataVer1 = {08000E0000003100300036003300370033003800}
     object lb_team7: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'ALT'
+      Hint = 'FAK'
       Align = alTop
       Alignment = taCenter
-      Caption = 'Cashpoint SCR Altach'
+      Caption = 'FK Austria Wien'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -1129,10 +1168,10 @@ object tw_konferenz: TccToolWindow
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'WAC'
+      Hint = 'SVM'
       Align = alTop
       Alignment = taCenter
-      Caption = 'RZ Pellets WAC'
+      Caption = 'SV Mattersburg'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -1441,7 +1480,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_4: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 84
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -1451,29 +1490,41 @@ object tw_konferenz: TccToolWindow
       ColorFocused = 6776679
       ColorMouseOver = 6776679
     end
+    object ed_nachspiel4: TptEdit
+      Left = 100
+      Top = 105
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
+    end
   end
   object pn_game5: TptPanel
     Left = 525
     Top = 5
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988795'
+    Hint = 'OPTA_ID: 1063736'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 4
     StoreUserData = True
-    UserDataVer1 = {08000C000000390038003800370039003500}
+    UserDataVer1 = {08000E0000003100300036003300370033003600}
     object lb_team9: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'SKN'
+      Hint = 'ASK'
       Align = alTop
       Alignment = taCenter
-      Caption = 'SKN St. Pölten'
+      Caption = 'LASK'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -1482,17 +1533,16 @@ object tw_konferenz: TccToolWindow
       ParentFont = False
       Transparent = True
       Locked = False
-      Caption_UTF7 = 'SKN St. P+APY-lten'
     end
     object lb_team10: TptLabel
       Left = 1
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'HTB'
+      Hint = 'ADM'
       Align = alTop
       Alignment = taCenter
-      Caption = 'TSV Prolactal Hartberg'
+      Caption = 'FC Flyeralarm Admira'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -1801,7 +1851,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_5: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 84
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -1810,6 +1860,18 @@ object tw_konferenz: TccToolWindow
       Locked = False
       ColorFocused = 6776679
       ColorMouseOver = 6776679
+    end
+    object ed_nachspiel5: TptEdit
+      Left = 100
+      Top = 105
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
     end
   end
   object cb_manual: TptCheckBox
@@ -2095,7 +2157,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 7
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -2346,7 +2407,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 8
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -2597,7 +2657,6 @@ object tw_konferenz: TccToolWindow
     ParentColor = False
     ParentFont = False
     TabOrder = 9
-    Visible = False
     Locked = False
     ColorFocused = 3289650
     ColorMouseOver = 3289650
@@ -2618,7 +2677,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 10
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -3049,7 +3107,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 12
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -3264,7 +3321,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 13
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -3763,7 +3819,6 @@ object tw_konferenz: TccToolWindow
     ModalResult = mrNone
     ParentFont = False
     TabOrder = 15
-    Visible = False
     ParentColor = False
     Color = clBtnFace
     ColorMouseOver = clBtnFace
@@ -4004,24 +4059,23 @@ object tw_konferenz: TccToolWindow
     Top = 6
     Width = 121
     Height = 126
-    Hint = 'OPTA_ID: 988791'
+    Hint = 'OPTA_ID: 1063737'
     Color = 6776679
     Locked = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 16
-    Visible = False
     StoreUserData = True
-    UserDataVer1 = {080000000000}
+    UserDataVer1 = {08000E0000003100300036003300370033003700}
     object lb_team11: TptLabel
       Left = 1
       Top = 1
       Width = 119
       Height = 18
-      Hint = 'RBS'
+      Hint = 'WAC'
       Align = alTop
       Alignment = taCenter
-      Caption = 'FC Red Bull Salzburg'
+      Caption = 'RZ Pellets WAC'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -4036,10 +4090,10 @@ object tw_konferenz: TccToolWindow
       Top = 19
       Width = 119
       Height = 18
-      Hint = 'SCR'
+      Hint = 'RBS'
       Align = alTop
       Alignment = taCenter
-      Caption = 'SK Rapid Wien'
+      Caption = 'FC Red Bull Salzburg'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -4348,7 +4402,7 @@ object tw_konferenz: TccToolWindow
     object cb_karusell_6: TptCheckBox
       Left = 7
       Top = 105
-      Width = 111
+      Width = 84
       Height = 17
       Caption = 'Show Score'
       Color = 6776679
@@ -4356,6 +4410,18 @@ object tw_konferenz: TccToolWindow
       Locked = False
       ColorFocused = 6776679
       ColorMouseOver = 6776679
+    end
+    object ed_nachspiel6: TptEdit
+      Left = 100
+      Top = 105
+      Width = 21
+      Height = 21
+      MaxLength = 0
+      TabOrder = 6
+      Numeric = False
+      InputType = itAnything
+      Locked = False
+      EventDataNames = 'OnKeyDown=pgMain_ed_nachspielKeyDown'
     end
   end
 end

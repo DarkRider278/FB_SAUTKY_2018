@@ -878,8 +878,8 @@ Class cls_Grafikaufrufe
     private sub vbStanding_HL(ByRef Data)
         dim i,j
         select case Data.Item("ANIM_TYPE")
-            case 1,2,3,5
-                for i = 1 to 5
+            case 1,2,3
+                for i = 1 to 6
                     if Data.Item("THL" & i) then
                         For j = 0 to int_TVCount
                            If not obj_TVList(j) is Nothing Then
@@ -891,7 +891,7 @@ Class cls_Grafikaufrufe
                         CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
                     end if
                 next
-                for i = 1 to 10
+                for i = 1 to 12
                     if Data.Item("HL" & i) then
                         For j = 0 to int_TVCount
                            If not obj_TVList(j) is Nothing Then
@@ -904,12 +904,37 @@ Class cls_Grafikaufrufe
                     end if
                 next
             case 4
-                for i = 1 to 10
+                for i = 1 to 12
                     if Data.Item("HL" & i) then
                         For j = 0 to int_TVCount
                            If not obj_TVList(j) is Nothing Then
                               If not obj_TVList(j).TVContent = 0 Then
                                     obj_TVList(j).vbStanding_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+            case 5,6,7,8,9,10,11
+                 for i = 1 to 3
+                    if Data.Item("THL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding_HL2 "H" & i
+                              End If
+                           End If
+                        Next
+                        CC.SF.Wait 100      ' SIEMIC:  Lieber ohne zeitlichen Versatz?
+                    end if
+                next
+                for i = 1 to 6
+                    if Data.Item("HL" & i) then
+                        For j = 0 to int_TVCount
+                           If not obj_TVList(j) is Nothing Then
+                              If not obj_TVList(j).TVContent = 0 Then
+                                    obj_TVList(j).vbStanding_HL2 "H" & (i+3)
                               End If
                            End If
                         Next
@@ -1745,7 +1770,7 @@ Class cls_Grafikaufrufe
 '                End If
 '            Next
             if Data.Item("ITEMCOUNT") >7 then
-                HL_FREE Data,1, 5, "HL","H",0
+                HL_FREE Data,1, 6, "HL","H",0
             else
                 HL_FREE Data,1, 7, "HL","H",0
             end if
@@ -1768,7 +1793,7 @@ Class cls_Grafikaufrufe
 '                        End If
 '                    End If
 '                Next
-                HL_FREE Data,6, 10, "HL","H",5
+                HL_FREE Data,7, 12, "HL","H",4
            end if
        end if
     End Sub
@@ -2325,8 +2350,9 @@ Class cls_Grafikaufrufe
                        end if
                     next
                 end if
-                if li = 0 then
-                    IF msgBox("Vollbild?", vbOkCancel, "QUESTION") = vbOK THEN
+
+                IF msgBox("Vollbild?", vbOkCancel, "QUESTION") = vbOK THEN
+                    if li = 0 then
                         For i = 0 to int_TVCount
                             If not obj_TVList(i) is Nothing Then
                                 If not obj_TVList(i).TVContent = 0 Then
@@ -2335,6 +2361,7 @@ Class cls_Grafikaufrufe
                             end if
                         next
                         cc.sf.Wait 600
+                    end if
                         For i = 0 to int_TVCount
                             If not obj_TVList(i) is Nothing Then
                                 If not obj_TVList(i).TVContent = 0 Then
@@ -2342,7 +2369,7 @@ Class cls_Grafikaufrufe
                                 end if
                             end if
                         next
-                    end if
+
                 end if
             END IF
         end if

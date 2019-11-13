@@ -187,7 +187,7 @@ sub OPTA_UPDATE_MATCH(file)
     tmp_match_data.item("ATTENDANCE") = text(oXML.SelectSingleNode(".//Attendance"))    ' Zuschauer Zahlen
     tmp_match_data.item("MATCH_TIME") = text(oXML.SelectSingleNode(".//Stat[@Type='match_time']"))
     tmp_match_data.item("REFEREE")    = text(oXML.SelectSingleNode(".//OfficialName/First")) & " " & text(oXML.SelectSingleNode(".//OfficialName/Last"))
-    tmp_match_data.item("PERIOD")=Text(oXML.SelectSingleNode(".//MatchInfo").GetAttribute("Period"))
+    tmp_match_data.item("PERIOD")=oXML.SelectSingleNode(".//MatchInfo").GetAttribute("Period")
 
     for x = 1 to 2
         if x = 1 then
@@ -311,7 +311,7 @@ sub OPTA_UPDATE_MATCH(file)
     out_.Edit
     out_.FieldByName("score_a") = cint(EmptyToZero(tmp_match_data.item("HOME|GOALS")))
     out_.FieldByName("score_b") = cint(EmptyToZero(tmp_match_data.item("AWAY|GOALS")))
-    out_.FieldByName("status") = cint(GetPeriod(EmptyToZero(tmp_match_data.item("PERIOD"))))
+    out_.FieldByName("status") = cint(GetPeriod(tmp_match_data.item("PERIOD")))
     out_.Post
     out_.RequestLive  = False
     out_.Active       = False
