@@ -4531,6 +4531,8 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
 
         dim iAddTime : iAddTime = Data.Item("INJURYTIME")
         dim bAddTime : bAddTime = (iAddTime > -1)
+        if not Data.Item("WITH_CLOCK") then bAddTime=false
+        
         if casefix=true then
             SetVizDataUpperFL "0100",Data.Item("T_SNAME_1")
             SetVizDataUpperFL "0200",Data.Item("T_SNAME_2")

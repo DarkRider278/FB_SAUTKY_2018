@@ -46,7 +46,7 @@ sub tw_standing_CL_bt_Erg1Click (Sender)
     Data.Item("OPT_TITLE")      = tw_standing_CL.ed_header.Text
     Data.Item("TITLE")      = tw_standing_CL.ed_header1.Text
 
-    Data.Item("ANIM_TYPE")  = 5
+    Data.Item("ANIM_TYPE")  = Right(Sender.Name, 2)
     Hide_DSS
     AllTV.TV__vb_Standing Data
     Set Data = Nothing
@@ -57,7 +57,7 @@ end sub
 sub tw_standing_CL_gridMouseUp (Sender, Button, Shift, X, Y)
   dim i : i = 0
    for i = 1 to tw_standing_CL.grid.RowCount - 1
-        tw_standing_CL.grid.Cells(i, 1)=i
+        tw_standing_CL.grid.Cells(i, 1)=i & "."
    next
 end sub
 

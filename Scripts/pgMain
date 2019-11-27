@@ -111,9 +111,9 @@ sub TSP_MATCH_CHANGE()
 
             REDCARD_H=i
             REDCARD_G=i
-            if  tw_konferenz.ComponentByName("ed_nachspiel" & i).text <> "" then
+            'if  tw_konferenz.ComponentByName("ed_nachspiel" & i).text <> "" then
                 pgMain.ed_nachspiel.Text=tw_konferenz.ComponentByName("ed_nachspiel" & i).text
-            end if
+            'end if
         else
             tw_konferenz.ComponentByName("lb_team" & 2*i-1).font.color = clBlack
             tw_konferenz.ComponentByName("lb_team" & 2*i).font.color   = clBlack
