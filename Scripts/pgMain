@@ -1350,7 +1350,7 @@ end sub
 
 ' Manueller OPTA Import
 sub pgMain_bt_Spiele_Sortieren1Click (Sender)
-      traverse_XML_directory(pgData.ed_XML_Path.Text)
+      traverse_XML_directory pgData.ed_XML_Path.Text,Sender
 end sub
 
 ' Spiele Sortieren

@@ -25,7 +25,7 @@ Sub OnRunMode (Sender)
     System.debugTimer.Interval = 5000
 
     ' Schauen wir mal was wir schon fuer XML Files hier finden
-    if cc.Files.DirectoryExists(pgData.ed_XML_Path.Text) then traverse_XML_directory(pgData.ed_XML_Path.Text)
+    if cc.Files.DirectoryExists(pgData.ed_XML_Path.Text) then traverse_XML_directory PGData.ed_XML_Path.Text,Nothing
     TSP_MATCH_CHANGE ' das aktuelle Spiel im TSP nochmal triggern
     call pgData_btn_import_bbClick(0)
     call pgData_btn_import_modsClick(0)

@@ -583,9 +583,10 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
                     obj__TV.SetScene "VideoBG"
                     obj__TV.LoadScene elBacklayer
                 end if
-                
+
                 if pg_settings.rb_opmode.ItemIndex>0 then
                     obj__TV.SetScene "DSS_Konf"
+                    if tw_Layout.layout.ItemIndex =1 then  obj__TV.SetScene "CB_KONFERGS"
                     obj__TV.LoadScene elBacklayer
                     obj__TV.DoEffect elBacklayer, "ALL", efReset
                 end if
@@ -6169,9 +6170,16 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
         'sScene = "CB_Konf_Ergs"
         'LoadScene2 elBacklayer, sScene
 
-        SetVizDataBL "6011",Data.Item("TEAMA")
-        SetVizDataBL "6012",Data.Item("SCORE")
-        SetVizDataBL "6013",Data.Item("TEAMB")
+        if tw_Layout.layout.ItemIndex =1  then
+            SetVizDataBL "3100",Data.Item("TEAMA")
+            SetVizDataBL "3105",Data.Item("SCOREA")
+            SetVizDataBL "3107",Data.Item("SCOREB")
+            SetVizDataBL "3110",Data.Item("TEAMB")
+        else
+            SetVizDataBL "6011",Data.Item("TEAMA")
+            SetVizDataBL "6012",Data.Item("SCORE")
+            SetVizDataBL "6013",Data.Item("TEAMB")
+        end if
 
         obj__TV.DoEffect elBacklayer, "Default", efPlay
     end sub
@@ -6183,16 +6191,34 @@ Class cls__TV_VIZ_SKY_AUSTRIA_2018
     Public sub Karusell_Next(byref Data)
         sScene = "CB_Konf_Ergebnisse"
         if Data.Item("SIDE") = "A" then
-            SetVizDataBL "6011",Data.Item("TEAMA")
-            SetVizDataBL "6012",Data.Item("SCORE")
-            SetVizDataBL "6013",Data.Item("TEAMB")
-            obj__TV.SendCommand("RENDERER*BACK_LAYER*STAGE*DIRECTOR*$BLITZERG CONTINUE REVERSE")
+        
+            if tw_Layout.layout.ItemIndex =1  then
+                SetVizDataBL "3100",Data.Item("TEAMA")
+                SetVizDataBL "3105",Data.Item("SCOREA")
+                SetVizDataBL "3107",Data.Item("SCOREB")
+                SetVizDataBL "3110",Data.Item("TEAMB")
+                obj__TV.SendCommand("RENDERER*BACK_LAYER*STAGE*DIRECTOR*$WECHSEL_KONFERGS CONTINUE REVERSE")
+            else
+                SetVizDataBL "6011",Data.Item("TEAMA")
+                SetVizDataBL "6012",Data.Item("SCORE")
+                SetVizDataBL "6013",Data.Item("TEAMB")
+                obj__TV.SendCommand("RENDERER*BACK_LAYER*STAGE*DIRECTOR*$BLITZERG CONTINUE REVERSE")
+            end if
+
             'obj__TV.DoEffect elBacklayer, "BLITZERG", efContinue
         else
-            SetVizDataBL "6111",Data.Item("TEAMA")
-            SetVizDataBL "6112",Data.Item("SCORE")
-            SetVizDataBL "6113",Data.Item("TEAMB")
-            obj__TV.DoEffect elBacklayer, "BLITZERG", efContinue
+            if tw_Layout.layout.ItemIndex =1  then
+                SetVizDataBL "3200",Data.Item("TEAMA")
+                SetVizDataBL "3205",Data.Item("SCOREA")
+                SetVizDataBL "3207",Data.Item("SCOREB")
+                SetVizDataBL "3210",Data.Item("TEAMB")
+                obj__TV.DoEffect elBacklayer, "WECHSEL_KONFERGS", efContinue
+            else
+                SetVizDataBL "6111",Data.Item("TEAMA")
+                SetVizDataBL "6112",Data.Item("SCORE")
+                SetVizDataBL "6113",Data.Item("TEAMB")
+                obj__TV.DoEffect elBacklayer, "BLITZERG", efContinue
+            end if
         end if
     end sub
 

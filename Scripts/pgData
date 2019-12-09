@@ -316,7 +316,6 @@ sub OPTA_UPDATE_MATCH(file)
     out_.RequestLive  = False
     out_.Active       = False
 
-
     set NodeList = oXML.SelectNodes(".//MatchPlayer")
     For each objNode in NodeList
         pID = objNode.GetAttribute("PlayerRef")
@@ -398,17 +397,17 @@ end sub
                         end if
                         
                         select case GameNode.GetAttribute("period")
-                            case "First Half"           tw_konferenz.ComponentByName("period" & x).Caption = "1"
-                            case "Half Time"            tw_konferenz.ComponentByName("period" & x).Caption = "2"    ' Pause
-                            case "Second Half"          tw_konferenz.ComponentByName("period" & x).Caption = "3"
-                            case "Extra Time"           tw_konferenz.ComponentByName("period" & x).Caption = "4"    ' Pause
-                            case "Extra First Half"     tw_konferenz.ComponentByName("period" & x).Caption = "5"
-                            case "Extra Half Time"      tw_konferenz.ComponentByName("period" & x).Caption = "6"    ' Pause
-                            case "Extra Second Half"    tw_konferenz.ComponentByName("period" & x).Caption = "7"
-                            case "After Extra"          tw_konferenz.ComponentByName("period" & x).Caption = "8"    ' Pause
-                            case "Penalty Shootout"     tw_konferenz.ComponentByName("period" & x).Caption = "9"    ' Elfmeter
+                            case "FirstHalf"           tw_konferenz.ComponentByName("period" & x).Caption = "1"
+                            case "HalfTime"            tw_konferenz.ComponentByName("period" & x).Caption = "2"    ' Pause
+                            case "SecondHalf"          tw_konferenz.ComponentByName("period" & x).Caption = "3"
+                            case "ExtraTime"           tw_konferenz.ComponentByName("period" & x).Caption = "4"    ' Pause
+                            case "ExtraFirstHalf"     tw_konferenz.ComponentByName("period" & x).Caption = "5"
+                            case "ExtraHalfTime"      tw_konferenz.ComponentByName("period" & x).Caption = "6"    ' Pause
+                            case "ExtraSecondHalf"    tw_konferenz.ComponentByName("period" & x).Caption = "7"
+                            case "AfterExtra"          tw_konferenz.ComponentByName("period" & x).Caption = "8"    ' Pause
+                            case "PenaltyShootout"     tw_konferenz.ComponentByName("period" & x).Caption = "9"    ' Elfmeter
                             case "PostMatch"            tw_konferenz.ComponentByName("period" & x).Caption = "10"   ' END STAND
-                            case "Full Time"            tw_konferenz.ComponentByName("period" & x).Caption = "10"   ' END STAND
+                            case "FullTime"            tw_konferenz.ComponentByName("period" & x).Caption = "10"   ' END STAND
                             case "PreMatch"             tw_konferenz.ComponentByName("period" & x).Caption = "11"   ' Vor dem Anstoﬂ
                             case "Abandoned"            tw_konferenz.ComponentByName("period" & x).Caption = "X!"   ' ABGESAGT
                             case else
@@ -434,17 +433,16 @@ end sub
 end sub
 
 function GetPeriod(p)
-
     select case p
-        case "First Half"           GetPeriod = 1
-        case "Half Time"            GetPeriod = 2    ' Pause
-        case "Second Half"          GetPeriod = 3
-        case "Extra Time"           GetPeriod = 4    ' Pause
-        case "Extra First Half"     GetPeriod = 5
-        case "Extra Half Time"      GetPeriod = 6    ' Pause
-        case "Extra Second Half"    GetPeriod = 7
-        case "After Extra"          GetPeriod = 8    ' Pause
-        case "Penalty Shootout"     GetPeriod = 9    ' Elfmeter
+        case "FirstHalf"           GetPeriod = 1
+        case "HalfTime"            GetPeriod = 2    ' Pause
+        case "SecondHalf"          GetPeriod = 3
+        case "ExtraTime"           GetPeriod = 4    ' Pause
+        case "ExtraFirstHalf"     GetPeriod = 5
+        case "ExtraHalfTime"      GetPeriod = 6    ' Pause
+        case "ExtraSecondHalf"    GetPeriod = 7
+        case "AfterExtra"          GetPeriod = 8    ' Pause
+        case "PenaltyShootout"     GetPeriod = 9    ' Elfmeter
         case "PostMatch"            GetPeriod = 10   ' END STAND
         case "FullTime"            GetPeriod = 10   ' END STAND
         case "PreMatch"             GetPeriod = 11   ' Vor dem Anstoﬂ
@@ -587,10 +585,11 @@ sub OPTA_FILE_CHANGED(Sender, file, file_idx)
         else
             cc.SF.Debugtext n & "File " & fname & " has been updated but not match actual competition"
         end if
+    elseif( right(fname, 12) = "-results.xml" and Sender is Nothing)    then  call OPTA_UPDATE_GAME_RESULTS(file)
     elseif right(fname, 16) = "matchresults.xml" then  call OPTA_UPDATE_MATCH(file)
     elseif right(fname, 14) = "-standings.xml"   then  call OPTA_UPDATE_STANDING(file)
     elseif  left(fname, 11) = "seasonstats"      then  call OPTA_UPDATE_SEASON_STATS(file)
-    elseif right(fname, 12) = "-results.xml"     then  call OPTA_UPDATE_GAME_RESULTS(file)
+
         cc.SF.Debugtext n & "File " & fname & " has been updated but ignored"
     end if
 end sub
@@ -894,7 +893,7 @@ End Sub
 
 ' Durchsucht ein OPTA XML Directory nach -result.xml files.
 ' Sammelt aus allen gefundenen Files Competition- und Season IDs und packt sie in die ComboBox zur Auswahl
-sub traverse_XML_directory(dir)
+sub traverse_XML_directory(dir,Sender)
     cc.SF.ShowSplashForm "Importiere OPTA Daten..."
     dim tmp, season, compID, i
     
@@ -902,7 +901,7 @@ sub traverse_XML_directory(dir)
     dim flist : flist = CC.Files.GetFileList(dir, "*.xml")
     if IsArray(flist) then
           for i = 0 to UBound(flist)
-                call OPTA_FILE_CHANGED(Nothing, dir & "\" & flist(i), -1)         ' Und wir schauen mal rein was wir da gefunden haben
+                call OPTA_FILE_CHANGED(Sender, dir & "\" & flist(i), -1)         ' Und wir schauen mal rein was wir da gefunden haben
           next
     else
           msgbox "Cannot find any XML files in " & dir
@@ -917,7 +916,7 @@ sub pgData_Edit1Click (Sender)
     'System.DirSeeker.Active = False
     pgData.ed_XML_Path.Text = dir
     if CC.Files.DirectoryExists(pgData.ed_XML_Path.Text) then
-        traverse_XML_directory(pgData.ed_XML_Path.Text)
+        traverse_XML_directory pgData.ed_XML_Path.Text,Nothing
 
         'System.DirSeeker.DirPath = pgData.ed_XML_Path.Text
         'System.DirSeeker.Active = True
@@ -1007,7 +1006,7 @@ sub pgData_bt_importDBClick (Sender)
             parse_games_list(pgData.ed_XML_Path.Text & "\srml-" & pgData.cb_competition.Text & "-" & pgData.cb_season.Text & "-results.xml")   ' Spiele anlegen
         end if
     end if
-    if cc.Files.DirectoryExists(pgData.ed_XML_Path.Text) then traverse_XML_directory(pgData.ed_XML_Path.Text)
+    if cc.Files.DirectoryExists(pgData.ed_XML_Path.Text) then traverse_XML_directory pgData.ed_XML_Path.Text,Nothing
 end sub
 
 sub pgData_ed_TSP_PathClick (Sender)

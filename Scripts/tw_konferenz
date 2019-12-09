@@ -228,6 +228,8 @@ sub tw_konferenz_bt_show_karusellClick (Sender)
             Data.Item("SCORE")= tw_konferenz.ComponentByName("score" & 2*c-1).Caption&" : " & tw_konferenz.ComponentByName("score" & 2*c).Caption
             Data.Item("TEAMA")=tw_konferenz.ComponentByName("lb_team" & 2*c-1).Hint
             Data.Item("TEAMB")=tw_konferenz.ComponentByName("lb_team" & 2*c).Hint
+            Data.Item("SCOREA")= tw_konferenz.ComponentByName("score" & 2*c-1).Caption
+            Data.Item("SCOREB")= tw_konferenz.ComponentByName("score" & 2*c).Caption
             AllTV.TV__Karusell_Show Data
             set Data = Nothing
             system.bt_karusell.Enabled=true
